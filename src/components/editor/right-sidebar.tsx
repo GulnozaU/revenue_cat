@@ -6,10 +6,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea, Label } from "@/components/ui/input";
 import { useProjectStore } from "@/store/project-store";
-import { getTrack } from "@/lib/music/library";
+import { getMusicTrack } from "@/lib/assets/library";
 import { cn } from "@/lib/utils";
 
-const IMPROVE_EXAMPLES = [
+const EXAMPLES = [
   "Make this part faster",
   "Make this caption smaller",
   "Remove the boring part",
@@ -19,85 +19,129 @@ const IMPROVE_EXAMPLES = [
 
 export function RightSidebar() {
   const project = useProjectStore((s) => s.project);
+  const setProject = useProjectStore((s) => s.setProject);
   const selection = useProjectStore((s) => s.selection);
   const playhead = useProjectStore((s) => s.playhead);
-  const updateClip = useProjectStore((s) => s.updateClip);
-  const updateCaption = useProjectStore((s) => s.updateCaption);
-  const updateZoom = useProjectStore((s) => s.updateZoom);
-  const updateText = useProjectStore((s) => s.updateText);
-  const setEditPlan = useProjectStore((s) => s.setEditPlan);
-  const removeSelected = useProjectStore((s) => s.removeSelected);
+  const setEditPlanLocal = useProjectStore((s) => s.setEditPlanLocal);
+  const setSelection = useProjectStore((s) => s.setSelection);
+  const setRendering = useProjectStore((s) => s.setRendering);
 
   const [instruction, setInstruction] = useState("");
   const [improving, setImproving] = useState(false);
 
   const plan = project?.editPlan;
-  if (!plan) return null;
+  if (!plan || !project) return null;
 
   const selectedClip =
-    selection?.type === "clip"
-      ? plan.clips.find((c) => c.id === selection.id)
-      : null;
+    selection?.type === "clip" ? plan.clips.find((c) => c.id === selection.id) : null;
   const selectedCaption =
     selection?.type === "caption"
       ? plan.captions.find((c) => c.id === selection.id)
       : null;
-  const selectedZoom =
-    selection?.type === "zoom"
-      ? plan.zooms.find((z) => z.id === selection.id)
-      : null;
-  const selectedText =
-    selection?.type === "text"
-      ? plan.texts.find((t) => t.id === selection.id)
+  const selectedSticker =
+    selection?.type === "sticker"
+      ? plan.stickers.find((s) => s.id === selection.id)
       : null;
 
+  const updateClip = (id: string, patch: Partial<(typeof plan.clips)[0]>) => {
+    setEditPlanLocal({
+      ...plan,
+      clips: plan.clips.map((c) => (c.id === id ? { ...c, ...patch } : c)),
+    });
+  };
+
+  const updateCaption = (id: string, patch: Partial<(typeof plan.captions)[0]>) => {
+    setEditPlanLocal({
+      ...plan,
+      captions: plan.captions.map((c) => (c.id === id ? { ...c, ...patch } : c)),
+    });
+  };
+
+  const removeSelected = () => {
+    if (!selection) return;
+    if (selection.type === "clip") {
+      const clips = plan.clips.filter((c) => c.id !== selection.id);
+      if (clips.length === 0) return toast.error("Need at least one clip");
+      // repack timeline
+      let cursor = 0;
+      const packed = clips.map((c) => {
+        const len = (c.sourceEnd - c.sourceStart) / (c.speed || 1);
+        const next = {
+          ...c,
+          timelineStart: cursor,
+          timelineEnd: cursor + len,
+        };
+        cursor += len;
+        return next;
+      });
+      setEditPlanLocal({ ...plan, clips: packed, duration: cursor });
+    } else if (selection.type === "caption") {
+      setEditPlanLocal({
+        ...plan,
+        captions: plan.captions.filter((c) => c.id !== selection.id),
+      });
+    } else if (selection.type === "sticker") {
+      setEditPlanLocal({
+        ...plan,
+        stickers: plan.stickers.filter((s) => s.id !== selection.id),
+      });
+    } else if (selection.type === "zoom") {
+      setEditPlanLocal({
+        ...plan,
+        zooms: plan.zooms.filter((z) => z.id !== selection.id),
+      });
+    } else if (selection.type === "text") {
+      setEditPlanLocal({
+        ...plan,
+        textOverlays: plan.textOverlays.filter((t) => t.id !== selection.id),
+      });
+    }
+    setSelection(null);
+  };
+
   const runImprove = async () => {
-    if (!instruction.trim() || !project?.analysis) {
-      toast.error("Enter an improvement instruction");
+    if (!instruction.trim()) {
+      toast.error("Enter an instruction");
       return;
     }
     setImproving(true);
+    setRendering(true);
     try {
-      const res = await fetch("/api/improve", {
+      // Persist current plan first
+      await fetch(`/api/projects/${project.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ editPlan: plan }),
+      });
+
+      const res = await fetch(`/api/projects/${project.id}/improve`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          prompt: project.prompt,
-          format: project.format,
-          analysis: project.analysis,
-          currentPlan: plan,
-          selection: selection
-            ? selection.type === "range"
-              ? {
-                  type: "range",
-                  start: selection.start,
-                  end: selection.end,
-                }
-              : selection.type === "music"
-                ? { type: "music" }
-                : {
-                    type: selection.type,
-                    id: "id" in selection ? selection.id : undefined,
-                    start: playhead,
-                    end: playhead + 1.5,
-                  }
-            : {
-                type: "range",
-                start: playhead,
-                end: Math.min(plan.duration, playhead + 2),
-              },
           instruction: instruction.trim(),
+          selection: selection
+            ? {
+                type: selection.type,
+                id: "id" in selection ? selection.id : undefined,
+                start: playhead,
+                end: playhead + 1.5,
+              }
+            : { type: "range", start: playhead, end: playhead + 2 },
         }),
       });
-      if (!res.ok) throw new Error("Improve failed");
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Improve failed");
+      }
       const data = await res.json();
-      setEditPlan(data.plan);
+      setProject(data.project);
       setInstruction("");
-      toast.success("Edit updated");
-    } catch {
-      toast.error("Could not apply AI improve");
+      toast.success("AI Improve applied + preview re-rendered");
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Improve failed");
     } finally {
       setImproving(false);
+      setRendering(false);
     }
   };
 
@@ -112,23 +156,57 @@ export function RightSidebar() {
             ? "Clip"
             : selectedCaption
               ? "Caption"
-              : selectedZoom
-                ? "Zoom"
-                : selectedText
-                  ? "Text"
-                  : selection?.type === "music"
-                    ? "Music"
-                    : "Nothing selected"}
+              : selectedSticker
+                ? "Sticker"
+                : selection?.type === "music"
+                  ? "Music"
+                  : selection?.type ?? "Nothing selected"}
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-5">
+      <div className="flex-1 space-y-5 overflow-y-auto p-4">
         {selectedClip && (
           <div className="space-y-3">
             <Field label="Reason">
               <p className="text-xs text-[var(--editor-muted)]">
-                {selectedClip.reason ?? "Selected clip"}
+                {selectedClip.reason ?? "Clip"}
               </p>
+            </Field>
+            <Field label="Trim source in">
+              <Input
+                type="number"
+                step="0.1"
+                className="h-8 bg-[var(--editor-panel-2)] border-[var(--editor-border)] text-[var(--editor-fg)]"
+                value={selectedClip.sourceStart}
+                onChange={(e) => {
+                  const sourceStart = Number(e.target.value);
+                  const len =
+                    (selectedClip.sourceEnd - sourceStart) /
+                    (selectedClip.speed || 1);
+                  updateClip(selectedClip.id, {
+                    sourceStart,
+                    timelineEnd: selectedClip.timelineStart + len,
+                  });
+                }}
+              />
+            </Field>
+            <Field label="Trim source out">
+              <Input
+                type="number"
+                step="0.1"
+                className="h-8 bg-[var(--editor-panel-2)] border-[var(--editor-border)] text-[var(--editor-fg)]"
+                value={selectedClip.sourceEnd}
+                onChange={(e) => {
+                  const sourceEnd = Number(e.target.value);
+                  const len =
+                    (sourceEnd - selectedClip.sourceStart) /
+                    (selectedClip.speed || 1);
+                  updateClip(selectedClip.id, {
+                    sourceEnd,
+                    timelineEnd: selectedClip.timelineStart + len,
+                  });
+                }}
+              />
             </Field>
             <Field label="Speed">
               <input
@@ -141,42 +219,13 @@ export function RightSidebar() {
                   const speed = Number(e.target.value);
                   const len =
                     (selectedClip.sourceEnd - selectedClip.sourceStart) / speed;
-                  updateClip(selectedClip.id!, {
+                  updateClip(selectedClip.id, {
                     speed,
                     timelineEnd: selectedClip.timelineStart + len,
                   });
                 }}
                 className="w-full accent-[var(--editor-accent)]"
               />
-              <p className="text-[11px] text-[var(--editor-subtle)]">
-                {(selectedClip.speed ?? 1).toFixed(2)}×
-              </p>
-            </Field>
-            <Field label="Source in / out">
-              <div className="grid grid-cols-2 gap-2">
-                <Input
-                  type="number"
-                  step="0.1"
-                  className="h-8 bg-[var(--editor-panel-2)] border-[var(--editor-border)] text-[var(--editor-fg)]"
-                  value={selectedClip.sourceStart}
-                  onChange={(e) =>
-                    updateClip(selectedClip.id!, {
-                      sourceStart: Number(e.target.value),
-                    })
-                  }
-                />
-                <Input
-                  type="number"
-                  step="0.1"
-                  className="h-8 bg-[var(--editor-panel-2)] border-[var(--editor-border)] text-[var(--editor-fg)]"
-                  value={selectedClip.sourceEnd}
-                  onChange={(e) =>
-                    updateClip(selectedClip.id!, {
-                      sourceEnd: Number(e.target.value),
-                    })
-                  }
-                />
-              </div>
             </Field>
           </div>
         )}
@@ -188,7 +237,7 @@ export function RightSidebar() {
                 className="min-h-[72px] bg-[var(--editor-panel-2)] border-[var(--editor-border)] text-[var(--editor-fg)]"
                 value={selectedCaption.text}
                 onChange={(e) =>
-                  updateCaption(selectedCaption.id!, { text: e.target.value })
+                  updateCaption(selectedCaption.id, { text: e.target.value })
                 }
               />
             </Field>
@@ -197,9 +246,9 @@ export function RightSidebar() {
                 type="range"
                 min={18}
                 max={72}
-                value={selectedCaption.fontSize ?? 42}
+                value={selectedCaption.fontSize ?? 44}
                 onChange={(e) =>
-                  updateCaption(selectedCaption.id!, {
+                  updateCaption(selectedCaption.id, {
                     fontSize: Number(e.target.value),
                   })
                 }
@@ -209,83 +258,50 @@ export function RightSidebar() {
           </div>
         )}
 
-        {selectedZoom && (
-          <div className="space-y-3">
-            <Field label="Scale">
-              <input
-                type="range"
-                min={1}
-                max={1.4}
-                step={0.01}
-                value={selectedZoom.scale}
-                onChange={(e) =>
-                  updateZoom(selectedZoom.id!, {
-                    scale: Number(e.target.value),
-                  })
-                }
-                className="w-full accent-[var(--editor-accent)]"
-              />
-              <p className="text-[11px] text-[var(--editor-subtle)]">
-                {selectedZoom.scale.toFixed(2)}×
-              </p>
-            </Field>
-          </div>
-        )}
-
-        {selectedText && (
-          <div className="space-y-3">
-            <Field label="Text">
-              <Input
-                className="bg-[var(--editor-panel-2)] border-[var(--editor-border)] text-[var(--editor-fg)]"
-                value={selectedText.text}
-                onChange={(e) =>
-                  updateText(selectedText.id!, { text: e.target.value })
-                }
-              />
-            </Field>
-          </div>
+        {selectedSticker && (
+          <Field label="Scale">
+            <input
+              type="range"
+              min={0.1}
+              max={1}
+              step={0.05}
+              value={selectedSticker.scale}
+              onChange={(e) =>
+                setEditPlanLocal({
+                  ...plan,
+                  stickers: plan.stickers.map((s) =>
+                    s.id === selectedSticker.id
+                      ? { ...s, scale: Number(e.target.value) }
+                      : s
+                  ),
+                })
+              }
+              className="w-full accent-[var(--editor-accent)]"
+            />
+          </Field>
         )}
 
         {selection?.type === "music" && plan.music && (
-          <div className="space-y-3">
-            <Field label="Track">
-              <p className="text-sm">{getTrack(plan.music.trackId).name}</p>
-            </Field>
-            <Field label="Volume">
-              <input
-                type="range"
-                min={0}
-                max={0.4}
-                step={0.01}
-                value={plan.music.volume}
-                onChange={(e) =>
-                  setEditPlan({
-                    ...plan,
-                    music: {
-                      ...plan.music!,
-                      volume: Number(e.target.value),
-                    },
-                  })
-                }
-                className="w-full accent-[var(--editor-accent)]"
-              />
-            </Field>
-          </div>
+          <Field label={`${getMusicTrack(plan.music.trackId).title} volume`}>
+            <input
+              type="range"
+              min={0}
+              max={0.4}
+              step={0.01}
+              value={plan.music.volume}
+              onChange={(e) =>
+                setEditPlanLocal({
+                  ...plan,
+                  music: { ...plan.music!, volume: Number(e.target.value) },
+                })
+              }
+              className="w-full accent-[var(--editor-accent)]"
+            />
+          </Field>
         )}
 
-        {!selection && (
-          <p className="text-xs leading-relaxed text-[var(--editor-muted)]">
-            Select a clip, caption, or effect on the timeline to edit properties.
-          </p>
-        )}
-
-        {selection && selection.type !== "music" && selection.type !== "range" && (
-          <Button
-            variant="danger"
-            size="sm"
-            className="w-full"
-            onClick={removeSelected}
-          >
+        {selection && (
+          <Button variant="danger" size="sm" className="w-full" onClick={removeSelected}>
             <Trash2 className="h-3.5 w-3.5" />
             Remove
           </Button>
@@ -296,24 +312,20 @@ export function RightSidebar() {
             <Sparkles className="h-4 w-4" />
             <p className="text-sm font-medium">AI Improve</p>
           </div>
-          <p className="mt-1 text-[11px] text-[var(--editor-subtle)]">
-            Applies to the current selection (or playhead range).
-          </p>
           <Textarea
             className="mt-3 min-h-[80px] bg-[var(--editor-panel)] border-[var(--editor-border)] text-[var(--editor-fg)]"
-            placeholder="Make this part faster…"
             value={instruction}
             onChange={(e) => setInstruction(e.target.value)}
+            placeholder="Make this section more energetic…"
           />
           <div className="mt-2 flex flex-wrap gap-1.5">
-            {IMPROVE_EXAMPLES.map((ex) => (
+            {EXAMPLES.map((ex) => (
               <button
                 key={ex}
                 type="button"
                 onClick={() => setInstruction(ex)}
                 className={cn(
-                  "rounded-lg px-2 py-1 text-[10px] text-[var(--editor-muted)]",
-                  "bg-[var(--editor-panel-2)] hover:text-[var(--editor-fg)]"
+                  "rounded-lg bg-[var(--editor-panel-2)] px-2 py-1 text-[10px] text-[var(--editor-muted)]"
                 )}
               >
                 {ex}
@@ -326,7 +338,7 @@ export function RightSidebar() {
             disabled={improving}
             onClick={runImprove}
           >
-            {improving ? "Improving…" : "AI Improve"}
+            {improving ? "Improving + rendering…" : "AI Improve"}
           </Button>
         </div>
       </div>

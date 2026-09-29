@@ -3,7 +3,7 @@
 import { useMemo, useRef } from "react";
 import { useProjectStore } from "@/store/project-store";
 import { cn, formatTimecode } from "@/lib/utils";
-import { getTrack } from "@/lib/music/library";
+import { getMusicTrack } from "@/lib/assets/library";
 
 const PX_PER_SEC = 48;
 
@@ -38,10 +38,10 @@ export function Timeline() {
   };
 
   return (
-    <div className="flex h-[220px] shrink-0 flex-col border-t border-[var(--editor-border)] bg-[var(--editor-panel)]">
+    <div className="flex h-[240px] shrink-0 flex-col border-t border-[var(--editor-border)] bg-[var(--editor-panel)]">
       <div className="flex items-center justify-between border-b border-[var(--editor-border)] px-4 py-1.5">
         <p className="text-[11px] uppercase tracking-wider text-[var(--editor-subtle)]">
-          Timeline
+          Timeline · single EditPlan source of truth
         </p>
         <p className="font-mono text-[11px] text-[var(--editor-muted)]">
           {formatTimecode(playhead)}
@@ -49,8 +49,7 @@ export function Timeline() {
       </div>
 
       <div ref={scrollRef} className="min-h-0 flex-1 overflow-auto">
-        <div className="relative min-w-full p-3" style={{ width }}>
-          {/* Ruler */}
+        <div className="relative p-3" style={{ width }}>
           <div
             className="relative mb-2 h-6 cursor-pointer"
             style={{ width }}
@@ -68,7 +67,7 @@ export function Timeline() {
             ))}
           </div>
 
-          <TrackLabel label="Video">
+          <Track label="Video">
             <div
               className="relative h-10 rounded-lg bg-[var(--editor-track)]"
               style={{ width }}
@@ -80,12 +79,11 @@ export function Timeline() {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setSelection({ type: "clip", id: clip.id! });
+                    setSelection({ type: "clip", id: clip.id });
                     setPlayhead(clip.timelineStart);
                   }}
                   className={cn(
-                    "absolute top-1 bottom-1 overflow-hidden rounded-md px-2 text-left text-[10px] text-white/90",
-                    "bg-[var(--editor-clip)] hover:brightness-110",
+                    "absolute top-1 bottom-1 overflow-hidden rounded-md bg-[var(--editor-clip)] px-2 text-left text-[10px] text-white/90",
                     selection?.type === "clip" &&
                       selection.id === clip.id &&
                       "ring-2 ring-[var(--editor-accent)]"
@@ -97,36 +95,26 @@ export function Timeline() {
                       (clip.timelineEnd - clip.timelineStart) * PX_PER_SEC
                     ),
                   }}
-                  title={clip.reason}
                 >
-                  <span className="block truncate">
-                    {(clip.speed ?? 1) !== 1
-                      ? `${(clip.speed ?? 1).toFixed(2)}× `
-                      : ""}
-                    {clip.reason ?? "Clip"}
-                  </span>
+                  <span className="block truncate">{clip.reason ?? "Clip"}</span>
                 </button>
               ))}
             </div>
-          </TrackLabel>
+          </Track>
 
-          <TrackLabel label="Captions">
-            <div
-              className="relative h-8 rounded-lg bg-[var(--editor-track)]"
-              style={{ width }}
-            >
+          <Track label="Captions">
+            <div className="relative h-8 rounded-lg bg-[var(--editor-track)]" style={{ width }}>
               {plan.captions.map((cap) => (
                 <button
                   key={cap.id}
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setSelection({ type: "caption", id: cap.id! });
+                    setSelection({ type: "caption", id: cap.id });
                     setPlayhead(cap.start);
                   }}
                   className={cn(
-                    "absolute top-1 bottom-1 overflow-hidden rounded px-1.5 text-left text-[9px] text-white/85",
-                    "bg-[var(--editor-caption)]",
+                    "absolute top-1 bottom-1 overflow-hidden rounded bg-[var(--editor-caption)] px-1.5 text-[9px] text-white/85",
                     selection?.type === "caption" &&
                       selection.id === cap.id &&
                       "ring-2 ring-[var(--editor-accent)]"
@@ -140,61 +128,52 @@ export function Timeline() {
                 </button>
               ))}
             </div>
-          </TrackLabel>
+          </Track>
 
-          <TrackLabel label="Zooms">
-            <div
-              className="relative h-6 rounded-lg bg-[var(--editor-track)]"
-              style={{ width }}
-            >
-              {plan.zooms.map((z) => (
+          <Track label="Stickers">
+            <div className="relative h-6 rounded-lg bg-[var(--editor-track)]" style={{ width }}>
+              {plan.stickers.map((s) => (
                 <button
-                  key={z.id}
+                  key={s.id}
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setSelection({ type: "zoom", id: z.id! });
-                    setPlayhead(z.start);
+                    setSelection({ type: "sticker", id: s.id });
+                    setPlayhead(s.start);
                   }}
                   className={cn(
-                    "absolute top-0.5 bottom-0.5 rounded bg-[var(--editor-zoom)] text-[9px] text-white/80",
-                    selection?.type === "zoom" &&
-                      selection.id === z.id &&
+                    "absolute top-0.5 bottom-0.5 rounded bg-[#5a3d4a]",
+                    selection?.type === "sticker" &&
+                      selection.id === s.id &&
                       "ring-2 ring-[var(--editor-accent)]"
                   )}
                   style={{
-                    left: z.start * PX_PER_SEC,
-                    width: Math.max(6, (z.end - z.start) * PX_PER_SEC),
+                    left: s.start * PX_PER_SEC,
+                    width: Math.max(6, (s.end - s.start) * PX_PER_SEC),
                   }}
                 />
               ))}
             </div>
-          </TrackLabel>
+          </Track>
 
-          <TrackLabel label="Music">
-            <div
-              className="relative h-7 rounded-lg bg-[var(--editor-track)]"
-              style={{ width }}
-            >
+          <Track label="Music">
+            <div className="relative h-7 rounded-lg bg-[var(--editor-track)]" style={{ width }}>
               {plan.music && (
                 <button
                   type="button"
                   onClick={() => setSelection({ type: "music" })}
                   className={cn(
-                    "absolute inset-y-1 left-0 rounded-md bg-[var(--editor-music)] px-2 text-left text-[10px] text-white/85",
-                    selection?.type === "music" &&
-                      "ring-2 ring-[var(--editor-accent)]"
+                    "absolute inset-y-1 left-0 rounded-md bg-[var(--editor-music)] px-2 text-[10px] text-white/85",
+                    selection?.type === "music" && "ring-2 ring-[var(--editor-accent)]"
                   )}
                   style={{ width: duration * PX_PER_SEC }}
                 >
-                  {getTrack(plan.music.trackId).name} · vol{" "}
-                  {Math.round(plan.music.volume * 100)}%
+                  {getMusicTrack(plan.music.trackId).title}
                 </button>
               )}
             </div>
-          </TrackLabel>
+          </Track>
 
-          {/* Playhead */}
           <div
             className="pointer-events-none absolute bottom-3 top-3 w-px bg-[var(--editor-accent)]"
             style={{ left: 12 + playhead * PX_PER_SEC }}
@@ -207,7 +186,7 @@ export function Timeline() {
   );
 }
 
-function TrackLabel({
+function Track({
   label,
   children,
 }: {

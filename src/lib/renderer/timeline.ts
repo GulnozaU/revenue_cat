@@ -1,6 +1,5 @@
 import type { EditPlan } from "@/lib/types/edit-plan";
 
-/** Map timeline time → source media time using clips. */
 export function timelineToSource(
   plan: EditPlan,
   timelineTime: number
@@ -28,9 +27,13 @@ export function activeCaption(plan: EditPlan, t: number) {
 }
 
 export function activeZoom(plan: EditPlan, t: number) {
-  return plan.zooms.find((z) => t >= z.start && t < z.end) ?? null;
+  return plan.zooms.find((z) => t >= z.start && z.end > t) ?? null;
 }
 
 export function activeTexts(plan: EditPlan, t: number) {
-  return plan.texts.filter((x) => t >= x.start && t < x.end);
+  return (plan.textOverlays ?? []).filter((x) => t >= x.start && t < x.end);
+}
+
+export function activeStickers(plan: EditPlan, t: number) {
+  return (plan.stickers ?? []).filter((x) => t >= x.start && t < x.end);
 }

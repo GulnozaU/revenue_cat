@@ -1,394 +1,469 @@
-import {
-  type EditPlan,
-  type VideoAnalysis,
-  type VideoFormat,
-  FORMAT_PRESETS,
-  validateEditPlan,
-  normalizeEditPlan,
+import type {
+  AestheticId,
+  EditPlan,
+  Transcript,
+  VideoAnalysis,
+  VideoFormat,
 } from "@/lib/types/edit-plan";
+import { FORMAT_PRESETS, normalizeEditPlan, validateEditPlan } from "@/lib/types/edit-plan";
+import { getStyle } from "@/lib/styles/presets";
+import { detectSilences } from "@/lib/ffmpeg/media";
+import OpenAI from "openai";
 
-export type EditPlanRequest = {
+export async function buildAnalysis(input: {
+  audioPath: string;
+  duration: number;
+  transcript: Transcript;
+}): Promise<VideoAnalysis> {
+  const silences =
+    input.transcript.provider === "silence-fallback"
+      ? await detectSilences(input.audioPath)
+      : findSilencesFromTranscript(input.transcript);
+
+  const highlightCandidates = input.transcript.segments
+    .map((seg) => {
+      const words = seg.text.split(/\s+/).filter(Boolean).length;
+      const density = words / Math.max(0.25, seg.end - seg.start);
+      const punchy =
+        /you|how|why|secret|best|never|always|watch|look|today|wait/i.test(
+          seg.text
+        );
+      const score = Math.min(1, density / 3.5) * 0.5 + (punchy ? 0.4 : 0.15);
+      return {
+        start: seg.start,
+        end: seg.end,
+        score,
+        reason: punchy ? "Hook / emphasis line" : "Spoken segment",
+      };
+    })
+    .sort((a, b) => b.score - a.score);
+
+  return {
+    transcript: input.transcript,
+    silences,
+    highlightCandidates,
+  };
+}
+
+function findSilencesFromTranscript(transcript: Transcript) {
+  const silences: VideoAnalysis["silences"] = [];
+  const segs = [...transcript.segments].sort((a, b) => a.start - b.start);
+  if (!segs.length) return silences;
+  if (segs[0].start > 0.4) {
+    silences.push({
+      start: 0,
+      end: segs[0].start,
+      duration: segs[0].start,
+    });
+  }
+  for (let i = 0; i < segs.length - 1; i++) {
+    const gap = segs[i + 1].start - segs[i].end;
+    if (gap >= 0.35) {
+      silences.push({
+        start: segs[i].end,
+        end: segs[i + 1].start,
+        duration: gap,
+      });
+    }
+  }
+  const last = segs[segs.length - 1];
+  if (transcript.duration - last.end >= 0.4) {
+    silences.push({
+      start: last.end,
+      end: transcript.duration,
+      duration: transcript.duration - last.end,
+    });
+  }
+  return silences;
+}
+
+export async function generateEditPlan(input: {
   prompt: string;
   format: VideoFormat;
+  aestheticId: AestheticId;
   analysis: VideoAnalysis;
+  sourceDuration: number;
   improve?: {
+    instruction: string;
+    currentPlan: EditPlan;
     selection?: {
-      type: "clip" | "caption" | "zoom" | "music" | "range";
+      type: string;
       id?: string;
       start?: number;
       end?: number;
     };
-    instruction: string;
-    currentPlan: EditPlan;
   };
-};
-
-function buildMockPlan(req: EditPlanRequest): EditPlan {
-  const { analysis, format, prompt, improve } = req;
-  const ratio = FORMAT_PRESETS[format].ratio as EditPlan["format"];
-  const duration = analysis.metadata.duration;
-  const highlights = analysis.highlightCandidates.slice(0, 5);
-
-  if (improve) {
-    return applyMockImprove(improve.currentPlan, improve.instruction, improve.selection);
-  }
-
-  const energetic = /fast|energetic|pace|upbeat|reel|lifestyle/i.test(prompt);
-  const keepFunny = /funny|humor|laugh/i.test(prompt);
-  const addZooms = /zoom|punch|emphas/i.test(prompt) || energetic;
-  const addCaptions = /caption|subtitle|text/i.test(prompt) || true;
-
-  const selected =
-    highlights.length > 0
-      ? highlights
-      : analysis.transcript.segments.map((s) => ({
-          start: s.start,
-          end: s.end,
-          score: 0.5,
-          reason: "Spoken segment",
-        }));
-
-  // Prefer stronger moments; skip long silences by using segment bounds.
-  let timelineCursor = 0;
-  const clips: EditPlan["clips"] = [];
-
-  const sorted = [...selected].sort((a, b) => a.start - b.start);
-  for (let i = 0; i < sorted.length; i++) {
-    const h = sorted[i];
-    let start = Math.max(0, h.start - (energetic ? 0.15 : 0.25));
-    let end = Math.min(duration, h.end + (energetic ? 0.1 : 0.2));
-
-    // Merge tiny gaps for smoother cuts when not ultra-fast
-    if (!energetic && i > 0) {
-      const prev = sorted[i - 1];
-      if (h.start - prev.end < 0.35) {
-        start = prev.end;
-      }
+}): Promise<{ plan: EditPlan; provider: "openai" | "deterministic" }> {
+  if (process.env.OPENAI_API_KEY) {
+    try {
+      const plan = await generateWithOpenAI(input);
+      if (plan) return { plan, provider: "openai" };
+    } catch (err) {
+      console.warn("LLM edit plan failed", err);
     }
-
-    // Skip awkward silence interiors
-    for (const sil of analysis.silences) {
-      if (sil.duration < 0.5) continue;
-      if (start < sil.start && end > sil.end) {
-        // split would be better; trim into silence edge for MVP
-        if (sil.start - start > end - sil.end) end = sil.start;
-        else start = sil.end;
-      }
-    }
-
-    if (end - start < 0.4) continue;
-
-    const speed = energetic && keepFunny && /funny|laugh/i.test(h.reason) ? 1 : energetic ? 1.05 : 1;
-    const tlLen = (end - start) / speed;
-    clips.push({
-      id: `clip_${clips.length + 1}`,
-      sourceStart: Number(start.toFixed(2)),
-      sourceEnd: Number(end.toFixed(2)),
-      timelineStart: Number(timelineCursor.toFixed(2)),
-      timelineEnd: Number((timelineCursor + tlLen).toFixed(2)),
-      speed,
-      reason: h.reason,
-    });
-    timelineCursor += tlLen;
   }
 
-  if (clips.length === 0) {
-    const take = Math.min(duration, energetic ? 18 : 28);
-    clips.push({
-      id: "clip_1",
-      sourceStart: 0,
-      sourceEnd: take,
-      timelineStart: 0,
-      timelineEnd: take,
-      speed: 1,
-      reason: "Full take fallback",
-    });
-    timelineCursor = take;
-  }
+  const plan = input.improve
+    ? applyDeterministicImprove(input)
+    : buildDeterministicPlan(input);
+  const validated = validateEditPlan(plan);
+  if (!validated.success) throw new Error(validated.error);
+  return {
+    plan: normalizeEditPlan(validated.data, input.sourceDuration),
+    provider: "deterministic",
+  };
+}
 
-  // Deduplicate overlapping source ranges lightly
-  const cleaned = mergeNearbyClips(clips);
+function buildDeterministicPlan(input: {
+  prompt: string;
+  format: VideoFormat;
+  aestheticId: AestheticId;
+  analysis: VideoAnalysis;
+  sourceDuration: number;
+}): EditPlan {
+  const style = getStyle(input.aestheticId);
+  const ratio = FORMAT_PRESETS[input.format].ratio;
+  const duration = input.sourceDuration;
+  const segs = input.analysis.transcript.segments;
 
-  const captions: EditPlan["captions"] = [];
-  if (addCaptions) {
-    for (const seg of analysis.transcript.segments) {
-      const mapped = mapSourceToTimeline(cleaned, seg.start, seg.end);
-      if (!mapped) continue;
-      const short = seg.text.length > 42 ? seg.text.slice(0, 40) + "…" : seg.text;
-      captions.push({
-        id: `cap_${captions.length + 1}`,
-        start: mapped.start,
-        end: mapped.end,
-        text: short,
-        style: energetic ? "clean_bold" : "minimal",
-        fontSize: energetic ? 44 : 38,
-        x: 0.5,
-        y: 0.78,
+  // Keep speech regions; drop long silences per style
+  const keepRegions: Array<{ start: number; end: number; reason: string }> = [];
+  if (segs.length === 0) {
+    keepRegions.push({ start: 0, end: Math.min(duration, 20), reason: "Full take" });
+  } else {
+    for (const seg of segs) {
+      const pad = style.targetClipPadding;
+      keepRegions.push({
+        start: Math.max(0, seg.start - pad),
+        end: Math.min(duration, seg.end + pad * 0.5),
+        reason: seg.text.slice(0, 60),
       });
     }
   }
 
-  const zooms: EditPlan["zooms"] = [];
-  if (addZooms) {
-    for (let i = 0; i < cleaned.length; i++) {
-      if (i % 2 === 1 || /emphas|strong|memorable|energy/i.test(cleaned[i].reason ?? "")) {
-        const mid = (cleaned[i].timelineStart + cleaned[i].timelineEnd) / 2;
-        zooms.push({
-          id: `zoom_${zooms.length + 1}`,
-          start: Number((mid - 0.35).toFixed(2)),
-          end: Number((mid + 0.55).toFixed(2)),
-          scale: energetic ? 1.1 : 1.06,
-          x: 0.5,
-          y: 0.45,
-        });
-      }
+  // Merge overlapping / near regions
+  keepRegions.sort((a, b) => a.start - b.start);
+  const merged: typeof keepRegions = [];
+  for (const r of keepRegions) {
+    const last = merged[merged.length - 1];
+    if (last && r.start - last.end <= style.maxSilenceKeep) {
+      last.end = Math.max(last.end, r.end);
+      last.reason = `${last.reason} · ${r.reason}`.slice(0, 80);
+    } else {
+      merged.push({ ...r });
     }
   }
 
-  const wantsMusic = /music|soundtrack|beat|energetic|upbeat|lifestyle/i.test(prompt);
+  // Fast pacing: prefer top highlights if many
+  let selected = merged;
+  if (style.pacing === "fast" && merged.length > 6) {
+    const scored = merged
+      .map((m) => {
+        const hit = input.analysis.highlightCandidates.find(
+          (h) => h.start >= m.start - 0.2 && h.end <= m.end + 0.2
+        );
+        return { ...m, score: hit?.score ?? 0.3 };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6)
+      .sort((a, b) => a.start - b.start);
+    selected = scored;
+  }
+
+  let cursor = 0;
+  const speed = style.pacing === "fast" ? 1.05 : 1;
+  const clips = selected.map((r, i) => {
+    const len = (r.end - r.start) / speed;
+    const clip = {
+      id: `clip_${i + 1}`,
+      sourceStart: Number(r.start.toFixed(3)),
+      sourceEnd: Number(r.end.toFixed(3)),
+      timelineStart: Number(cursor.toFixed(3)),
+      timelineEnd: Number((cursor + len).toFixed(3)),
+      speed,
+      action: "keep" as const,
+      reason: r.reason,
+    };
+    cursor += len;
+    return clip;
+  });
+
+  const captionY =
+    style.captionPosition === "center"
+      ? 0.5
+      : style.captionPosition === "upper_center"
+        ? 0.22
+        : 0.78;
+
+  const captions = input.analysis.transcript.segments
+    .map((seg, i) => {
+      const mapped = mapSourceToTimeline(clips, seg.start, seg.end);
+      if (!mapped) return null;
+      const text =
+        seg.text.startsWith("[speech")
+          ? seg.text
+          : seg.text.length > 48
+            ? `${seg.text.slice(0, 46)}…`
+            : seg.text;
+      return {
+        id: `cap_${i + 1}`,
+        start: mapped.start,
+        end: mapped.end,
+        text,
+        style: style.captionStyle,
+        fontId: style.fontId,
+        fontSize: style.pacing === "fast" ? 52 : 44,
+        x: 0.5,
+        y: captionY,
+        animation: style.pacing === "fast" ? ("pop" as const) : ("none" as const),
+      };
+    })
+    .filter(Boolean) as EditPlan["captions"];
+
+  const zooms: EditPlan["zooms"] = [];
+  const zoomEvery =
+    style.zoomFrequency === "high"
+      ? 1
+      : style.zoomFrequency === "medium"
+        ? 2
+        : style.zoomFrequency === "low"
+          ? 3
+          : 99;
+  clips.forEach((c, i) => {
+    if (i % zoomEvery !== 0) return;
+    const mid = (c.timelineStart + c.timelineEnd) / 2;
+    zooms.push({
+      id: `zoom_${zooms.length + 1}`,
+      start: Number((mid - 0.4).toFixed(3)),
+      end: Number((mid + 0.55).toFixed(3)),
+      scale: style.zoomFrequency === "high" ? 1.12 : 1.07,
+      x: 0.5,
+      y: 0.45,
+    });
+  });
+
+  const stickers: EditPlan["stickers"] = [];
+  if (style.stickerUsage !== "none" && clips.length > 0) {
+    const count =
+      style.stickerUsage === "high" ? 3 : style.stickerUsage === "medium" ? 2 : 1;
+    const ids = ["star", "heart", "sparkle", "fire"];
+    for (let i = 0; i < Math.min(count, clips.length); i++) {
+      const c = clips[i];
+      stickers.push({
+        id: `stk_${i + 1}`,
+        assetId: ids[i % ids.length],
+        start: c.timelineStart + 0.2,
+        end: Math.min(c.timelineEnd, c.timelineStart + 1.8),
+        x: 0.82,
+        y: 0.18 + i * 0.08,
+        scale: 0.28,
+        rotation: i % 2 === 0 ? -8 : 10,
+      });
+    }
+  }
+
+  const wantsMusic =
+    style.musicTrackId &&
+    (/music|beat|energetic|soundtrack/i.test(input.prompt) ||
+      style.musicMood !== "none");
 
   return normalizeEditPlan(
     {
+      sourceDuration: duration,
       format: ratio,
-      duration: cleaned[cleaned.length - 1]?.timelineEnd ?? timelineCursor,
-      clips: cleaned,
+      aestheticId: input.aestheticId,
+      duration: cursor,
+      clips,
+      cuts: [],
       captions,
+      textOverlays: [],
+      stickers,
       zooms,
-      texts: [],
-      music: wantsMusic
-        ? { trackId: "upbeat_01", volume: 0.12, fadeIn: 0.4, fadeOut: 0.8 }
-        : { trackId: "upbeat_01", volume: 0.1, fadeIn: 0.3, fadeOut: 0.6 },
-      styleNotes: `Mock plan from prompt: ${prompt.slice(0, 120)}`,
+      music: wantsMusic && style.musicTrackId
+        ? {
+            trackId: style.musicTrackId,
+            volume: style.musicVolume,
+            startAt: 0,
+            fadeIn: 0.4,
+            fadeOut: 0.8,
+          }
+        : null,
+      styleNotes: `Deterministic plan · style=${style.name} · prompt=${input.prompt.slice(0, 80)}`,
     },
     duration
   );
 }
 
-function mergeNearbyClips(clips: EditPlan["clips"]): EditPlan["clips"] {
-  if (clips.length <= 1) return clips;
-  const out: EditPlan["clips"] = [];
-  let cur = { ...clips[0] };
-  for (let i = 1; i < clips.length; i++) {
-    const next = clips[i];
-    const sourceGap = next.sourceStart - cur.sourceEnd;
-    if (sourceGap >= 0 && sourceGap < 0.25 && cur.speed === next.speed) {
-      const extra = next.timelineEnd - next.timelineStart;
-      cur = {
-        ...cur,
-        sourceEnd: next.sourceEnd,
-        timelineEnd: cur.timelineEnd + extra,
-        reason: cur.reason,
-      };
-    } else {
-      out.push(cur);
-      // retime timeline continuity
-      const len = next.timelineEnd - next.timelineStart;
-      const start = out[out.length - 1]?.timelineEnd ?? 0;
-      cur = {
-        ...next,
-        timelineStart: start,
-        timelineEnd: start + len,
-      };
-    }
-  }
-  out.push(cur);
-  return out.map((c, i) => ({ ...c, id: `clip_${i + 1}` }));
-}
+function applyDeterministicImprove(input: {
+  improve?: {
+    instruction: string;
+    currentPlan: EditPlan;
+    selection?: { type: string; id?: string; start?: number; end?: number };
+  };
+  sourceDuration: number;
+  aestheticId: AestheticId;
+  analysis: VideoAnalysis;
+  prompt: string;
+  format: VideoFormat;
+}): EditPlan {
+  const plan = structuredClone(input.improve!.currentPlan);
+  const text = input.improve!.instruction.toLowerCase();
+  const sel = input.improve!.selection;
 
-function mapSourceToTimeline(
-  clips: EditPlan["clips"],
-  sourceStart: number,
-  sourceEnd: number
-): { start: number; end: number } | null {
-  for (const clip of clips) {
-    const overlapStart = Math.max(sourceStart, clip.sourceStart);
-    const overlapEnd = Math.min(sourceEnd, clip.sourceEnd);
-    if (overlapEnd <= overlapStart) continue;
-    const speed = clip.speed ?? 1;
-    const start =
-      clip.timelineStart + (overlapStart - clip.sourceStart) / speed;
-    const end = clip.timelineStart + (overlapEnd - clip.sourceStart) / speed;
-    return {
-      start: Number(start.toFixed(2)),
-      end: Number(Math.max(start + 0.2, end).toFixed(2)),
-    };
-  }
-  return null;
-}
-
-function applyMockImprove(
-  plan: EditPlan,
-  instruction: string,
-  selection?: EditPlanRequest["improve"] extends infer I
-    ? I extends { selection?: infer S }
-      ? S
-      : never
-    : never
-): EditPlan {
-  const next: EditPlan = structuredClone(plan);
-  const text = instruction.toLowerCase();
-
-  if (selection?.type === "clip" && selection.id) {
-    const clip = next.clips.find((c) => c.id === selection.id);
+  if (sel?.type === "clip" && sel.id) {
+    const clip = plan.clips.find((c) => c.id === sel.id);
     if (clip) {
-      if (/faster|speed|pace|energetic/.test(text)) {
-        clip.speed = Math.min(2, (clip.speed ?? 1) * 1.25);
-        const len = (clip.sourceEnd - clip.sourceStart) / clip.speed;
-        clip.timelineEnd = clip.timelineStart + len;
+      if (/faster|energetic|pace/.test(text)) {
+        clip.speed = Math.min(2, (clip.speed || 1) * 1.25);
       }
       if (/slower|calm/.test(text)) {
-        clip.speed = Math.max(0.75, (clip.speed ?? 1) * 0.85);
-        const len = (clip.sourceEnd - clip.sourceStart) / clip.speed;
-        clip.timelineEnd = clip.timelineStart + len;
+        clip.speed = Math.max(0.7, (clip.speed || 1) * 0.85);
       }
-      if (/boring|remove|cut|trim/.test(text)) {
+      if (/boring|remove|trim|cut/.test(text)) {
         const mid = (clip.sourceStart + clip.sourceEnd) / 2;
         const keep = Math.max(0.6, (clip.sourceEnd - clip.sourceStart) * 0.55);
         clip.sourceStart = mid - keep / 2;
         clip.sourceEnd = mid + keep / 2;
-        const len = (clip.sourceEnd - clip.sourceStart) / (clip.speed ?? 1);
-        clip.timelineEnd = clip.timelineStart + len;
       }
     }
   }
 
-  if (selection?.type === "caption" && selection.id) {
-    const cap = next.captions.find((c) => c.id === selection.id);
-    if (cap) {
-      if (/smaller|tiny/.test(text)) cap.fontSize = Math.max(18, (cap.fontSize ?? 42) - 8);
-      if (/bigger|larger|emphas/.test(text))
-        cap.fontSize = Math.min(72, (cap.fontSize ?? 42) + 8);
-      if (/bold|punch/.test(text)) cap.style = "clean_bold";
-    }
-  }
-
   if (/zoom/.test(text)) {
-    const start = selection?.start ?? next.duration * 0.3;
-    const end = selection?.end ?? start + 1.2;
-    next.zooms.push({
-      id: `zoom_${next.zooms.length + 1}`,
+    const start = sel?.start ?? plan.duration * 0.3;
+    plan.zooms.push({
+      id: `zoom_${Date.now()}`,
       start,
-      end,
+      end: start + 1.1,
       scale: /subtle/.test(text) ? 1.06 : 1.12,
       x: 0.5,
       y: 0.45,
     });
   }
 
-  if (/music|energetic|upbeat/.test(text) && next.music) {
-    next.music.volume = Math.min(0.28, next.music.volume + 0.04);
-    next.music.trackId = "upbeat_01";
-  }
-
-  if (/caption.*small|smaller caption/.test(text)) {
-    next.captions = next.captions.map((c) => ({
+  if (/caption.*small|smaller/.test(text)) {
+    plan.captions = plan.captions.map((c) => ({
       ...c,
-      fontSize: Math.max(18, (c.fontSize ?? 42) - 6),
+      fontSize: Math.max(18, (c.fontSize ?? 44) - 8),
     }));
   }
 
-  // Re-pack timeline after speed/trim changes
-  let cursor = 0;
-  next.clips = next.clips.map((c, i) => {
-    const len = (c.sourceEnd - c.sourceStart) / (c.speed ?? 1);
-    const updated = {
-      ...c,
-      id: c.id ?? `clip_${i + 1}`,
-      timelineStart: Number(cursor.toFixed(2)),
-      timelineEnd: Number((cursor + len).toFixed(2)),
+  if (/energetic|music/.test(text)) {
+    plan.music = {
+      trackId: "upbeat_01",
+      volume: 0.18,
+      startAt: 0,
+      fadeIn: 0.3,
+      fadeOut: 0.6,
     };
-    cursor += len;
-    return updated;
-  });
-  next.duration = cursor;
+  }
 
-  return next;
+  return normalizeEditPlan(plan, input.sourceDuration);
 }
 
-async function generateWithLLM(req: EditPlanRequest): Promise<EditPlan | null> {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) return null;
-
-  const system = `You are an expert video editor. Output ONLY valid JSON matching this schema:
-{
-  "format": "vertical_9_16" | "landscape_16_9",
-  "duration": number,
-  "clips": [{ "sourceStart", "sourceEnd", "timelineStart", "timelineEnd", "speed?", "reason?" }],
-  "captions": [{ "start", "end", "text", "style": "clean_bold"|"minimal"|"kinetic"|"boxed"|"outline", "fontSize?" }],
-  "zooms": [{ "start", "end", "scale", "x?", "y?" }],
-  "texts": [],
-  "music": { "trackId": "upbeat_01"|"chill_01"|"cinematic_01", "volume": 0-1 } | null,
-  "styleNotes": string
+function mapSourceToTimeline(
+  clips: EditPlan["clips"],
+  sourceStart: number,
+  sourceEnd: number
+) {
+  for (const clip of clips) {
+    const overlapStart = Math.max(sourceStart, clip.sourceStart);
+    const overlapEnd = Math.min(sourceEnd, clip.sourceEnd);
+    if (overlapEnd <= overlapStart) continue;
+    const speed = clip.speed || 1;
+    const start = clip.timelineStart + (overlapStart - clip.sourceStart) / speed;
+    const end = clip.timelineStart + (overlapEnd - clip.sourceStart) / speed;
+    return {
+      start: Number(start.toFixed(3)),
+      end: Number(Math.max(start + 0.15, end).toFixed(3)),
+    };
+  }
+  return null;
 }
-Rules:
-- Prefer human pacing: cut silences, keep strong lines, avoid machine-gun cuts unless asked.
-- timeline must be continuous from 0 without gaps.
-- Never invent source times beyond video duration.
-- Captions should be short punchy phrases from the transcript.`;
 
-  const userPayload = {
-    prompt: req.prompt,
-    format: req.format,
-    duration: req.analysis.metadata.duration,
-    transcript: req.analysis.transcript.segments,
-    highlights: req.analysis.highlightCandidates.slice(0, 12),
-    silences: req.analysis.silences,
-    improve: req.improve ?? null,
+async function generateWithOpenAI(input: {
+  prompt: string;
+  format: VideoFormat;
+  aestheticId: AestheticId;
+  analysis: VideoAnalysis;
+  sourceDuration: number;
+  improve?: {
+    instruction: string;
+    currentPlan: EditPlan;
+    selection?: { type: string; id?: string; start?: number; end?: number };
+  };
+}): Promise<EditPlan | null> {
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const style = getStyle(input.aestheticId);
+  const schemaHint = {
+    sourceDuration: "number",
+    format: "vertical_9_16|landscape_16_9",
+    aestheticId: input.aestheticId,
+    duration: "number",
+    clips: [
+      {
+        id: "clip_1",
+        sourceStart: 0,
+        sourceEnd: 1,
+        timelineStart: 0,
+        timelineEnd: 1,
+        speed: 1,
+        action: "keep",
+        reason: "string",
+      },
+    ],
+    cuts: [],
+    captions: [
+      {
+        id: "cap_1",
+        start: 0,
+        end: 1,
+        text: "string",
+        style: style.captionStyle,
+        fontId: style.fontId,
+        fontSize: 44,
+        x: 0.5,
+        y: 0.78,
+        animation: "none",
+      },
+    ],
+    textOverlays: [],
+    stickers: [],
+    zooms: [],
+    music: style.musicTrackId
+      ? { trackId: style.musicTrackId, volume: style.musicVolume, startAt: 0, fadeIn: 0.4, fadeOut: 0.8 }
+      : null,
   };
 
-  try {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
+  const completion = await openai.chat.completions.create({
+    model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
+    temperature: 0.3,
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content: `You are a professional short-form video editor. Return ONLY JSON matching this shape: ${JSON.stringify(schemaHint)}.
+Rules: continuous timeline from 0; never invent source times beyond sourceDuration; cut awkward pauses; captions from transcript; respect aesthetic style ${style.name} (${JSON.stringify(style)}).`,
       },
-      body: JSON.stringify({
-        model: process.env.OPENAI_MODEL ?? "gpt-4o-mini",
-        temperature: 0.4,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: system },
-          { role: "user", content: JSON.stringify(userPayload) },
-        ],
-      }),
-    });
+      {
+        role: "user",
+        content: JSON.stringify({
+          prompt: input.prompt,
+          format: input.format,
+          sourceDuration: input.sourceDuration,
+          transcript: input.analysis.transcript.segments,
+          silences: input.analysis.silences,
+          highlights: input.analysis.highlightCandidates.slice(0, 12),
+          improve: input.improve ?? null,
+        }),
+      },
+    ],
+  });
 
-    if (!res.ok) {
-      console.warn("LLM edit plan failed", await res.text());
-      return null;
-    }
-
-    const data = (await res.json()) as {
-      choices: Array<{ message: { content: string } }>;
-    };
-    const raw = JSON.parse(data.choices[0]?.message?.content ?? "{}");
-    const validated = validateEditPlan(raw);
-    if (!validated.success) {
-      console.warn("Invalid LLM edit plan", validated.error);
-      return null;
-    }
-    return normalizeEditPlan(validated.data, req.analysis.metadata.duration);
-  } catch (err) {
-    console.warn("LLM error", err);
+  const raw = JSON.parse(completion.choices[0]?.message?.content ?? "{}");
+  const validated = validateEditPlan(raw);
+  if (!validated.success) {
+    console.warn("LLM plan invalid", validated.error);
     return null;
   }
-}
-
-export async function generateEditPlan(req: EditPlanRequest): Promise<{
-  plan: EditPlan;
-  provider: "openai" | "mock";
-}> {
-  const llm = await generateWithLLM(req);
-  if (llm) return { plan: llm, provider: "openai" };
-
-  const mock = buildMockPlan(req);
-  const validated = validateEditPlan(mock);
-  if (!validated.success) {
-    throw new Error(`Mock plan invalid: ${validated.error}`);
-  }
-  return {
-    plan: normalizeEditPlan(validated.data, req.analysis.metadata.duration),
-    provider: "mock",
-  };
+  return normalizeEditPlan(validated.data, input.sourceDuration);
 }

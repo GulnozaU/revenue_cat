@@ -7,165 +7,132 @@ import { Film, Trash2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/input";
-import { FORMAT_PRESETS, type MediaAsset, type VideoFormat } from "@/lib/types/edit-plan";
+import {
+  FORMAT_PRESETS,
+  type AestheticId,
+  type VideoFormat,
+} from "@/lib/types/edit-plan";
+import { STYLE_PRESETS } from "@/lib/styles/presets";
 import { formatDuration } from "@/lib/utils";
 import { useProjectStore } from "@/store/project-store";
 
 const ACCEPT = "video/mp4,video/quicktime,video/webm,.mp4,.mov,.webm";
 
-async function readVideoMeta(file: File): Promise<{
+type LocalFile = {
+  file: File;
+  previewUrl: string;
   duration: number;
   width: number;
   height: number;
   thumbnailUrl?: string;
-}> {
+};
+
+async function readMeta(file: File): Promise<Omit<LocalFile, "file">> {
+  const previewUrl = URL.createObjectURL(file);
   return new Promise((resolve) => {
-    const url = URL.createObjectURL(file);
     const video = document.createElement("video");
     video.preload = "metadata";
     video.muted = true;
-    video.src = url;
+    video.src = previewUrl;
     video.onloadedmetadata = () => {
-      const duration = video.duration || 30;
-      const width = video.videoWidth || 1080;
-      const height = video.videoHeight || 1920;
-      video.currentTime = Math.min(1, duration / 4);
+      const duration = video.duration || 0;
+      const width = video.videoWidth || 0;
+      const height = video.videoHeight || 0;
+      video.currentTime = Math.min(1, duration / 4 || 0);
       video.onseeked = () => {
         try {
           const canvas = document.createElement("canvas");
-          canvas.width = 320;
-          canvas.height = Math.round((320 * height) / width) || 180;
-          const ctx = canvas.getContext("2d");
-          ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+          canvas.width = 160;
+          canvas.height = Math.round((160 * height) / Math.max(width, 1)) || 90;
+          canvas.getContext("2d")?.drawImage(video, 0, 0, canvas.width, canvas.height);
           resolve({
+            previewUrl,
             duration,
             width,
             height,
             thumbnailUrl: canvas.toDataURL("image/jpeg", 0.7),
           });
         } catch {
-          resolve({ duration, width, height });
+          resolve({ previewUrl, duration, width, height });
         }
       };
     };
-    video.onerror = () => resolve({ duration: 30, width: 1080, height: 1920 });
+    video.onerror = () =>
+      resolve({ previewUrl, duration: 0, width: 0, height: 0 });
   });
 }
 
 export default function UploadPage() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
-  const createDraft = useProjectStore((s) => s.createDraft);
-  const setAssets = useProjectStore((s) => s.setAssets);
-  const setFormat = useProjectStore((s) => s.setFormat);
-  const setPrompt = useProjectStore((s) => s.setPrompt);
-  const project = useProjectStore((s) => s.project);
+  const setProject = useProjectStore((s) => s.setProject);
+  const draftFormat = useProjectStore((s) => s.draftFormat);
+  const draftAesthetic = useProjectStore((s) => s.draftAesthetic);
+  const draftPrompt = useProjectStore((s) => s.draftPrompt);
+  const setDraftFormat = useProjectStore((s) => s.setDraftFormat);
+  const setDraftAesthetic = useProjectStore((s) => s.setDraftAesthetic);
+  const setDraftPrompt = useProjectStore((s) => s.setDraftPrompt);
 
-  const [assets, setLocalAssets] = useState<MediaAsset[]>(project?.assets ?? []);
-  const [format, setLocalFormat] = useState<VideoFormat>(
-    project?.format ?? "instagram_reel"
-  );
-  const [prompt, setLocalPrompt] = useState(
-    project?.prompt ?? ""
-  );
+  const [local, setLocal] = useState<LocalFile | null>(null);
   const [dragging, setDragging] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  const useDemoFootage = async () => {
-    const url =
-      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4";
-    setLocalAssets([
-      {
-        id: `asset_demo`,
-        filename: "demo-lifestyle.mp4",
-        mimeType: "video/mp4",
-        url,
-        thumbnailUrl: undefined,
-        duration: 15,
-        width: 1280,
-        height: 720,
-        sizeBytes: 2_500_000,
-      },
-    ]);
-    if (!prompt.trim()) {
-      setLocalPrompt(
-        "Make this feel like a fast-paced lifestyle Reel. Remove awkward pauses, keep the funny moments, add clean modern captions, use subtle zooms, and add energetic background music."
-      );
-    }
-    toast.success("Demo footage loaded");
-  };
-
-  const addFiles = useCallback(async (files: FileList | File[]) => {
-    const list = Array.from(files);
-    const next: MediaAsset[] = [];
-    for (const file of list) {
-      const ok =
-        file.type.includes("mp4") ||
-        file.type.includes("webm") ||
-        file.type.includes("quicktime") ||
-        /\.(mp4|mov|webm)$/i.test(file.name);
-      if (!ok) {
-        toast.error(`${file.name} is not a supported video format`);
-        continue;
-      }
-      const meta = await readVideoMeta(file);
-      const url = URL.createObjectURL(file);
-      next.push({
-        id: `asset_${Math.random().toString(36).slice(2, 9)}`,
-        filename: file.name,
-        mimeType: file.type || "video/mp4",
-        url,
-        thumbnailUrl: meta.thumbnailUrl,
-        duration: meta.duration,
-        width: meta.width,
-        height: meta.height,
-        sizeBytes: file.size,
-      });
-      // stash raw file on window map for later upload
-      if (typeof window !== "undefined") {
-        const map = (window as unknown as { __cutlineFiles?: Map<string, File> })
-          .__cutlineFiles ?? new Map();
-        map.set(next[next.length - 1].id, file);
-        (window as unknown as { __cutlineFiles: Map<string, File> }).__cutlineFiles =
-          map;
-      }
-    }
-    setLocalAssets((prev) => [...prev, ...next]);
-  }, []);
-
-  const onDrop = useCallback(
-    async (e: React.DragEvent) => {
-      e.preventDefault();
-      setDragging(false);
-      if (e.dataTransfer.files?.length) await addFiles(e.dataTransfer.files);
-    },
-    [addFiles]
-  );
-
-  const removeAsset = (id: string) => {
-    setLocalAssets((prev) => prev.filter((a) => a.id !== id));
-  };
-
-  const createEdit = async () => {
-    if (assets.length === 0) {
-      toast.error("Upload at least one video");
+  const addFile = useCallback(async (file: File) => {
+    const ok =
+      file.type.includes("mp4") ||
+      file.type.includes("webm") ||
+      file.type.includes("quicktime") ||
+      /\.(mp4|mov|webm)$/i.test(file.name);
+    if (!ok) {
+      toast.error("Use MP4, MOV, or WebM");
       return;
     }
-    if (!prompt.trim()) {
+    const meta = await readMeta(file);
+    setLocal({ file, ...meta });
+  }, []);
+
+  const createEdit = async () => {
+    if (!local) {
+      toast.error("Upload a video first");
+      return;
+    }
+    if (!draftPrompt.trim()) {
       toast.error("Describe how you want it edited");
       return;
     }
+
     setBusy(true);
-    const id = createDraft({
-      format,
-      prompt: prompt.trim(),
-      assets,
-      name: assets[0]?.filename.replace(/\.[^.]+$/, "") ?? "Untitled",
-    });
-    setAssets(assets);
-    setFormat(format);
-    setPrompt(prompt.trim());
-    router.push(`/processing/${id}`);
+    try {
+      // 1) Create project on server
+      const createRes = await fetch("/api/projects", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: local.file.name.replace(/\.[^.]+$/, ""),
+          format: draftFormat,
+          aestheticId: draftAesthetic,
+          prompt: draftPrompt.trim(),
+        }),
+      });
+      if (!createRes.ok) throw new Error("Could not create project");
+      const { project } = await createRes.json();
+      setProject(project);
+
+      // Navigate to processing; kick off upload+pipeline there with file
+      sessionStorage.setItem(
+        `cutline_pending_upload_${project.id}`,
+        "1"
+      );
+      // Store file in IndexedDB-like memory via temporary global for the processing page
+      (window as unknown as { __cutlineUpload?: { id: string; file: File } }).__cutlineUpload =
+        { id: project.id, file: local.file };
+
+      router.push(`/processing/${project.id}`);
+    } catch (err) {
+      console.error(err);
+      toast.error(err instanceof Error ? err.message : "Upload failed");
+      setBusy(false);
+    }
   };
 
   return (
@@ -177,10 +144,7 @@ export default function UploadPage() {
           </span>
           <span className="font-display text-lg font-semibold">Cutline</span>
         </Link>
-        <Link
-          href="/signin"
-          className="text-sm text-[var(--fg-muted)] hover:text-[var(--fg)]"
-        >
+        <Link href="/signin" className="text-sm text-[var(--fg-muted)] hover:text-[var(--fg)]">
           Sign in
         </Link>
       </header>
@@ -190,7 +154,7 @@ export default function UploadPage() {
           Start your edit
         </h1>
         <p className="mt-2 text-[var(--fg-muted)]">
-          Upload footage, pick a format, describe the vibe.
+          Real upload → real transcription → real FFmpeg render.
         </p>
 
         <section className="mt-8">
@@ -200,7 +164,12 @@ export default function UploadPage() {
               setDragging(true);
             }}
             onDragLeave={() => setDragging(false)}
-            onDrop={onDrop}
+            onDrop={async (e) => {
+              e.preventDefault();
+              setDragging(false);
+              const f = e.dataTransfer.files?.[0];
+              if (f) await addFile(f);
+            }}
             onClick={() => inputRef.current?.click()}
             className={`flex cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed px-6 py-14 transition-colors ${
               dragging
@@ -211,88 +180,58 @@ export default function UploadPage() {
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)]">
               <Upload className="h-6 w-6" />
             </div>
-            <p className="mt-4 font-display text-lg font-semibold">
-              Drop videos here
-            </p>
-            <p className="mt-1 text-sm text-[var(--fg-muted)]">
-              MP4, MOV, or WebM · click to browse
-            </p>
+            <p className="mt-4 font-display text-lg font-semibold">Drop a video here</p>
+            <p className="mt-1 text-sm text-[var(--fg-muted)]">MP4, MOV, or WebM</p>
             <input
               ref={inputRef}
               type="file"
               accept={ACCEPT}
-              multiple
               className="hidden"
-              onChange={(e) => e.target.files && addFiles(e.target.files)}
+              onChange={(e) => e.target.files?.[0] && addFile(e.target.files[0])}
             />
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="mt-5"
-              onClick={(e) => {
-                e.stopPropagation();
-                void useDemoFootage();
-              }}
-            >
-              Use demo footage
-            </Button>
           </div>
 
-          {assets.length > 0 && (
-            <div className="mt-4 grid gap-3 sm:grid-cols-2">
-              {assets.map((asset) => (
-                <div
-                  key={asset.id}
-                  className="flex gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3"
-                >
-                  <div className="relative h-16 w-12 shrink-0 overflow-hidden rounded-xl bg-[var(--surface-2)]">
-                    {asset.thumbnailUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={asset.thumbnailUrl}
-                        alt=""
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-[var(--fg-subtle)]">
-                        <Film className="h-5 w-5" />
-                      </div>
-                    )}
+          {local && (
+            <div className="mt-4 flex gap-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-3">
+              <div className="relative h-16 w-12 shrink-0 overflow-hidden rounded-xl bg-[var(--surface-2)]">
+                {local.thumbnailUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={local.thumbnailUrl} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <div className="flex h-full items-center justify-center">
+                    <Film className="h-5 w-5 text-[var(--fg-subtle)]" />
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{asset.filename}</p>
-                    <p className="mt-1 text-xs text-[var(--fg-muted)]">
-                      {formatDuration(asset.duration)} ·{" "}
-                      {(asset.sizeBytes / (1024 * 1024)).toFixed(1)} MB
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => removeAsset(asset.id)}
-                    className="self-start rounded-lg p-1.5 text-[var(--fg-subtle)] hover:bg-[var(--surface-2)] hover:text-red-500"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </button>
-                </div>
-              ))}
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">{local.file.name}</p>
+                <p className="mt-1 text-xs text-[var(--fg-muted)]">
+                  {formatDuration(local.duration)} · {local.width}×{local.height} ·{" "}
+                  {(local.file.size / (1024 * 1024)).toFixed(1)} MB
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setLocal(null)}
+                className="self-start rounded-lg p-1.5 text-[var(--fg-subtle)] hover:bg-[var(--surface-2)] hover:text-red-500"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
             </div>
           )}
         </section>
 
         <section className="mt-10">
-          <h2 className="font-display text-xl font-semibold">
-            Where are you posting?
-          </h2>
+          <h2 className="font-display text-xl font-semibold">Where are you posting?</h2>
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {(Object.keys(FORMAT_PRESETS) as VideoFormat[]).map((key) => {
               const preset = FORMAT_PRESETS[key];
-              const active = format === key;
+              const active = draftFormat === key;
               return (
                 <button
                   key={key}
                   type="button"
-                  onClick={() => setLocalFormat(key)}
+                  onClick={() => setDraftFormat(key)}
                   className={`rounded-2xl border px-4 py-4 text-left transition-colors ${
                     active
                       ? "border-[var(--accent)] bg-[var(--accent-soft)]"
@@ -300,9 +239,7 @@ export default function UploadPage() {
                   }`}
                 >
                   <p className="font-display font-semibold">{preset.label}</p>
-                  <p className="mt-1 text-xs text-[var(--fg-muted)]">
-                    {preset.aspect}
-                  </p>
+                  <p className="mt-1 text-xs text-[var(--fg-muted)]">{preset.aspect}</p>
                 </button>
               );
             })}
@@ -310,20 +247,42 @@ export default function UploadPage() {
         </section>
 
         <section className="mt-10">
-          <h2 className="font-display text-xl font-semibold">
-            How should we edit it?
-          </h2>
+          <h2 className="font-display text-xl font-semibold">Creator aesthetic</h2>
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+            {(Object.keys(STYLE_PRESETS) as AestheticId[]).map((id) => {
+              const style = STYLE_PRESETS[id];
+              const active = draftAesthetic === id;
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => setDraftAesthetic(id)}
+                  className={`rounded-xl border px-3 py-3 text-left text-sm ${
+                    active
+                      ? "border-[var(--accent)] bg-[var(--accent-soft)]"
+                      : "border-[var(--border)] bg-[var(--surface)]"
+                  }`}
+                >
+                  {style.name}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mt-10">
+          <h2 className="font-display text-xl font-semibold">How should we edit it?</h2>
           <Textarea
             className="mt-4 min-h-[140px]"
-            value={prompt}
-            onChange={(e) => setLocalPrompt(e.target.value)}
+            value={draftPrompt}
+            onChange={(e) => setDraftPrompt(e.target.value)}
             placeholder="Make this energetic and clean. Remove long pauses, emphasize the funny moments, add modern captions and subtle zooms."
           />
         </section>
 
         <div className="mt-8 flex justify-end">
           <Button size="lg" disabled={busy} onClick={createEdit}>
-            Create my edit
+            {busy ? "Starting…" : "Create my edit"}
           </Button>
         </div>
       </main>

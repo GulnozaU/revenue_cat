@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useProjectStore } from "@/store/project-store";
 import { EditorTopBar } from "@/components/editor/top-bar";
@@ -14,14 +14,37 @@ export default function EditorPage() {
   const params = useParams<{ projectId: string }>();
   const router = useRouter();
   const project = useProjectStore((s) => s.project);
+  const setProject = useProjectStore((s) => s.setProject);
+  const [loading, setLoading] = useState(!project?.editPlan);
 
   useEffect(() => {
-    if (!project || project.id !== params.projectId || !project.editPlan) {
-      router.replace("/upload");
+    let cancelled = false;
+    async function load() {
+      if (project?.id === params.projectId && project.editPlan && project.previewUrl) {
+        setLoading(false);
+        return;
+      }
+      const res = await fetch(`/api/projects/${params.projectId}`);
+      if (!res.ok) {
+        router.replace("/upload");
+        return;
+      }
+      const data = await res.json();
+      if (cancelled) return;
+      if (!data.project?.editPlan) {
+        router.replace("/upload");
+        return;
+      }
+      setProject(data.project);
+      setLoading(false);
     }
-  }, [project, params.projectId, router]);
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, [params.projectId, project?.id, project?.editPlan, project?.previewUrl, router, setProject]);
 
-  if (!project?.editPlan) {
+  if (loading || !project?.editPlan) {
     return (
       <div className="flex min-h-screen items-center justify-center editor-shell">
         <p className="text-[var(--editor-muted)]">Loading editor…</p>

@@ -1,165 +1,175 @@
-import type { Transcript, VideoMetadata } from "@/lib/types/edit-plan";
+import { promises as fs } from "fs";
+import path from "path";
+import OpenAI from "openai";
+import type { Transcript, TranscriptSegment } from "@/lib/types/edit-plan";
+import { detectSilences } from "@/lib/ffmpeg/media";
 
-export interface TranscriptionProvider {
-  name: "mock" | "openai" | "deepgram";
-  transcribe(input: {
-    filePathOrUrl: string;
-    duration: number;
-    mimeType?: string;
-  }): Promise<Transcript>;
+export async function transcribeAudio(input: {
+  wavPath: string;
+  duration: number;
+}): Promise<Transcript> {
+  if (process.env.OPENAI_API_KEY) {
+    try {
+      return await transcribeWithOpenAI(input.wavPath, input.duration);
+    } catch (err) {
+      console.warn("OpenAI transcription failed, trying local", err);
+    }
+  }
+
+  try {
+    return await transcribeWithLocalWhisper(input.wavPath, input.duration);
+  } catch (err) {
+    console.warn("Local whisper failed, using silence-based segments", err);
+    return await silenceFallbackTranscript(input.wavPath, input.duration);
+  }
 }
 
-const MOCK_SCRIPT = [
-  { text: "Okay so here's the thing nobody talks about", start: 0.4, end: 3.2 },
-  { text: "when you're building something people actually want", start: 3.4, end: 6.1 },
-  { text: "You don't need perfect footage", start: 6.8, end: 8.6 },
-  { text: "You need a clear story and good pacing", start: 8.8, end: 11.4 },
-  { text: "Cut the awkward pauses", start: 12.2, end: 13.8 },
-  { text: "Keep the moments that feel real", start: 14.0, end: 16.2 },
-  { text: "And suddenly it looks like a pro edit", start: 16.5, end: 19.0 },
-  { text: "That's the whole idea behind Cutline", start: 19.8, end: 22.4 },
-  { text: "Describe the vibe", start: 23.0, end: 24.2 },
-  { text: "Refine it visually", start: 24.4, end: 25.8 },
-  { text: "Ship something that feels human", start: 26.2, end: 28.6 },
-];
+async function transcribeWithOpenAI(
+  wavPath: string,
+  duration: number
+): Promise<Transcript> {
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const buf = await fs.readFile(wavPath);
+  const file = new File([buf], path.basename(wavPath), { type: "audio/wav" });
 
-function buildMockTranscript(duration: number): Transcript {
-  const scale = duration > 0 ? Math.min(1, duration / 30) : 1;
-  const segments = MOCK_SCRIPT.map((s, i) => {
-    const start = Math.min(duration - 0.2, s.start * scale);
-    const end = Math.min(duration, s.end * scale);
-    return {
+  const result = (await openai.audio.transcriptions.create({
+    file,
+    model: "whisper-1",
+    response_format: "verbose_json",
+  })) as unknown as {
+    text: string;
+    language?: string;
+    duration?: number;
+    segments?: Array<{ start: number; end: number; text: string }>;
+  };
+
+  const segments: TranscriptSegment[] = (result.segments ?? []).map((s, i) => ({
+    id: `seg_${i + 1}`,
+    start: s.start,
+    end: s.end,
+    text: s.text.trim(),
+  }));
+
+  return {
+    language: result.language ?? "en",
+    fullText: result.text,
+    segments,
+    duration: result.duration ?? duration,
+    provider: "openai",
+  };
+}
+
+async function transcribeWithLocalWhisper(
+  wavPath: string,
+  duration: number
+): Promise<Transcript> {
+  const { pipeline, env } = await import("@xenova/transformers");
+  env.allowLocalModels = false;
+
+  const audio = await readWavAsFloat32(wavPath);
+  const transcriber = await pipeline(
+    "automatic-speech-recognition",
+    "Xenova/whisper-tiny.en"
+  );
+
+  const output = (await transcriber(audio, {
+    return_timestamps: true,
+    chunk_length_s: 30,
+    stride_length_s: 5,
+  } as Record<string, unknown>)) as {
+    text: string;
+    chunks?: Array<{ text: string; timestamp: [number, number | null] }>;
+  };
+
+  const segments: TranscriptSegment[] = (output.chunks ?? [])
+    .map((c, i) => ({
       id: `seg_${i + 1}`,
-      text: s.text,
-      start,
-      end: Math.max(start + 0.3, end),
-      words: s.text.split(" ").map((word, wi, arr) => {
-        const span = (end - start) / arr.length;
-        return {
-          word,
-          start: start + wi * span,
-          end: start + (wi + 1) * span,
-        };
-      }),
-    };
-  }).filter((s) => s.start < duration);
+      text: c.text.trim(),
+      start: c.timestamp?.[0] ?? 0,
+      end: c.timestamp?.[1] ?? duration,
+    }))
+    .filter((s) => s.text.length > 0);
+
+  if (segments.length === 0 && output.text?.trim()) {
+    segments.push({
+      id: "seg_1",
+      text: output.text.trim(),
+      start: 0,
+      end: duration,
+    });
+  }
 
   return {
     language: "en",
-    fullText: segments.map((s) => s.text).join(". ") + ".",
+    fullText: output.text ?? segments.map((s) => s.text).join(" "),
     segments,
     duration,
-    provider: "mock",
+    provider: "local-whisper",
   };
 }
 
-export class MockTranscriptionProvider implements TranscriptionProvider {
-  name = "mock" as const;
-
-  async transcribe(input: {
-    filePathOrUrl: string;
-    duration: number;
-  }): Promise<Transcript> {
-    await delay(400);
-    return buildMockTranscript(input.duration || 30);
+/** Read 16-bit mono PCM WAV into Float32Array for transformers.js */
+async function readWavAsFloat32(wavPath: string): Promise<Float32Array> {
+  const buf = await fs.readFile(wavPath);
+  // Find "data" chunk
+  let offset = 12;
+  let dataOffset = 44;
+  let dataSize = buf.length - 44;
+  while (offset < buf.length - 8) {
+    const id = buf.toString("ascii", offset, offset + 4);
+    const size = buf.readUInt32LE(offset + 4);
+    if (id === "data") {
+      dataOffset = offset + 8;
+      dataSize = size;
+      break;
+    }
+    offset += 8 + size;
   }
+  const sampleCount = Math.floor(dataSize / 2);
+  const out = new Float32Array(sampleCount);
+  for (let i = 0; i < sampleCount; i++) {
+    const s = buf.readInt16LE(dataOffset + i * 2);
+    out[i] = s / 32768;
+  }
+  return out;
 }
 
-export class OpenAITranscriptionProvider implements TranscriptionProvider {
-  name = "openai" as const;
-
-  async transcribe(input: {
-    filePathOrUrl: string;
-    duration: number;
-    mimeType?: string;
-  }): Promise<Transcript> {
-    const apiKey = process.env.OPENAI_API_KEY;
-    if (!apiKey) {
-      return new MockTranscriptionProvider().transcribe(input);
-    }
-
-    // Whisper-compatible path: if we only have a URL/path without fetchable file,
-    // fall back to mock so demos never break.
-    try {
-      const { promises: fs } = await import("fs");
-      const pathMod = await import("path");
-      const isLocal = !input.filePathOrUrl.startsWith("http");
-      if (!isLocal) {
-        return new MockTranscriptionProvider().transcribe(input);
-      }
-
-      const abs = pathMod.isAbsolute(input.filePathOrUrl)
-        ? input.filePathOrUrl
-        : pathMod.join(/* turbopackIgnore: true */ process.cwd(), "storage", input.filePathOrUrl);
-      const buf = await fs.readFile(abs);
-      const form = new FormData();
-      const bytes = new Uint8Array(buf);
-      form.append(
-        "file",
-        new Blob([bytes], { type: input.mimeType ?? "video/mp4" }),
-        "audio.mp4"
-      );
-      form.append("model", "whisper-1");
-      form.append("response_format", "verbose_json");
-      form.append("timestamp_granularities[]", "segment");
-
-      const res = await fetch("https://api.openai.com/v1/audio/transcriptions", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${apiKey}` },
-        body: form,
+async function silenceFallbackTranscript(
+  wavPath: string,
+  duration: number
+): Promise<Transcript> {
+  const silences = await detectSilences(wavPath);
+  const speech: TranscriptSegment[] = [];
+  let cursor = 0;
+  let i = 0;
+  for (const sil of silences) {
+    if (sil.start - cursor >= 0.4) {
+      speech.push({
+        id: `seg_${++i}`,
+        start: cursor,
+        end: sil.start,
+        text: `[speech ${i}]`,
       });
-
-      if (!res.ok) {
-        console.warn("OpenAI transcription failed, using mock", await res.text());
-        return new MockTranscriptionProvider().transcribe(input);
-      }
-
-      const data = (await res.json()) as {
-        text: string;
-        language?: string;
-        duration?: number;
-        segments?: Array<{ id: number; start: number; end: number; text: string }>;
-      };
-
-      return {
-        language: data.language ?? "en",
-        fullText: data.text,
-        duration: data.duration ?? input.duration,
-        provider: "openai",
-        segments: (data.segments ?? []).map((s, i) => ({
-          id: `seg_${i + 1}`,
-          text: s.text.trim(),
-          start: s.start,
-          end: s.end,
-        })),
-      };
-    } catch (err) {
-      console.warn("Transcription error, using mock", err);
-      return new MockTranscriptionProvider().transcribe(input);
     }
+    cursor = sil.end;
   }
-}
+  if (duration - cursor >= 0.4) {
+    speech.push({
+      id: `seg_${++i}`,
+      start: cursor,
+      end: duration,
+      text: `[speech ${i}]`,
+    });
+  }
+  if (speech.length === 0) {
+    speech.push({ id: "seg_1", start: 0, end: duration, text: "[speech 1]" });
+  }
 
-export function getTranscriptionProvider(): TranscriptionProvider {
-  if (process.env.OPENAI_API_KEY) {
-    return new OpenAITranscriptionProvider();
-  }
-  if (process.env.DEEPGRAM_API_KEY) {
-    // Deepgram can be wired later; mock keeps demos working.
-    return new MockTranscriptionProvider();
-  }
-  return new MockTranscriptionProvider();
-}
-
-export function estimateMetadata(durationHint?: number): VideoMetadata {
   return {
-    duration: durationHint && durationHint > 0 ? durationHint : 30,
-    width: 1080,
-    height: 1920,
-    fps: 30,
+    language: "und",
+    fullText: speech.map((s) => s.text).join(" "),
+    segments: speech,
+    duration,
+    provider: "silence-fallback",
   };
-}
-
-function delay(ms: number) {
-  return new Promise((r) => setTimeout(r, ms));
 }

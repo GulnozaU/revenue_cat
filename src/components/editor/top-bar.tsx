@@ -1,51 +1,80 @@
 "use client";
 
 import Link from "next/link";
-import { Redo2, Undo2, Download, Play } from "lucide-react";
+import { Redo2, Undo2, Download, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useProjectStore } from "@/store/project-store";
 
 export function EditorTopBar() {
   const project = useProjectStore((s) => s.project);
+  const setProject = useProjectStore((s) => s.setProject);
   const undo = useProjectStore((s) => s.undo);
   const redo = useProjectStore((s) => s.redo);
   const history = useProjectStore((s) => s.history);
   const future = useProjectStore((s) => s.future);
   const auth = useProjectStore((s) => s.auth);
   const setShowAuthModal = useProjectStore((s) => s.setShowAuthModal);
-  const updateProject = useProjectStore((s) => s.updateProject);
+  const setRendering = useProjectStore((s) => s.setRendering);
+  const rendering = useProjectStore((s) => s.rendering);
 
-  const onExport = () => {
-    if (!auth.signedIn) {
+  const persistAndRender = async (quality: "preview" | "export") => {
+    if (!project?.editPlan) return;
+    if (quality === "export" && !auth.signedIn) {
       setShowAuthModal(true, "export");
       return;
     }
-    toast.success("Export queued", {
-      description: "Your edit is ready to download (demo export).",
-    });
-    updateProject({ status: "ready", exportUrl: project?.assets[0]?.url });
-  };
 
-  const onPreview = () => {
-    toast.message("Preview mode", {
-      description: "Playing the current edit plan on the canvas.",
-    });
+    setRendering(true);
+    try {
+      // Persist plan
+      await fetch(`/api/projects/${project.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ editPlan: project.editPlan, name: project.name }),
+      });
+
+      const res = await fetch(`/api/projects/${project.id}/render`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          quality,
+          editPlan: project.editPlan,
+          signedIn: auth.signedIn,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Render failed");
+      }
+      const data = await res.json();
+      setProject(data.project);
+
+      if (quality === "export" && data.project.exportUrl) {
+        toast.success("Export ready");
+        const a = document.createElement("a");
+        a.href = data.project.exportUrl;
+        a.download = `${project.name || "cutline"}.mp4`;
+        a.click();
+      } else {
+        toast.success("Preview re-rendered");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Render failed");
+    } finally {
+      setRendering(false);
+    }
   };
 
   return (
     <header className="flex h-14 shrink-0 items-center justify-between border-b border-[var(--editor-border)] bg-[var(--editor-panel)] px-4">
-      <div className="flex items-center gap-3 min-w-0">
-        <Link href="/" className="flex items-center gap-2 shrink-0">
+      <div className="flex min-w-0 items-center gap-3">
+        <Link href="/" className="flex shrink-0 items-center gap-2">
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--editor-accent)] text-[#042f2c] font-display text-xs font-bold">
             C
           </span>
         </Link>
-        <input
-          className="min-w-0 max-w-[220px] truncate bg-transparent text-sm font-medium text-[var(--editor-fg)] outline-none focus:underline"
-          value={project?.name ?? "Untitled"}
-          onChange={(e) => updateProject({ name: e.target.value })}
-        />
+        <span className="truncate text-sm font-medium">{project?.name ?? "Untitled"}</span>
       </div>
 
       <div className="flex items-center gap-1">
@@ -55,7 +84,6 @@ export function EditorTopBar() {
           disabled={history.length === 0}
           onClick={undo}
           className="text-[var(--editor-muted)] hover:text-[var(--editor-fg)] hover:bg-[var(--editor-panel-2)]"
-          title="Undo"
         >
           <Undo2 className="h-4 w-4" />
         </Button>
@@ -65,7 +93,6 @@ export function EditorTopBar() {
           disabled={future.length === 0}
           onClick={redo}
           className="text-[var(--editor-muted)] hover:text-[var(--editor-fg)] hover:bg-[var(--editor-panel-2)]"
-          title="Redo"
         >
           <Redo2 className="h-4 w-4" />
         </Button>
@@ -75,13 +102,14 @@ export function EditorTopBar() {
         <Button
           variant="secondary"
           size="sm"
-          onClick={onPreview}
+          disabled={rendering}
+          onClick={() => persistAndRender("preview")}
           className="bg-[var(--editor-panel-2)] text-[var(--editor-fg)] hover:bg-[var(--editor-border)]"
         >
-          <Play className="h-3.5 w-3.5" />
-          Preview
+          <RefreshCw className={`h-3.5 w-3.5 ${rendering ? "animate-spin" : ""}`} />
+          Apply preview
         </Button>
-        <Button size="sm" onClick={onExport}>
+        <Button size="sm" disabled={rendering} onClick={() => persistAndRender("export")}>
           <Download className="h-3.5 w-3.5" />
           Export
         </Button>
