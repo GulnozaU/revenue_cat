@@ -1,69 +1,79 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { HeroPreview } from "@/components/landing/hero-preview";
+import { HowItWorks } from "@/components/landing/how-it-works";
+import { Examples } from "@/components/landing/examples";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
+    <div className="min-h-screen bg-[var(--bg)]">
+      <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
+        <Link href="/" className="flex items-center gap-2">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-sm font-bold">
+            C
+          </span>
+          <span className="font-display text-lg font-semibold tracking-tight">
+            Cutline
+          </span>
+        </Link>
+        <nav className="hidden items-center gap-8 text-sm text-[var(--fg-muted)] md:flex">
+          <a href="#how" className="hover:text-[var(--fg)] transition-colors">
+            How it works
           </a>
           <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#examples"
+            className="hover:text-[var(--fg)] transition-colors"
           >
-            Documentation
+            Examples
           </a>
-        </div>
+          <Link href="/signin" className="hover:text-[var(--fg)] transition-colors">
+            Sign in
+          </Link>
+        </nav>
+        <Button asChild size="sm" className="md:hidden">
+          <Link href="/upload">Start</Link>
+        </Button>
+      </header>
+
+      <main>
+        <section className="mx-auto max-w-6xl px-6 pb-8 pt-10 md:pt-16">
+          <div className="mx-auto max-w-3xl text-center float-in">
+            <h1 className="font-display text-[clamp(2.5rem,6vw,4.75rem)] font-extrabold leading-[1.02] tracking-tight text-[var(--fg)]">
+              Your video.
+              <br />
+              Your vision.
+              <br />
+              <span className="text-[var(--accent)]">AI does the editing.</span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-xl text-base md:text-lg text-[var(--fg-muted)] leading-relaxed">
+              Upload your footage, describe the edit you want, and refine the
+              result in a visual editor.
+            </p>
+            <div className="mt-8 flex flex-col items-center gap-3">
+              <Button asChild size="lg" className="min-w-[200px]">
+                <Link href="/upload">Start editing</Link>
+              </Button>
+              <p className="text-sm text-[var(--fg-subtle)]">
+                No account required.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-14 float-in" style={{ animationDelay: "120ms" }}>
+            <HeroPreview />
+          </div>
+        </section>
+
+        <HowItWorks />
+        <Examples />
       </main>
+
+      <footer className="mx-auto mt-10 flex w-full max-w-6xl items-center justify-between border-t border-[var(--border)] px-6 py-8 text-sm text-[var(--fg-subtle)]">
+        <span className="font-display font-semibold text-[var(--fg-muted)]">
+          Cutline
+        </span>
+        <span>Shipaton 2026 · Built for creators</span>
+      </footer>
     </div>
   );
 }
