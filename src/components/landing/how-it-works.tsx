@@ -1,18 +1,18 @@
 const STEPS = [
   {
     n: "01",
-    title: "Upload footage",
-    body: "Drop in MP4, MOV, or WebM. No account needed to start.",
+    title: "Upload real footage",
+    body: "Your MP4 is saved on the server — not just a browser preview.",
   },
   {
     n: "02",
-    title: "Describe the edit",
-    body: "Tell Cutline the vibe, pacing, captions, and music you want.",
+    title: "Gemini watches it",
+    body: "The actual video file is uploaded to Gemini Files API and analyzed.",
   },
   {
     n: "03",
-    title: "Refine visually",
-    body: "Open a CapCut-style editor. Tweak clips, text, zooms — or AI Improve a selection.",
+    title: "Refine & export",
+    body: "Edit in a visual timeline. FFmpeg renders a real MP4 with your changes.",
   },
 ];
 
@@ -21,16 +21,19 @@ export function HowItWorks() {
     <section id="how" className="mx-auto max-w-6xl px-6 py-20">
       <div className="max-w-xl">
         <p className="text-sm font-medium text-[var(--accent)]">How it works</p>
-        <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
+        <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight md:text-4xl">
           A creative tool, not a chatbot
         </h2>
         <p className="mt-3 text-[var(--fg-muted)]">
-          AI builds a structured edit plan. You stay in control of every cut.
+          AI builds a structured edit plan from the real video. You stay in control of every cut.
         </p>
       </div>
       <div className="mt-12 grid gap-8 md:grid-cols-3">
         {STEPS.map((step) => (
-          <div key={step.n} className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6">
+          <div
+            key={step.n}
+            className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6"
+          >
             <span className="font-display text-sm font-semibold text-[var(--accent)]">
               {step.n}
             </span>

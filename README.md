@@ -1,48 +1,44 @@
 # Cutline
 
-AI-powered video editor — Shipaton 2026.
+AI-powered visual video editor for creators (Shipaton 2026).
 
-**Real pipeline:** upload → ffprobe → proxy → transcription → validated edit plan → FFmpeg MP4 → editor → export.
+**Pipeline:** Upload MP4 → Gemini Files API watches the real video → validated EditPlan → FFmpeg renders MP4 → visual editor → export.
 
-## Quick start
+## Run
 
 ```bash
 npm install
+cp .env.example .env.local
+# Set GEMINI_API_KEY=...
+# AI_MODE=real   # or mock for offline fixtures
+
 npm run dev
 ```
 
-Open http://localhost:3000 → **Start editing** → upload an MP4 → Create my edit.
+Open http://localhost:3000
 
-Optional for better ASR + LLM plans:
+- `/` landing  
+- `/dashboard` workspace  
+- `/new` create project  
+- `/editor/[id]` CapCut-style editor  
+
+## AI modes
+
+| Mode | Behavior |
+|------|----------|
+| `AI_MODE=real` | Uploads the actual MP4 to Gemini Files API, waits until ACTIVE, returns structured EditPlan |
+| `AI_MODE=mock` | Uses saved fixtures / deterministic plan — **no Gemini calls** |
+
+Normal editor actions never call Gemini. Only initial create + explicit AI Improve do.
+
+## Smoke test
 
 ```bash
-cp .env.example .env.local
-# OPENAI_API_KEY=sk-...
+AI_MODE=mock npm run smoke
 ```
 
-Without a key, local Whisper (`Xenova/whisper-tiny.en`) runs on-device.
+## Notes
 
-## Smoke test (no UI)
-
-```bash
-ffmpeg -y -f lavfi -i "color=c=#1a3030:s=720x1280:d=8:r=30" \
-  -f lavfi -i "sine=frequency=440:duration=8" \
-  -c:v libx264 -pix_fmt yuv420p -c:a aac -shortest storage/tmp/smoke_source.mp4
-
-npm run smoke
-```
-
-## Architecture
-
-```
-VIDEO FILE
-  → ffprobe + thumbnail + proxy + wav
-  → transcription (OpenAI | local whisper | silence fallback)
-  → analysis (silences / highlights)
-  → structured EditPlan (Zod-validated)
-  → FFmpeg render (cuts, captions, stickers, music)
-  → editor preview MP4
-  → export MP4
-```
-
-See `AUDIT.md` for what was fake vs what is real now.
+- Export requires a successful FFmpeg render; the file must exist before “ready”.
+- Stickers/captions/music are burned into the MP4 (Sharp PNG overlays + amix).
+- Style learning UI is scaffolded but not faked as complete.

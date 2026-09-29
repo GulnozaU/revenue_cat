@@ -205,6 +205,7 @@ export type ProjectRecord = {
   previewUrl?: string;
   exportPath?: string;
   exportUrl?: string;
+  aiProvider?: "gemini" | "mock";
   createdAt: string;
   updatedAt: string;
   error?: string;
@@ -266,10 +267,9 @@ export const PROCESSING_STAGES = [
   { id: "uploading", label: "Uploading footage" },
   { id: "probing", label: "Reading video metadata" },
   { id: "proxy", label: "Building edit proxy" },
-  { id: "transcribing", label: "Transcribing speech" },
-  { id: "analyzing", label: "Finding best moments" },
-  { id: "planning", label: "Building edit plan" },
-  { id: "rendering", label: "Rendering preview" },
+  { id: "watching", label: "Gemini watching your video" },
+  { id: "planning", label: "Building structured edit plan" },
+  { id: "rendering", label: "Rendering preview with FFmpeg" },
 ] as const;
 
 export type ProcessingStageId = (typeof PROCESSING_STAGES)[number]["id"];

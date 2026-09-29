@@ -51,7 +51,8 @@ export type StickerAsset = {
     | "Lifestyle"
     | "Food"
     | "Travel"
-    | "Decorative";
+    | "Decorative"
+    | "Study";
   type: "image";
   url: string;
   file: string;
@@ -59,9 +60,14 @@ export type StickerAsset = {
 
 export const STICKER_LIBRARY: StickerAsset[] = [
   { id: "star", name: "Star", category: "Stars", type: "image", url: "/assets/stickers/star.png", file: "star.png" },
+  { id: "star2", name: "Gold Star", category: "Stars", type: "image", url: "/assets/stickers/star2.png", file: "star2.png" },
   { id: "heart", name: "Heart", category: "Hearts", type: "image", url: "/assets/stickers/heart.png", file: "heart.png" },
-  { id: "arrow", name: "Arrow", category: "Arrows", type: "image", url: "/assets/stickers/arrow.png", file: "arrow.png" },
+  { id: "heart2", name: "Soft Heart", category: "Hearts", type: "image", url: "/assets/stickers/heart2.png", file: "heart2.png" },
+  { id: "bow", name: "Bow", category: "Cute", type: "image", url: "/assets/stickers/bow.png", file: "bow.png" },
+  { id: "flower", name: "Flower", category: "Cute", type: "image", url: "/assets/stickers/flower.png", file: "flower.png" },
+  { id: "spark", name: "Spark", category: "Decorative", type: "image", url: "/assets/stickers/spark.png", file: "spark.png" },
   { id: "sparkle", name: "Sparkle", category: "Decorative", type: "image", url: "/assets/stickers/sparkle.png", file: "sparkle.png" },
+  { id: "arrow", name: "Arrow", category: "Arrows", type: "image", url: "/assets/stickers/arrow.png", file: "arrow.png" },
   { id: "circle", name: "Ring", category: "Shapes", type: "image", url: "/assets/stickers/circle.png", file: "circle.png" },
   { id: "fire", name: "Fire", category: "Reaction", type: "image", url: "/assets/stickers/fire.png", file: "fire.png" },
 ];

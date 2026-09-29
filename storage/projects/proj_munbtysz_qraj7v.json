@@ -1,0 +1,146 @@
+{
+  "id": "proj_munbtysz_qraj7v",
+  "name": "smoke-test",
+  "format": "instagram_reel",
+  "aestheticId": "cute",
+  "prompt": "Make this cute and cozy. Remove pauses, add soft captions.",
+  "assets": [
+    {
+      "id": "9a64f8e9-46e5-4048-9e10-0661c588c7db",
+      "filename": "smoke_source.mp4",
+      "mimeType": "video/mp4",
+      "sourcePath": "uploads/proj_munbtysz_qraj7v/9a64f8e9-46e5-4048-9e10-0661c588c7db.mp4",
+      "sourceUrl": "/api/files/uploads/proj_munbtysz_qraj7v/9a64f8e9-46e5-4048-9e10-0661c588c7db.mp4",
+      "duration": 8,
+      "width": 720,
+      "height": 1280,
+      "fps": 30,
+      "sizeBytes": 90047,
+      "hasAudio": true,
+      "thumbnailPath": "uploads/proj_munbtysz_qraj7v/9a64f8e9-46e5-4048-9e10-0661c588c7db_thumb.jpg",
+      "thumbnailUrl": "/api/files/uploads/proj_munbtysz_qraj7v/9a64f8e9-46e5-4048-9e10-0661c588c7db_thumb.jpg",
+      "proxyPath": "uploads/proj_munbtysz_qraj7v/9a64f8e9-46e5-4048-9e10-0661c588c7db_proxy.mp4",
+      "proxyUrl": "/api/files/uploads/proj_munbtysz_qraj7v/9a64f8e9-46e5-4048-9e10-0661c588c7db_proxy.mp4",
+      "audioPath": "uploads/proj_munbtysz_qraj7v/9a64f8e9-46e5-4048-9e10-0661c588c7db_audio.wav"
+    }
+  ],
+  "status": "ready",
+  "createdAt": "2026-09-29T23:47:56.146Z",
+  "updatedAt": "2026-09-29T23:47:58.627Z",
+  "analysis": {
+    "transcript": {
+      "language": "und",
+      "fullText": "[moment 1]",
+      "duration": 8,
+      "provider": "silence-fallback",
+      "segments": [
+        {
+          "id": "seg_1",
+          "start": 0,
+          "end": 8,
+          "text": "[moment 1]"
+        }
+      ]
+    },
+    "silences": [],
+    "highlightCandidates": [
+      {
+        "start": 0,
+        "end": 8,
+        "score": 0.18571428571428572,
+        "reason": "Spoken segment"
+      }
+    ]
+  },
+  "editPlan": {
+    "sourceDuration": 8,
+    "format": "vertical_9_16",
+    "aestheticId": "cute",
+    "duration": 5.6,
+    "clips": [
+      {
+        "id": "clip_1",
+        "sourceStart": 0,
+        "sourceEnd": 5.6,
+        "timelineStart": 0,
+        "timelineEnd": 5.6,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Mock fixture opening"
+      }
+    ],
+    "cuts": [],
+    "captions": [
+      {
+        "id": "cap_1",
+        "start": 0.2,
+        "end": 2.5,
+        "text": "First cut (mock mode)",
+        "style": "soft_bold",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_smoke_1790725677263",
+        "start": 0,
+        "end": 1.5,
+        "text": "SMOKE CAPTION",
+        "style": "soft_bold",
+        "fontId": "arial_bold",
+        "fontSize": 48,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      }
+    ],
+    "textOverlays": [],
+    "stickers": [
+      {
+        "id": "stk_1",
+        "assetId": "heart",
+        "start": 0.4,
+        "end": 2,
+        "x": 0.82,
+        "y": 0.18,
+        "scale": 0.28,
+        "rotation": -8
+      },
+      {
+        "id": "stk_smoke",
+        "assetId": "bow",
+        "start": 0.2,
+        "end": 2,
+        "x": 0.8,
+        "y": 0.2,
+        "scale": 0.3,
+        "rotation": 0
+      }
+    ],
+    "zooms": [
+      {
+        "id": "zoom_1",
+        "start": 1,
+        "end": 2.2,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      }
+    ],
+    "music": {
+      "trackId": "upbeat_01",
+      "volume": 0.14,
+      "startAt": 0,
+      "fadeIn": 0.4,
+      "fadeOut": 0.8
+    },
+    "styleNotes": "AI_MODE=mock fixture"
+  },
+  "aiProvider": "mock",
+  "previewPath": "renders/proj_munbtysz_qraj7v/preview.mp4",
+  "previewUrl": "/api/files/renders/proj_munbtysz_qraj7v/preview.mp4",
+  "exportPath": "renders/proj_munbtysz_qraj7v/export.mp4",
+  "exportUrl": "/api/files/renders/proj_munbtysz_qraj7v/export.mp4"
+}

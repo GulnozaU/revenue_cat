@@ -1,10 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
-import type {
-  ProjectRecord,
-  VideoAsset,
-} from "@/lib/types/edit-plan";
+import type { ProjectRecord, VideoAsset } from "@/lib/types/edit-plan";
 import {
   assertFfmpeg,
   extractAudioWav,
@@ -14,10 +11,10 @@ import {
   storagePath,
   toPublicApiUrl,
 } from "@/lib/ffmpeg/media";
-import { transcribeAudio } from "@/lib/transcription";
 import { buildAnalysis, generateEditPlan } from "@/lib/ai/edit-plan";
 import { renderEditPlan } from "@/lib/ffmpeg/render";
 import { loadProject, saveProject, createProject } from "@/lib/projects/store";
+import { detectSilences } from "@/lib/ffmpeg/media";
 
 export { createProject };
 
@@ -26,8 +23,7 @@ export type PipelineProgress = {
     | "uploading"
     | "probing"
     | "proxy"
-    | "transcribing"
-    | "analyzing"
+    | "watching"
     | "planning"
     | "rendering"
     | "done"
@@ -60,7 +56,6 @@ export async function ingestUploadedFile(opts: {
   if (meta.hasAudio) {
     await extractAudioWav(sourcePath, audioPath);
   } else {
-    // Create silent wav matching duration for pipeline continuity
     const { runFfmpeg } = await import("@/lib/ffmpeg/media");
     await runFfmpeg([
       "-y",
@@ -96,6 +91,52 @@ export async function ingestUploadedFile(opts: {
   };
 }
 
+/** Lightweight local analysis (silences) — Gemini watches the video for the edit plan. */
+async function buildLocalAnalysis(audioPath: string, duration: number) {
+  const silences = await detectSilences(audioPath).catch(() => []);
+  const transcript = {
+    language: "und",
+    fullText: "",
+    duration,
+    provider: "silence-fallback" as const,
+    segments: [] as Array<{ id: string; text: string; start: number; end: number }>,
+  };
+
+  // Invert silences into speech-ish regions for highlight hints
+  let cursor = 0;
+  let i = 0;
+  for (const sil of silences) {
+    if (sil.start - cursor >= 0.4) {
+      transcript.segments.push({
+        id: `seg_${++i}`,
+        start: cursor,
+        end: sil.start,
+        text: `[moment ${i}]`,
+      });
+    }
+    cursor = sil.end;
+  }
+  if (duration - cursor >= 0.4) {
+    transcript.segments.push({
+      id: `seg_${++i}`,
+      start: cursor,
+      end: duration,
+      text: `[moment ${i}]`,
+    });
+  }
+  if (transcript.segments.length === 0) {
+    transcript.segments.push({
+      id: "seg_1",
+      start: 0,
+      end: duration,
+      text: "[full take]",
+    });
+  }
+  transcript.fullText = transcript.segments.map((s) => s.text).join(" ");
+
+  return buildAnalysis({ audioPath, duration, transcript });
+}
+
 export async function runProjectPipeline(
   projectId: string,
   onProgress?: (p: PipelineProgress) => void
@@ -112,31 +153,30 @@ export async function runProjectPipeline(
     project.status = "processing";
     await saveProject(project);
 
-    onProgress?.({ stage: "transcribing", message: "Transcribing speech" });
-    const transcript = await transcribeAudio({
-      wavPath: audioAbs,
-      duration: asset.duration,
-    });
-
-    onProgress?.({ stage: "analyzing", message: "Finding best moments" });
-    const analysis = await buildAnalysis({
-      audioPath: audioAbs,
-      duration: asset.duration,
-      transcript,
-    });
+    onProgress?.({ stage: "proxy", message: "Preparing media" });
+    const analysis = await buildLocalAnalysis(audioAbs, asset.duration);
     project.analysis = analysis;
 
-    onProgress?.({ stage: "planning", message: "Building edit plan" });
-    const { plan } = await generateEditPlan({
+    onProgress?.({
+      stage: "watching",
+      message: "Gemini is watching your video…",
+    });
+    onProgress?.({ stage: "planning", message: "Building structured edit plan" });
+
+    const { plan, provider } = await generateEditPlan({
       prompt: project.prompt,
       format: project.format,
       aestheticId: project.aestheticId,
       analysis,
       sourceDuration: asset.duration,
+      videoPath: sourceAbs,
+      mimeType: asset.mimeType,
     });
     project.editPlan = plan;
+    project.aiProvider = provider;
+    await saveProject(project);
 
-    onProgress?.({ stage: "rendering", message: "Rendering preview" });
+    onProgress?.({ stage: "rendering", message: "Rendering preview with FFmpeg" });
     const previewRel = path.join("renders", projectId, "preview.mp4");
     const previewAbs = storagePath(previewRel);
     await renderEditPlan({
@@ -201,4 +241,3 @@ export async function reRenderProject(
   await saveProject(project);
   return project;
 }
-

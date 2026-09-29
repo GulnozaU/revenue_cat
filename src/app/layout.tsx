@@ -1,24 +1,24 @@
 import type { Metadata } from "next";
-import { DM_Sans, Syne } from "next/font/google";
+import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
 
-const syne = Syne({
-  variable: "--font-syne",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Cutline — AI video editor that feels human",
+  title: "Cutline — Your style. Your video. AI does the first cut.",
   description:
-    "Upload your footage, describe the edit you want, and refine the result in a visual editor.",
+    "Upload footage, pick an aesthetic, and refine a real first edit in a visual editor.",
 };
 
 export default function RootLayout({
@@ -29,11 +29,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${dmSans.variable} ${syne.variable} h-full antialiased`}
+      className={`${plusJakarta.variable} ${fraunces.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col font-sans grain">
         {children}
-        <Toaster theme="dark" position="bottom-right" richColors />
+        <Toaster theme="light" position="bottom-right" richColors />
       </body>
     </html>
   );

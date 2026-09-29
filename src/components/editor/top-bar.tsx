@@ -13,21 +13,14 @@ export function EditorTopBar() {
   const redo = useProjectStore((s) => s.redo);
   const history = useProjectStore((s) => s.history);
   const future = useProjectStore((s) => s.future);
-  const auth = useProjectStore((s) => s.auth);
-  const setShowAuthModal = useProjectStore((s) => s.setShowAuthModal);
   const setRendering = useProjectStore((s) => s.setRendering);
   const rendering = useProjectStore((s) => s.rendering);
 
   const persistAndRender = async (quality: "preview" | "export") => {
     if (!project?.editPlan) return;
-    if (quality === "export" && !auth.signedIn) {
-      setShowAuthModal(true, "export");
-      return;
-    }
 
     setRendering(true);
     try {
-      // Persist plan
       await fetch(`/api/projects/${project.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -40,18 +33,24 @@ export function EditorTopBar() {
         body: JSON.stringify({
           quality,
           editPlan: project.editPlan,
-          signedIn: auth.signedIn,
+          signedIn: true,
         }),
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || "Render failed");
+        throw new Error(
+          (err as { error?: string }).error ||
+            (quality === "export" ? "Export failed" : "Render failed")
+        );
       }
       const data = await res.json();
       setProject(data.project);
 
-      if (quality === "export" && data.project.exportUrl) {
-        toast.success("Export ready");
+      if (quality === "export") {
+        if (!data.project.exportUrl) {
+          throw new Error("Export finished but no file URL was returned.");
+        }
+        toast.success("Export ready — downloading MP4");
         const a = document.createElement("a");
         a.href = data.project.exportUrl;
         a.download = `${project.name || "cutline"}.mp4`;
@@ -69,12 +68,14 @@ export function EditorTopBar() {
   return (
     <header className="flex h-14 shrink-0 items-center justify-between border-b border-[var(--editor-border)] bg-[var(--editor-panel)] px-4">
       <div className="flex min-w-0 items-center gap-3">
-        <Link href="/" className="flex shrink-0 items-center gap-2">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--editor-accent)] text-[#042f2c] font-display text-xs font-bold">
+        <Link href="/dashboard" className="flex shrink-0 items-center gap-2">
+          <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--editor-accent)] text-[#3a1f2a] font-display text-xs font-bold">
             C
           </span>
         </Link>
-        <span className="truncate text-sm font-medium">{project?.name ?? "Untitled"}</span>
+        <span className="truncate text-sm font-medium">
+          {project?.name ?? "Untitled"}
+        </span>
       </div>
 
       <div className="flex items-center gap-1">
@@ -107,11 +108,15 @@ export function EditorTopBar() {
           className="bg-[var(--editor-panel-2)] text-[var(--editor-fg)] hover:bg-[var(--editor-border)]"
         >
           <RefreshCw className={`h-3.5 w-3.5 ${rendering ? "animate-spin" : ""}`} />
-          Apply preview
+          {rendering ? "Rendering…" : "Apply preview"}
         </Button>
-        <Button size="sm" disabled={rendering} onClick={() => persistAndRender("export")}>
+        <Button
+          size="sm"
+          disabled={rendering}
+          onClick={() => persistAndRender("export")}
+        >
           <Download className="h-3.5 w-3.5" />
-          Export
+          Export MP4
         </Button>
       </div>
     </header>

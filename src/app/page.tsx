@@ -3,16 +3,17 @@ import { Button } from "@/components/ui/button";
 import { HeroPreview } from "@/components/landing/hero-preview";
 import { HowItWorks } from "@/components/landing/how-it-works";
 import { Examples } from "@/components/landing/examples";
+import { AESTHETIC_ORDER, STYLE_PRESETS } from "@/lib/styles/presets";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-[var(--bg)]">
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-sm font-bold">
+        <Link href="/" className="flex items-center gap-2.5">
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-base font-semibold">
             C
           </span>
-          <span className="font-display text-lg font-semibold tracking-tight">
+          <span className="font-display text-xl font-semibold tracking-tight">
             Cutline
           </span>
         </Link>
@@ -20,59 +21,97 @@ export default function HomePage() {
           <a href="#how" className="hover:text-[var(--fg)] transition-colors">
             How it works
           </a>
-          <a
-            href="#examples"
-            className="hover:text-[var(--fg)] transition-colors"
-          >
-            Examples
+          <a href="#aesthetics" className="hover:text-[var(--fg)] transition-colors">
+            Aesthetics
           </a>
-          <Link href="/signin" className="hover:text-[var(--fg)] transition-colors">
-            Sign in
+          <Link href="/dashboard" className="hover:text-[var(--fg)] transition-colors">
+            Workspace
           </Link>
         </nav>
-        <Button asChild size="sm" className="md:hidden">
-          <Link href="/upload">Start</Link>
+        <Button asChild size="sm">
+          <Link href="/new">Start editing</Link>
         </Button>
       </header>
 
       <main>
-        <section className="mx-auto max-w-6xl px-6 pb-8 pt-10 md:pt-16">
+        <section className="mx-auto max-w-6xl px-6 pb-8 pt-12 md:pt-16">
           <div className="mx-auto max-w-3xl text-center float-in">
-            <h1 className="font-display text-[clamp(2.5rem,6vw,4.75rem)] font-extrabold leading-[1.02] tracking-tight text-[var(--fg)]">
+            <p className="text-sm font-medium text-[var(--accent)]">
+              AI-powered first cut · full visual control
+            </p>
+            <h1 className="mt-4 font-display text-[clamp(2.4rem,5.5vw,4.4rem)] font-semibold leading-[1.05] tracking-tight text-[var(--fg)]">
+              Your style.
+              <br />
               Your video.
               <br />
-              Your vision.
-              <br />
-              <span className="text-[var(--accent)]">AI does the editing.</span>
+              AI does the first cut.
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-base md:text-lg text-[var(--fg-muted)] leading-relaxed">
-              Upload your footage, describe the edit you want, and refine the
-              result in a visual editor.
+              Upload footage, pick an aesthetic, and get a real edited draft.
+              Then refine clips, captions, stickers, and music in a CapCut-style
+              editor — Gemini watches your actual video; FFmpeg renders the MP4.
             </p>
-            <div className="mt-8 flex flex-col items-center gap-3">
-              <Button asChild size="lg" className="min-w-[200px]">
-                <Link href="/upload">Start editing</Link>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+              <Button asChild size="lg" className="min-w-[180px]">
+                <Link href="/new">Start editing</Link>
               </Button>
-              <p className="text-sm text-[var(--fg-subtle)]">
-                No account required.
-              </p>
+              <Button asChild variant="outline" size="lg">
+                <a href="#how">See how it works</a>
+              </Button>
             </div>
+            <p className="mt-4 text-sm text-[var(--fg-subtle)]">
+              No account required to try.
+            </p>
           </div>
 
-          <div className="mt-14 float-in" style={{ animationDelay: "120ms" }}>
+          <div className="mt-14 float-in" style={{ animationDelay: "100ms" }}>
             <HeroPreview />
           </div>
         </section>
 
         <HowItWorks />
+
+        <section id="aesthetics" className="mx-auto max-w-6xl px-6 py-16">
+          <div className="max-w-xl">
+            <p className="text-sm font-medium text-[var(--accent)]">Aesthetics</p>
+            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight md:text-4xl">
+              Edits that match your vibe
+            </h2>
+            <p className="mt-3 text-[var(--fg-muted)]">
+              Each preset tunes pacing, captions, stickers, and music — not one generic AI look.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {AESTHETIC_ORDER.map((id) => {
+              const s = STYLE_PRESETS[id];
+              return (
+                <Link
+                  key={id}
+                  href={`/new?aesthetic=${id}`}
+                  className="group rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 transition-colors hover:border-[var(--accent)]/40"
+                >
+                  <div
+                    className="mb-4 flex h-16 overflow-hidden rounded-2xl"
+                    style={{
+                      background: `linear-gradient(135deg, ${s.swatch[0]}, ${s.swatch[1]})`,
+                    }}
+                  />
+                  <h3 className="font-display text-lg font-semibold">{s.name}</h3>
+                  <p className="mt-1 text-sm text-[var(--fg-muted)]">{s.tagline}</p>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
         <Examples />
       </main>
 
-      <footer className="mx-auto mt-10 flex w-full max-w-6xl items-center justify-between border-t border-[var(--border)] px-6 py-8 text-sm text-[var(--fg-subtle)]">
+      <footer className="mx-auto mt-8 flex w-full max-w-6xl flex-col gap-2 border-t border-[var(--border)] px-6 py-8 text-sm text-[var(--fg-subtle)] sm:flex-row sm:items-center sm:justify-between">
         <span className="font-display font-semibold text-[var(--fg-muted)]">
           Cutline
         </span>
-        <span>Shipaton 2026 · Built for creators</span>
+        <span>Shipaton 2026 · Real Gemini analysis · Real FFmpeg export</span>
       </footer>
     </div>
   );

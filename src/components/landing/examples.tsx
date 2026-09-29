@@ -1,18 +1,18 @@
 const EXAMPLES = [
   {
-    title: "Lifestyle Reel",
-    prompt: "Fast-paced, remove pauses, modern captions, subtle zooms",
-    result: "28s · 6 cuts · clean bold captions",
+    title: "Before → After",
+    prompt: "Raw phone footage with pauses",
+    result: "Trimmed · captions · soft zooms · music bed",
   },
   {
-    title: "Founder story",
-    prompt: "Calm pacing, keep emotional lines, soft music",
-    result: "42s · cinematic zooms · minimal captions",
+    title: "Cute / Coquette",
+    prompt: "Playful stickers, soft bubble captions",
+    result: "Heart overlays · warm pacing · light track",
   },
   {
-    title: "Product demo",
-    prompt: "Punchy hooks, emphasize features, energetic beat",
-    result: "22s · kinetic captions · upbeat track",
+    title: "Clean Lifestyle",
+    prompt: "Minimal text, intentional cuts",
+    result: "Bold captions · subtle zoom · upbeat bed",
   },
 ];
 
@@ -21,18 +21,18 @@ export function Examples() {
     <section id="examples" className="mx-auto max-w-6xl px-6 pb-24">
       <div className="max-w-xl">
         <p className="text-sm font-medium text-[var(--accent)]">Examples</p>
-        <h2 className="mt-2 font-display text-3xl font-bold tracking-tight md:text-4xl">
-          Edits that feel intentional
+        <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight md:text-4xl">
+          First cuts that feel intentional
         </h2>
       </div>
       <div className="mt-10 grid gap-5 md:grid-cols-3">
         {EXAMPLES.map((ex) => (
           <article
             key={ex.title}
-            className="group overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface)]"
+            className="overflow-hidden rounded-3xl border border-[var(--border)] bg-[var(--surface)]"
           >
-            <div className="aspect-[4/3] bg-gradient-to-br from-[#d8ece9] via-[#eef4f3] to-[#f7f8f8] p-6">
-              <div className="flex h-full items-end rounded-2xl border border-black/5 bg-[#111315] p-4">
+            <div className="aspect-[4/3] bg-gradient-to-br from-[#f7ebe8] via-[#f5f0ea] to-[#ebe8f5] p-6">
+              <div className="flex h-full items-end rounded-2xl border border-black/5 bg-[#161412] p-4">
                 <div>
                   <p className="font-display text-lg font-semibold text-white">
                     {ex.title}
@@ -43,7 +43,7 @@ export function Examples() {
             </div>
             <div className="p-5">
               <p className="text-xs uppercase tracking-wide text-[var(--fg-subtle)]">
-                Prompt
+                Direction
               </p>
               <p className="mt-2 text-sm text-[var(--fg-muted)] leading-relaxed">
                 “{ex.prompt}”

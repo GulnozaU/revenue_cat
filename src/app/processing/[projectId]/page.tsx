@@ -17,7 +17,7 @@ export default function ProcessingPage() {
   const [stageIndex, setStageIndex] = useState(0);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [detail, setDetail] = useState("Starting…");
+  const [detail, setDetail] = useState("Preparing your project…");
 
   useEffect(() => {
     let cancelled = false;
@@ -29,7 +29,6 @@ export default function ProcessingPage() {
       ).__cutlineUpload;
 
       if (!upload || upload.id !== params.projectId) {
-        // Resume: fetch existing project
         const res = await fetch(`/api/projects/${params.projectId}`);
         if (res.ok) {
           const data = await res.json();
@@ -37,20 +36,26 @@ export default function ProcessingPage() {
             setProject(data.project);
             setReady(true);
             setStageIndex(PROCESSING_STAGES.length);
+            setDetail(
+              `Provider: ${data.project.aiProvider ?? "n/a"} · clips: ${data.project.editPlan?.clips?.length ?? 0}`
+            );
+            return;
+          }
+          if (data.project?.status === "error") {
+            setError(data.project.error || "We couldn't create the edit.");
             return;
           }
         }
-        setError("No upload found. Go back and upload a video.");
+        setError("Couldn't find your upload. Go back and try again.");
         return;
       }
 
-      // Animate stages while server works
       tick = setInterval(() => {
         setStageIndex((i) => Math.min(i + 1, PROCESSING_STAGES.length - 2));
-      }, 2500);
+      }, 4000);
 
       try {
-        setDetail("Uploading and analyzing on the server…");
+        setDetail("Uploading video and asking Gemini to watch it…");
         const form = new FormData();
         form.append("file", upload.file);
 
@@ -63,7 +68,10 @@ export default function ProcessingPage() {
 
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
-          throw new Error(err.error || `Processing failed (${res.status})`);
+          throw new Error(
+            (err as { error?: string }).error ||
+              `Processing failed (${res.status})`
+          );
         }
 
         const data = await res.json();
@@ -72,15 +80,19 @@ export default function ProcessingPage() {
         setProject(data.project);
         setStageIndex(PROCESSING_STAGES.length);
         setDetail(
-          `Transcript: ${data.project.analysis?.transcript?.provider ?? "n/a"} · clips: ${data.project.editPlan?.clips?.length ?? 0}`
+          `Gemini provider: ${data.project.aiProvider ?? "n/a"} · ${data.project.editPlan?.clips?.length ?? 0} clips · ${data.project.editPlan?.captions?.length ?? 0} captions`
         );
         setReady(true);
         delete (window as unknown as { __cutlineUpload?: unknown }).__cutlineUpload;
       } catch (err) {
         if (tick) clearInterval(tick);
         console.error(err);
-        setError(err instanceof Error ? err.message : "Processing failed");
-        toast.error("Pipeline failed");
+        setError(
+          err instanceof Error
+            ? err.message
+            : "We couldn't create the edit. Try again."
+        );
+        toast.error("Couldn't create the edit");
       }
     }
 
@@ -94,8 +106,8 @@ export default function ProcessingPage() {
   return (
     <div className="min-h-screen bg-[var(--bg)]">
       <header className="mx-auto flex w-full max-w-lg items-center px-6 py-5">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-sm font-bold">
+        <Link href="/dashboard" className="flex items-center gap-2">
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-sm font-semibold">
             C
           </span>
           <span className="font-display text-lg font-semibold">Cutline</span>
@@ -103,15 +115,19 @@ export default function ProcessingPage() {
       </header>
 
       <main className="mx-auto flex max-w-lg flex-col px-6 pb-20 pt-10">
-        <h1 className="font-display text-3xl font-bold tracking-tight">
-          {ready ? "Your first cut is ready." : "Building your edit"}
+        <h1 className="font-display text-3xl font-semibold tracking-tight">
+          {ready
+            ? "Your first cut is ready."
+            : error
+              ? "Something went wrong"
+              : "Creating your first cut"}
         </h1>
         <p className="mt-2 text-[var(--fg-muted)]">{detail}</p>
 
         <ul className="mt-10 space-y-3">
           {PROCESSING_STAGES.map((stage, i) => {
             const isDone = ready || i < stageIndex;
-            const isActive = !ready && i === stageIndex;
+            const isActive = !ready && !error && i === stageIndex;
             return (
               <li
                 key={stage.id}
@@ -144,7 +160,14 @@ export default function ProcessingPage() {
           })}
         </ul>
 
-        {error && <p className="mt-6 text-sm text-red-500">{error}</p>}
+        {error && (
+          <div className="mt-6 space-y-3">
+            <p className="text-sm text-red-600">{error}</p>
+            <Button variant="outline" onClick={() => router.push("/new")}>
+              Try again
+            </Button>
+          </div>
+        )}
 
         {ready && (
           <Button
