@@ -2,10 +2,8 @@ import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 import type {
-  AestheticId,
   ProjectRecord,
   VideoAsset,
-  VideoFormat,
 } from "@/lib/types/edit-plan";
 import {
   assertFfmpeg,
@@ -19,7 +17,9 @@ import {
 import { transcribeAudio } from "@/lib/transcription";
 import { buildAnalysis, generateEditPlan } from "@/lib/ai/edit-plan";
 import { renderEditPlan } from "@/lib/ffmpeg/render";
-import { loadProject, saveProject } from "@/lib/projects/store";
+import { loadProject, saveProject, createProject } from "@/lib/projects/store";
+
+export { createProject };
 
 export type PipelineProgress = {
   stage:
@@ -202,25 +202,3 @@ export async function reRenderProject(
   return project;
 }
 
-export async function createProject(input: {
-  name: string;
-  format: VideoFormat;
-  aestheticId: AestheticId;
-  prompt: string;
-}): Promise<ProjectRecord> {
-  const { newProjectId } = await import("@/lib/projects/store");
-  const now = new Date().toISOString();
-  const project: ProjectRecord = {
-    id: newProjectId(),
-    name: input.name,
-    format: input.format,
-    aestheticId: input.aestheticId,
-    prompt: input.prompt,
-    assets: [],
-    status: "draft",
-    createdAt: now,
-    updatedAt: now,
-  };
-  await saveProject(project);
-  return project;
-}

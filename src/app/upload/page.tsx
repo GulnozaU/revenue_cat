@@ -114,7 +114,13 @@ export default function UploadPage() {
           prompt: draftPrompt.trim(),
         }),
       });
-      if (!createRes.ok) throw new Error("Could not create project");
+      if (!createRes.ok) {
+        const errBody = await createRes.json().catch(() => ({}));
+        throw new Error(
+          (errBody as { error?: string }).error ||
+            `Could not create project (${createRes.status})`
+        );
+      }
       const { project } = await createRes.json();
       setProject(project);
 
