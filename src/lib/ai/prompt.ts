@@ -38,6 +38,7 @@ Rules:
 - Captions should reflect actual spoken words or on-screen meaning.
 - Stickers only from: star, star2, heart, heart2, bow, flower, spark, sparkle, fire, arrow, circle.
 - Music trackId only from: ${tracks}.
+- cuts must be an array of objects like { "at": 1.2, "type": "hard" } OR an empty array []. Never use bare strings or objects without "at".
 - Respect aesthetic "${style.name}": pacing=${style.pacing}, captionStyle=${style.captionStyle}, stickerUsage=${style.stickerUsage}, zoomFrequency=${style.zoomFrequency}.
 - Target format: ${FORMAT_PRESETS[format].ratio} (${FORMAT_PRESETS[format].aspect}).
 - Return ONLY JSON. No markdown fences. No commentary.`;

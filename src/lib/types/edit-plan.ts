@@ -225,10 +225,11 @@ export function validateEditPlan(input: unknown):
   return { success: true, data: parsed.data };
 }
 
-/** Soften LLM JSON before Zod so long captions don't reject the whole plan. */
+/** Soften LLM JSON before Zod so minor shape issues don't reject the whole plan. */
 function sanitizeRawEditPlan(input: unknown): unknown {
   if (!input || typeof input !== "object") return input;
   const plan = { ...(input as Record<string, unknown>) };
+
   if (Array.isArray(plan.captions)) {
     plan.captions = plan.captions.map((c) => {
       if (!c || typeof c !== "object") return c;
@@ -237,6 +238,7 @@ function sanitizeRawEditPlan(input: unknown): unknown {
       return cap;
     });
   }
+
   if (Array.isArray(plan.textOverlays)) {
     plan.textOverlays = plan.textOverlays.map((t) => {
       if (!t || typeof t !== "object") return t;
@@ -245,6 +247,34 @@ function sanitizeRawEditPlan(input: unknown): unknown {
       return row;
     });
   }
+
+  // LLMs often emit cuts as strings, timestamps under wrong keys, or empty objects
+  if (Array.isArray(plan.cuts)) {
+    plan.cuts = plan.cuts
+      .map((cut) => {
+        if (typeof cut === "number") {
+          return { at: cut, type: "hard" as const };
+        }
+        if (!cut || typeof cut !== "object") return null;
+        const row = cut as Record<string, unknown>;
+        const atRaw =
+          row.at ?? row.time ?? row.timestamp ?? row.t ?? row.position ?? row.start;
+        const at = typeof atRaw === "number" ? atRaw : Number(atRaw);
+        if (!Number.isFinite(at) || at < 0) return null;
+        const typeRaw = String(row.type ?? "hard").toLowerCase();
+        const type = typeRaw === "fade" ? "fade" : "hard";
+        return { at, type };
+      })
+      .filter(Boolean);
+  } else {
+    plan.cuts = [];
+  }
+
+  // Drop null music / coerce empty string
+  if (plan.music === "" || plan.music === undefined) {
+    plan.music = null;
+  }
+
   return plan;
 }
 
