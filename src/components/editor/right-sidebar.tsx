@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input, Textarea, Label } from "@/components/ui/input";
 import { useProjectStore } from "@/store/project-store";
 import { getMusicTrack } from "@/lib/assets/library";
+import { FontPicker } from "@/components/editor/font-picker";
 import { cn } from "@/lib/utils";
 
 const EXAMPLES = [
@@ -41,6 +42,10 @@ export function RightSidebar() {
   const selectedSticker =
     selection?.type === "sticker"
       ? plan.stickers.find((s) => s.id === selection.id)
+      : null;
+  const selectedText =
+    selection?.type === "text"
+      ? plan.textOverlays.find((t) => t.id === selection.id)
       : null;
 
   const updateClip = (id: string, patch: Partial<(typeof plan.clips)[0]>) => {
@@ -163,8 +168,10 @@ export function RightSidebar() {
             ? "Clip"
             : selectedCaption
               ? "Caption"
-              : selectedSticker
-                ? "Sticker"
+              : selectedText
+                ? "Title"
+                : selectedSticker
+                  ? "Sticker"
                 : selection?.type === "music"
                   ? "Music"
                   : selection?.type ?? "Nothing selected"}
@@ -249,18 +256,14 @@ export function RightSidebar() {
               />
             </Field>
             <Field label="Font">
-              <select
-                className="h-8 w-full rounded-md border border-[var(--editor-border)] bg-[var(--editor-panel-2)] px-2 text-sm text-[var(--editor-fg)]"
+              <FontPicker
+                compact
                 value={selectedCaption.fontId}
-                onChange={(e) =>
-                  updateCaption(selectedCaption.id, { fontId: e.target.value })
+                previewText={selectedCaption.text}
+                onChange={(fontId) =>
+                  updateCaption(selectedCaption.id, { fontId })
                 }
-              >
-                <option value="dm_sans">DM Sans</option>
-                <option value="arial">Clean Sans</option>
-                <option value="arial_bold">Bold Sans</option>
-                <option value="courier_bold">Typewriter</option>
-              </select>
+              />
             </Field>
             <Field label="Font size">
               <input
@@ -274,6 +277,27 @@ export function RightSidebar() {
                   })
                 }
                 className="w-full accent-[var(--editor-accent)]"
+              />
+            </Field>
+          </div>
+        )}
+
+        {selectedText && (
+          <div className="space-y-3">
+            <Field label="Title">
+              <Textarea
+                className="min-h-[72px] bg-[var(--editor-panel-2)] border-[var(--editor-border)] text-[var(--editor-fg)]"
+                value={selectedText.text}
+                onChange={(e) =>
+                  setEditPlanLocal({
+                    ...plan,
+                    textOverlays: plan.textOverlays.map((t) =>
+                      t.id === selectedText.id
+                        ? { ...t, text: e.target.value }
+                        : t
+                    ),
+                  })
+                }
               />
             </Field>
           </div>

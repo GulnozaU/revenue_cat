@@ -95,13 +95,16 @@ async function renderTextPng(opts: {
 
 async function loadFontFace(fontId: string): Promise<string> {
   const font = getFont(fontId);
+  const family = font.family || font.name;
   try {
-    const face = new FontFace(font.name, `url(${font.url})`);
+    const face = new FontFace(family, `url(${font.url})`, {
+      weight: String(700),
+    });
     await face.load();
     document.fonts.add(face);
-    return `"${font.name}", Arial, sans-serif`;
+    return `"${family}", system-ui, sans-serif`;
   } catch {
-    return "Arial, Helvetica, sans-serif";
+    return `"${family}", system-ui, sans-serif`;
   }
 }
 

@@ -31,6 +31,9 @@ export default function RootLayout({
       lang="en"
       className={`${plusJakarta.variable} ${fraunces.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="stylesheet" href="/fonts/fonts.css" />
+      </head>
       <body className="min-h-full flex flex-col font-sans grain">
         {children}
         <Toaster theme="light" position="bottom-right" richColors />

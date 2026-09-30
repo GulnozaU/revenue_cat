@@ -25,7 +25,7 @@ export function createEmptyStyleProfile(name = "My Style"): StyleProfile {
     name,
     pacing: "medium",
     captions: "clean_bold",
-    fontId: "arial_bold",
+    fontId: "satoshi",
     stickers: "medium",
     zooms: "medium",
     transitions: "soft",

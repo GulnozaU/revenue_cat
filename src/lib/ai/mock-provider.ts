@@ -9,8 +9,8 @@ import { assertValidPlan, type GenerateEditPlanInput } from "@/lib/ai/provider";
 export async function generateEditPlanWithMock(
   input: GenerateEditPlanInput
 ): Promise<{ plan: EditPlan; provider: "mock" }> {
-  // Fake "thinking" delay for the demo UX (1–1.6s)
-  await sleep(1000 + Math.floor(Math.random() * 600));
+  // Short beat so the stage list can animate; the video stays in the browser.
+  await sleep(700);
 
   if (input.improve) {
     const plan = applyMockImprove(
@@ -116,7 +116,7 @@ export function buildOceanReelEditPlan(
         end: Math.min(3.5, outDuration),
         text: "just a little reset 🌊",
         style: "soft_bold" as const,
-        fontId: "dm_sans",
+        fontId: "chillax",
         fontSize: 44,
         x: 0.5,
         y: 0.78,
@@ -128,7 +128,7 @@ export function buildOceanReelEditPlan(
         end: Math.min(8.5, outDuration),
         text: "slow down for a second",
         style: "soft_bold" as const,
-        fontId: "dm_sans",
+        fontId: "chillax",
         fontSize: 42,
         x: 0.5,
         y: 0.78,
@@ -140,7 +140,7 @@ export function buildOceanReelEditPlan(
         end: Math.min(14.5, outDuration),
         text: "you don't have to rush everything ✨",
         style: "soft_bold" as const,
-        fontId: "dm_sans",
+        fontId: "chillax",
         fontSize: 40,
         x: 0.5,
         y: 0.78,
@@ -152,7 +152,7 @@ export function buildOceanReelEditPlan(
         end: Math.min(21.0, outDuration),
         text: "a little moment for yourself",
         style: "soft_bold" as const,
-        fontId: "dm_sans",
+        fontId: "chillax",
         fontSize: 42,
         x: 0.5,
         y: 0.78,
@@ -165,7 +165,7 @@ export function buildOceanReelEditPlan(
         start: 0,
         end: Math.min(3, outDuration),
         text: "ocean reset",
-        fontId: "dm_sans",
+        fontId: "chillax",
         fontSize: 56,
         color: "#FFFFFF",
         x: 0.5,

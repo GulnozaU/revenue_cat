@@ -75,7 +75,7 @@ export const CaptionSchema = z
     style: z
       .enum(["clean_bold", "minimal", "kinetic", "boxed", "outline", "soft_bold"])
       .default("clean_bold"),
-    fontId: z.string().default("arial_bold"),
+    fontId: z.string().default("satoshi"),
     fontSize: z.number().min(16).max(120).default(48),
     x: z.number().min(0).max(1).default(0.5),
     y: z.number().min(0).max(1).default(0.78),
@@ -90,7 +90,7 @@ export const TextOverlaySchema = z.object({
   start: z.number().min(0),
   end: z.number().min(0),
   text: z.string().min(1).max(120),
-  fontId: z.string().default("arial_bold"),
+  fontId: z.string().default("satoshi"),
   fontSize: z.number().min(16).max(140).default(56),
   color: z.string().default("#FFFFFF"),
   x: z.number().min(0).max(1).default(0.5),

@@ -42,7 +42,7 @@ export default function EditorPage() {
     return () => {
       cancelled = true;
     };
-  }, [params.projectId, project?.id, project?.editPlan, project?.previewUrl, router, setProject]);
+  }, [params.projectId, project?.id, project?.editPlan, router, setProject]);
 
   if (loading || !project?.editPlan) {
     return (

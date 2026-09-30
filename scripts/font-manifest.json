@@ -1,0 +1,212 @@
+[
+  {
+    "id": "satoshi",
+    "slug": "satoshi",
+    "weight": 700,
+    "family": "Satoshi",
+    "file": "satoshi.woff2"
+  },
+  {
+    "id": "general_sans",
+    "slug": "general-sans",
+    "weight": 600,
+    "family": "General Sans",
+    "file": "general_sans.woff2"
+  },
+  {
+    "id": "clash_display",
+    "slug": "clash-display",
+    "weight": 600,
+    "family": "Clash Display",
+    "file": "clash_display.woff2"
+  },
+  {
+    "id": "cabinet_grotesk",
+    "slug": "cabinet-grotesk",
+    "weight": 700,
+    "family": "Cabinet Grotesk",
+    "file": "cabinet_grotesk.woff2"
+  },
+  {
+    "id": "switzer",
+    "slug": "switzer",
+    "weight": 600,
+    "family": "Switzer",
+    "file": "switzer.woff2"
+  },
+  {
+    "id": "zodiak",
+    "slug": "zodiak",
+    "weight": 700,
+    "family": "Zodiak",
+    "file": "zodiak.woff2"
+  },
+  {
+    "id": "boska",
+    "slug": "boska",
+    "weight": 700,
+    "family": "Boska",
+    "file": "boska.woff2"
+  },
+  {
+    "id": "chubbo",
+    "slug": "chubbo",
+    "weight": 700,
+    "family": "Chubbo",
+    "file": "chubbo.woff2"
+  },
+  {
+    "id": "britney",
+    "slug": "britney",
+    "weight": 400,
+    "family": "Britney",
+    "file": "britney.woff2"
+  },
+  {
+    "id": "telma",
+    "slug": "telma",
+    "weight": 700,
+    "family": "Telma",
+    "file": "telma.woff2"
+  },
+  {
+    "id": "pally",
+    "slug": "pally",
+    "weight": 700,
+    "family": "Pally",
+    "file": "pally.woff2"
+  },
+  {
+    "id": "chillax",
+    "slug": "chillax",
+    "weight": 600,
+    "family": "Chillax",
+    "file": "chillax.woff2"
+  },
+  {
+    "id": "pilcrow_rounded",
+    "slug": "pilcrow-rounded",
+    "weight": 700,
+    "family": "Pilcrow Rounded",
+    "file": "pilcrow_rounded.woff2"
+  },
+  {
+    "id": "array",
+    "slug": "array",
+    "weight": 700,
+    "family": "Array",
+    "file": "array.woff2"
+  },
+  {
+    "id": "tanker",
+    "slug": "tanker",
+    "weight": 400,
+    "family": "Tanker",
+    "file": "tanker.woff2"
+  },
+  {
+    "id": "panchang",
+    "slug": "panchang",
+    "weight": 700,
+    "family": "Panchang",
+    "file": "panchang.woff2"
+  },
+  {
+    "id": "author",
+    "slug": "author",
+    "weight": 600,
+    "family": "Author",
+    "file": "author.woff2"
+  },
+  {
+    "id": "melodrama",
+    "slug": "melodrama",
+    "weight": 700,
+    "family": "Melodrama",
+    "file": "melodrama.woff2"
+  },
+  {
+    "id": "comico",
+    "slug": "comico",
+    "weight": 400,
+    "family": "Comico",
+    "file": "comico.woff2"
+  },
+  {
+    "id": "space_grotesk",
+    "slug": "space-grotesk",
+    "weight": 700,
+    "family": "Space Grotesk",
+    "file": "space_grotesk.woff2"
+  },
+  {
+    "id": "manrope",
+    "slug": "manrope",
+    "weight": 700,
+    "family": "Manrope",
+    "file": "manrope.woff2"
+  },
+  {
+    "id": "nunito",
+    "slug": "nunito",
+    "weight": 700,
+    "family": "Nunito",
+    "file": "nunito.woff2"
+  },
+  {
+    "id": "quicksand",
+    "slug": "quicksand",
+    "weight": 700,
+    "family": "Quicksand",
+    "file": "quicksand.woff2"
+  },
+  {
+    "id": "dancing_script",
+    "slug": "dancing-script",
+    "weight": 700,
+    "family": "Dancing Script",
+    "file": "dancing_script.woff2"
+  },
+  {
+    "id": "bebas_neue",
+    "slug": "bebas-neue",
+    "weight": 400,
+    "family": "Bebas Neue",
+    "file": "bebas_neue.woff2"
+  },
+  {
+    "id": "outfit",
+    "slug": "outfit",
+    "weight": 700,
+    "family": "Outfit",
+    "file": "outfit.woff2"
+  },
+  {
+    "id": "literata",
+    "slug": "literata",
+    "weight": 700,
+    "family": "Literata",
+    "file": "literata.woff2"
+  },
+  {
+    "id": "kalam",
+    "slug": "kalam",
+    "weight": 700,
+    "family": "Kalam",
+    "file": "kalam.woff2"
+  },
+  {
+    "id": "montserrat",
+    "slug": "montserrat",
+    "weight": 700,
+    "family": "Montserrat",
+    "file": "montserrat.woff2"
+  },
+  {
+    "id": "plus_jakarta",
+    "slug": "plus-jakarta-sans",
+    "weight": 700,
+    "family": "Plus Jakarta Sans",
+    "file": "plus_jakarta.woff2"
+  }
+]

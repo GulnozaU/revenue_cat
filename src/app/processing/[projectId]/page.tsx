@@ -5,9 +5,12 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { PROCESSING_STAGES } from "@/lib/types/edit-plan";
+import { PROCESSING_STAGES, type ProjectRecord } from "@/lib/types/edit-plan";
 import { useProjectStore } from "@/store/project-store";
 import { toast } from "sonner";
+
+/** One in-flight analysis per project (React Strict Mode mounts twice in dev). */
+const analysisJobs = new Map<string, Promise<{ project: ProjectRecord }>>();
 
 export default function ProcessingPage() {
   const params = useParams<{ projectId: string }>();
@@ -57,7 +60,7 @@ export default function ProcessingPage() {
       try {
         setDetail("Analyzing your footage…");
         const form = new FormData();
-        form.append("file", upload.file);
+        form.append("filename", upload.file.name);
 
         const meta = await probeClientMeta(upload.file);
         if (!(meta.duration > 0)) {
@@ -71,21 +74,30 @@ export default function ProcessingPage() {
         if (meta.thumbnailDataUrl) {
           form.append("thumbnailDataUrl", meta.thumbnailDataUrl);
         }
-
-        const res = await fetch(`/api/projects/${params.projectId}/process`, {
-          method: "POST",
-          body: form,
-        });
-
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          throw new Error(
-            (err as { error?: string }).error ||
-              `Processing failed (${res.status})`
-          );
+        // Real AI needs the bytes. Demo mode keeps the file in the browser.
+        if (process.env.NEXT_PUBLIC_AI_MODE === "real") {
+          form.append("file", upload.file);
         }
 
-        const data = await res.json();
+        let job = analysisJobs.get(params.projectId);
+        if (!job) {
+          job = fetch(`/api/projects/${params.projectId}/process`, {
+            method: "POST",
+            body: form,
+          }).then(async (res) => {
+            if (!res.ok) {
+              const err = await res.json().catch(() => ({}));
+              throw new Error(
+                (err as { error?: string }).error ||
+                  `Processing failed (${res.status})`
+              );
+            }
+            return res.json();
+          });
+          analysisJobs.set(params.projectId, job);
+        }
+
+        const data = await job;
         if (cancelled) return;
 
         if (!data.project?.editPlan) {
@@ -121,6 +133,7 @@ export default function ProcessingPage() {
             : "We couldn't create the edit. Try again."
         );
         toast.error("Couldn't create the edit");
+        analysisJobs.delete(params.projectId);
       }
     }
 

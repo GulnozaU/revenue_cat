@@ -1,46 +1,41 @@
+import {
+  EDITOR_FONTS,
+  getEditorFont,
+  type EditorFont,
+} from "@/data/fonts";
+
+/** @deprecated Prefer EditorFont from @/data/fonts — kept for existing imports */
 export type FontDef = {
   id: string;
   name: string;
-  category: "Cute" | "Clean" | "Bold" | "Minimal" | "Handwritten";
+  category: string;
   file: string;
-  /** Public URL served from /public/fonts */
   url: string;
+  family?: string;
 };
 
-export const FONT_LIBRARY: FontDef[] = [
-  {
-    id: "dm_sans",
-    name: "DM Sans",
-    category: "Clean",
-    file: "ArialBold.ttf",
-    url: "/fonts/ArialBold.ttf",
-  },
-  {
-    id: "arial",
-    name: "Clean Sans",
-    category: "Clean",
-    file: "Arial.ttf",
-    url: "/fonts/Arial.ttf",
-  },
-  {
-    id: "arial_bold",
-    name: "Bold Sans",
-    category: "Bold",
-    file: "ArialBold.ttf",
-    url: "/fonts/ArialBold.ttf",
-  },
-  {
-    id: "courier_bold",
-    name: "Typewriter",
-    category: "Minimal",
-    file: "CourierBold.ttf",
-    url: "/fonts/CourierBold.ttf",
-  },
-];
+export const FONT_LIBRARY: FontDef[] = EDITOR_FONTS.map((f) => ({
+  id: f.id,
+  name: f.name,
+  category: f.aesthetics[0] ?? "clean",
+  file: f.file,
+  url: f.url,
+  family: f.family,
+}));
 
-export function getFont(id: string): FontDef {
-  return FONT_LIBRARY.find((f) => f.id === id) ?? FONT_LIBRARY[0];
+export function getFont(id: string): FontDef & { family: string } {
+  const f: EditorFont = getEditorFont(id);
+  return {
+    id: f.id,
+    name: f.name,
+    category: f.aesthetics[0] ?? "clean",
+    file: f.file,
+    url: f.url,
+    family: f.family,
+  };
 }
+
+export { EDITOR_FONTS, getEditorFont };
 
 export type StickerAsset = {
   id: string;

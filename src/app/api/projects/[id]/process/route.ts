@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 import { loadProject, saveProject } from "@/lib/projects/store";
 import { ingestUploadedFile, runProjectPipeline } from "@/lib/pipeline";
+import { getAiMode } from "@/lib/ai/provider";
+import type { VideoAsset } from "@/lib/types/edit-plan";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -21,37 +24,68 @@ export async function POST(req: Request, ctx: Ctx) {
 
     const form = await req.formData();
     const file = form.get("file");
-    if (!(file instanceof File)) {
-      return NextResponse.json({ error: "file required" }, { status: 400 });
-    }
-
     const duration = Number(form.get("duration") || 0);
     const width = Number(form.get("width") || 0);
     const height = Number(form.get("height") || 0);
+    const filename = String(form.get("filename") || "upload.mp4");
     const thumbnailDataUrl =
       typeof form.get("thumbnailDataUrl") === "string"
         ? (form.get("thumbnailDataUrl") as string)
         : undefined;
 
+    // Demo mode: keep the MP4 in the browser. Don't upload the whole file.
+    const mockWithoutFile =
+      getAiMode() === "mock" && !(file instanceof File);
+
+    if (!(file instanceof File) && !mockWithoutFile) {
+      return NextResponse.json({ error: "file required" }, { status: 400 });
+    }
+    if (mockWithoutFile && !(duration > 0)) {
+      return NextResponse.json(
+        { error: "Couldn't read this video. Try another MP4 file." },
+        { status: 400 }
+      );
+    }
+
     project.status = "uploading";
     await saveProject(project);
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const asset = await ingestUploadedFile({
-      projectId: id,
-      filename: file.name,
-      mimeType: file.type || "video/mp4",
-      buffer,
-      duration: duration > 0 ? duration : 1,
-      width: width > 0 ? width : 1080,
-      height: height > 0 ? height : 1920,
-      thumbnailDataUrl,
-    });
+    let buffer = Buffer.alloc(0);
+    let asset: VideoAsset;
+
+    if (file instanceof File) {
+      buffer = Buffer.from(await file.arrayBuffer());
+      asset = await ingestUploadedFile({
+        projectId: id,
+        filename: file.name,
+        mimeType: file.type || "video/mp4",
+        buffer,
+        duration: duration > 0 ? duration : 1,
+        width: width > 0 ? width : 1080,
+        height: height > 0 ? height : 1920,
+        thumbnailDataUrl,
+      });
+    } else {
+      asset = {
+        id: randomUUID(),
+        filename,
+        mimeType: "video/mp4",
+        sourcePath: "",
+        sourceUrl: "",
+        duration,
+        width: width > 0 ? width : 1080,
+        height: height > 0 ? height : 1920,
+        fps: 30,
+        sizeBytes: 0,
+        hasAudio: true,
+        thumbnailUrl: thumbnailDataUrl,
+      };
+    }
 
     project.assets = [asset];
     project.name =
       project.name === "Untitled project"
-        ? file.name.replace(/\.[^.]+$/, "")
+        ? filename.replace(/\.[^.]+$/, "")
         : project.name;
     await saveProject(project);
 

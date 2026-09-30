@@ -130,6 +130,34 @@ export function Timeline() {
             </div>
           </Track>
 
+          <Track label="Text">
+            <div className="relative h-8 rounded-lg bg-[var(--editor-track)]" style={{ width }}>
+              {plan.textOverlays.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelection({ type: "text", id: t.id });
+                    setPlayhead(t.start);
+                  }}
+                  className={cn(
+                    "absolute top-1 bottom-1 overflow-hidden rounded bg-[#4a3d32] px-1.5 text-[9px] text-white/85",
+                    selection?.type === "text" &&
+                      selection.id === t.id &&
+                      "ring-2 ring-[var(--editor-accent)]"
+                  )}
+                  style={{
+                    left: t.start * PX_PER_SEC,
+                    width: Math.max(6, (t.end - t.start) * PX_PER_SEC),
+                  }}
+                >
+                  <span className="block truncate">{t.text}</span>
+                </button>
+              ))}
+            </div>
+          </Track>
+
           <Track label="Stickers">
             <div className="relative h-6 rounded-lg bg-[var(--editor-track)]" style={{ width }}>
               {plan.stickers.map((s) => (
