@@ -157,10 +157,10 @@ export default function ProcessingPage() {
     <div className="min-h-screen bg-[var(--bg)]">
       <header className="mx-auto flex w-full max-w-lg items-center px-6 py-5">
         <Link href="/dashboard" className="flex items-center gap-2">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-sm font-semibold">
-            C
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-[10px] font-semibold">
+            S
           </span>
-          <span className="font-display text-lg font-semibold">Cutline</span>
+          <span className="font-display text-lg font-semibold">stylebox</span>
         </Link>
       </header>
 

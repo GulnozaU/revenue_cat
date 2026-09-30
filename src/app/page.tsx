@@ -10,11 +10,11 @@ export default function HomePage() {
     <div className="min-h-screen bg-[var(--bg)]">
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-base font-semibold">
-            C
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-xs font-semibold">
+            S
           </span>
           <span className="font-display text-xl font-semibold tracking-tight">
-            Cutline
+            stylebox
           </span>
         </Link>
         <nav className="hidden items-center gap-8 text-sm text-[var(--fg-muted)] md:flex">
@@ -109,7 +109,7 @@ export default function HomePage() {
 
       <footer className="mx-auto mt-8 flex w-full max-w-6xl flex-col gap-2 border-t border-[var(--border)] px-6 py-8 text-sm text-[var(--fg-subtle)] sm:flex-row sm:items-center sm:justify-between">
         <span className="font-display font-semibold text-[var(--fg-muted)]">
-          Cutline
+          stylebox
         </span>
         <span>Shipaton 2026 · Real Gemini analysis · Real FFmpeg export</span>
       </footer>

@@ -17,10 +17,10 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-[var(--bg)]">
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-base font-semibold">
-            C
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-xs font-semibold">
+            S
           </span>
-          <span className="font-display text-xl font-semibold">Cutline</span>
+          <span className="font-display text-xl font-semibold">stylebox</span>
         </Link>
         <Button asChild>
           <Link href="/new">+ New video</Link>
@@ -119,7 +119,7 @@ export default async function DashboardPage() {
         <section className="mt-14 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 md:p-8">
           <h2 className="font-display text-xl font-semibold">Your Style</h2>
           <p className="mt-2 max-w-xl text-sm text-[var(--fg-muted)] leading-relaxed">
-            Coming next: upload 2–3 example videos so Cutline can learn your pacing,
+            Coming next: upload 2–3 example videos so stylebox can learn your pacing,
             captions, and sticker habits. The StyleProfile data model is ready —
             full learning ships after the core editor.
           </p>

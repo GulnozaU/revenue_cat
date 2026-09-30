@@ -22,6 +22,18 @@ function clampTempo(speed: number) {
   return Math.min(2, Math.max(0.5, speed));
 }
 
+/** Own a fresh copy — ffmpeg.writeFile can detach the source ArrayBuffer. */
+function ownBytes(data: Uint8Array): Uint8Array<ArrayBuffer> {
+  const copy = new Uint8Array(data.byteLength);
+  copy.set(data);
+  return copy;
+}
+
+function bytesToBlob(data: Uint8Array, type: string): Blob {
+  const owned = ownBytes(data);
+  return new Blob([owned], { type });
+}
+
 async function renderTextPng(opts: {
   text: string;
   fontSize: number;
@@ -30,7 +42,7 @@ async function renderTextPng(opts: {
   outline?: boolean;
   maxWidth: number;
   fontFamily?: string;
-}): Promise<Uint8Array> {
+}): Promise<{ data: Uint8Array; width: number; height: number }> {
   const color = opts.color ?? "#FFFFFF";
   const pad = opts.boxed ? 18 : 8;
   const canvas = document.createElement("canvas");
@@ -74,7 +86,11 @@ async function renderTextPng(opts: {
       "image/png"
     );
   });
-  return new Uint8Array(await blob.arrayBuffer());
+  return {
+    data: new Uint8Array(await blob.arrayBuffer()),
+    width: approxW,
+    height: approxH,
+  };
 }
 
 async function loadFontFace(fontId: string): Promise<string> {
@@ -182,7 +198,7 @@ export async function renderEditPlanInBrowser(opts: {
   try {
     onProgress?.({ ratio: 0.1, message: "Writing source into FFmpeg…" });
     const inputName = track("input.mp4");
-    await ffmpeg.writeFile(inputName, await fetchFile(source));
+    await ffmpeg.writeFile(inputName, ownBytes(await fetchFile(source)));
 
     const clipFiles: string[] = [];
     for (let i = 0; i < usableClips.length; i++) {
@@ -349,10 +365,8 @@ export async function renderEditPlanInBrowser(opts: {
       throw new Error("Video rendering failed: empty output.");
     }
 
-    // Copy into a fresh ArrayBuffer-backed view for Blob compatibility
-    const copy = new Uint8Array(data.byteLength);
-    copy.set(data);
-    const blob = new Blob([copy.buffer], { type: "video/mp4" });
+    // Own bytes before cleanup deletes FS files / wasm recycles memory
+    const blob = bytesToBlob(data, "video/mp4");
     onProgress?.({ ratio: 1, message: "Render complete" });
     return blob;
   } catch (err) {
@@ -394,18 +408,20 @@ async function burnOverlaysBrowser(opts: {
   for (const sticker of plan.stickers) {
     const asset = getSticker(sticker.assetId);
     const sw = Math.max(24, Math.round(width * sticker.scale));
-    const raw = await fetchFile(asset.url);
+    const raw = ownBytes(await fetchFile(asset.url));
     const stkName = track(`stk_${sticker.id}.png`);
-    // Resize via ffmpeg scale of the sticker itself in filter; write original
     await ffmpeg.writeFile(stkName, raw);
     const scaled = track(`stk_${sticker.id}_s.png`);
-    await ffmpeg.exec([
+    const scaleCode = await ffmpeg.exec([
       "-i",
       stkName,
       "-vf",
       `scale=${sw}:-1`,
       scaled,
     ]);
+    if (scaleCode !== 0) {
+      throw new Error("Video rendering failed while scaling a sticker.");
+    }
     overlays.push({
       path: scaled,
       x: Math.round(sticker.x * width - sw / 2),
@@ -424,7 +440,7 @@ async function burnOverlaysBrowser(opts: {
       )
     );
     const png = await renderTextPng({
-      text: cap.text,
+      text: cap.text.slice(0, 240),
       fontSize: fontsize,
       boxed: cap.style === "boxed",
       outline: cap.style === "outline" || cap.style === "kinetic",
@@ -432,13 +448,12 @@ async function burnOverlaysBrowser(opts: {
       fontFamily,
     });
     const name = track(`cap_${cap.id}.png`);
-    await ffmpeg.writeFile(name, png);
-    // Approximate size from canvas — measure again via Image
-    const dims = await pngDimensions(png);
+    // Dimensions known before writeFile (writeFile may detach the buffer)
+    await ffmpeg.writeFile(name, ownBytes(png.data));
     overlays.push({
       path: name,
-      x: Math.round((cap.x ?? 0.5) * width - dims.w / 2),
-      y: Math.round((cap.y ?? 0.78) * height - dims.h / 2),
+      x: Math.round((cap.x ?? 0.5) * width - png.width / 2),
+      y: Math.round((cap.y ?? 0.78) * height - png.height / 2),
       start: cap.start,
       end: cap.end,
     });
@@ -453,7 +468,7 @@ async function burnOverlaysBrowser(opts: {
       )
     );
     const png = await renderTextPng({
-      text: t.text,
+      text: t.text.slice(0, 120),
       fontSize: fontsize,
       color: t.color || "#FFFFFF",
       boxed: false,
@@ -462,12 +477,11 @@ async function burnOverlaysBrowser(opts: {
       fontFamily,
     });
     const name = track(`txt_${t.id}.png`);
-    await ffmpeg.writeFile(name, png);
-    const dims = await pngDimensions(png);
+    await ffmpeg.writeFile(name, ownBytes(png.data));
     overlays.push({
       path: name,
-      x: Math.round(t.x * width - dims.w / 2),
-      y: Math.round(t.y * height - dims.h / 2),
+      x: Math.round(t.x * width - png.width / 2),
+      y: Math.round(t.y * height - png.height / 2),
       start: t.start,
       end: t.end,
     });
@@ -544,7 +558,7 @@ async function mixMusicBrowser(opts: {
 }) {
   const music = getMusicTrack(opts.trackId);
   const musicFile = opts.track(`music_${opts.trackId}.mp3`);
-  await opts.ffmpeg.writeFile(musicFile, await fetchFile(music.url));
+  await opts.ffmpeg.writeFile(musicFile, ownBytes(await fetchFile(music.url)));
 
   const fadeOutStart = Math.max(0, opts.duration - opts.fadeOut);
   const musicFilter = [
@@ -606,21 +620,3 @@ async function mixMusicBrowser(opts: {
   }
 }
 
-function pngDimensions(data: Uint8Array): Promise<{ w: number; h: number }> {
-  return new Promise((resolve) => {
-    const blob = new Blob([data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength) as ArrayBuffer], {
-      type: "image/png",
-    });
-    const url = URL.createObjectURL(blob);
-    const img = new Image();
-    img.onload = () => {
-      resolve({ w: img.naturalWidth || 100, h: img.naturalHeight || 40 });
-      URL.revokeObjectURL(url);
-    };
-    img.onerror = () => {
-      resolve({ w: 100, h: 40 });
-      URL.revokeObjectURL(url);
-    };
-    img.src = url;
-  });
-}

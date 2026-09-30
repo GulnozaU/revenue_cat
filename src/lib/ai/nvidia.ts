@@ -92,10 +92,11 @@ export async function generateEditPlanWithNvidia(
     max_tokens: 8192,
     stream: false,
     chat_template_kwargs: { enable_thinking: false },
-    mm_processor_kwargs: { use_audio_in_video: true },
+    // Prefer video-only first — audio-in-video fails on some MP4s
+    mm_processor_kwargs: { use_audio_in_video: false },
   };
 
-  const res = await fetch(NVIDIA_URL, {
+  let res = await fetch(NVIDIA_URL, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -106,11 +107,36 @@ export async function generateEditPlanWithNvidia(
     body: JSON.stringify(body),
   });
 
+  // Retry once with audio track enabled if the video-only call fails for non-audio reasons
   if (!res.ok) {
     const errText = await res.text().catch(() => "");
-    throw new Error(
-      `NVIDIA analysis failed (${res.status}): ${errText.slice(0, 400) || res.statusText}`
-    );
+    const audioFail = /Failed to load audio|audio/i.test(errText);
+    if (!audioFail) {
+      // try with audio
+      res = await fetch(NVIDIA_URL, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "NVCF-POLL-SECONDS": "1800",
+        },
+        body: JSON.stringify({
+          ...body,
+          mm_processor_kwargs: { use_audio_in_video: true },
+        }),
+      });
+      if (!res.ok) {
+        const err2 = await res.text().catch(() => "");
+        throw new Error(
+          `NVIDIA analysis failed (${res.status}): ${(err2 || errText).slice(0, 400) || res.statusText}`
+        );
+      }
+    } else {
+      throw new Error(
+        `NVIDIA analysis failed (${res.status}): ${errText.slice(0, 400) || res.statusText}`
+      );
+    }
   }
 
   const json = (await res.json()) as {

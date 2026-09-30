@@ -1,0 +1,221 @@
+{
+  "id": "proj_mune1w3o_8eey7j",
+  "name": "Screen_Recording_2026-05-31_at_4_23_31_PM",
+  "format": "instagram_reel",
+  "aestheticId": "fast_paced",
+  "prompt": "Add zooms when the cursor is cliking",
+  "assets": [
+    {
+      "id": "c162216d-a6bf-44a4-943d-f9d665299df4",
+      "filename": "Screen_Recording_2026-05-31_at_4_23_31_PM.mp4",
+      "mimeType": "video/mp4",
+      "sourcePath": "uploads/proj_mune1w3o_8eey7j/c162216d-a6bf-44a4-943d-f9d665299df4.mp4",
+      "sourceUrl": "/api/files/uploads/proj_mune1w3o_8eey7j/c162216d-a6bf-44a4-943d-f9d665299df4.mp4",
+      "duration": 125.35,
+      "width": 2408,
+      "height": 1330,
+      "fps": 30,
+      "sizeBytes": 11898244,
+      "hasAudio": true,
+      "thumbnailPath": "uploads/proj_mune1w3o_8eey7j/c162216d-a6bf-44a4-943d-f9d665299df4_thumb.jpg",
+      "thumbnailUrl": "/api/files/uploads/proj_mune1w3o_8eey7j/c162216d-a6bf-44a4-943d-f9d665299df4_thumb.jpg",
+      "proxyPath": "uploads/proj_mune1w3o_8eey7j/c162216d-a6bf-44a4-943d-f9d665299df4.mp4",
+      "proxyUrl": "/api/files/uploads/proj_mune1w3o_8eey7j/c162216d-a6bf-44a4-943d-f9d665299df4.mp4"
+    }
+  ],
+  "status": "ready",
+  "createdAt": "2026-09-30T00:50:05.124Z",
+  "updatedAt": "2026-09-30T00:51:47.903Z",
+  "analysis": {
+    "transcript": {
+      "language": "und",
+      "fullText": "",
+      "duration": 125.35,
+      "provider": "silence-fallback",
+      "segments": [
+        {
+          "id": "seg_1",
+          "start": 0,
+          "end": 125.35,
+          "text": "[full take]"
+        }
+      ]
+    },
+    "silences": [],
+    "highlightCandidates": [
+      {
+        "start": 0,
+        "end": 125.35,
+        "score": 0.5,
+        "reason": "Segment"
+      }
+    ]
+  },
+  "editPlan": {
+    "sourceDuration": 125.35,
+    "format": "vertical_9_16",
+    "aestheticId": "fast_paced",
+    "duration": 13.4,
+    "clips": [
+      {
+        "id": "clip_1",
+        "sourceStart": 0,
+        "sourceEnd": 1.8,
+        "timelineStart": 0,
+        "timelineEnd": 1.8,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Sign in click to enter clinic console"
+      },
+      {
+        "id": "clip_2",
+        "sourceStart": 3.8,
+        "sourceEnd": 6.2,
+        "timelineStart": 1.8,
+        "timelineEnd": 4.2,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Clicking New PA and launching parallel batch run"
+      },
+      {
+        "id": "clip_3",
+        "sourceStart": 14,
+        "sourceEnd": 17.5,
+        "timelineStart": 4.2,
+        "timelineEnd": 7.7,
+        "speed": 1,
+        "action": "keep",
+        "reason": "AI agent autofilling prior authorization forms live"
+      },
+      {
+        "id": "clip_4",
+        "sourceStart": 23.5,
+        "sourceEnd": 26.5,
+        "timelineStart": 7.7,
+        "timelineEnd": 10.7,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Authorization reference submitted successfully"
+      },
+      {
+        "id": "clip_5",
+        "sourceStart": 32.5,
+        "sourceEnd": 35,
+        "timelineStart": 10.7,
+        "timelineEnd": 13.2,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Navigating back and clicking audit run"
+      },
+      {
+        "id": "clip_6",
+        "sourceStart": 125.15,
+        "sourceEnd": 125.35,
+        "timelineStart": 13.2,
+        "timelineEnd": 13.4,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Prior authorization approved confirmation"
+      }
+    ],
+    "cuts": [],
+    "captions": [
+      {
+        "id": "cap_1",
+        "start": 0.2,
+        "end": 1.6,
+        "text": "Sign In to Clinic Console",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "pop"
+      },
+      {
+        "id": "cap_2",
+        "start": 1.9,
+        "end": 4,
+        "text": "Launch 4 Parallel AI Agents",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "pop"
+      },
+      {
+        "id": "cap_3",
+        "start": 4.4,
+        "end": 7.5,
+        "text": "Live Form Autofill In Action",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "pop"
+      },
+      {
+        "id": "cap_4",
+        "start": 7.9,
+        "end": 10.5,
+        "text": "Instant Submission Generated",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "pop"
+      }
+    ],
+    "textOverlays": [],
+    "stickers": [
+      {
+        "id": "stk_1",
+        "assetId": "sparkle",
+        "start": 8,
+        "end": 10.5,
+        "x": 0.5,
+        "y": 0.25,
+        "scale": 0.35,
+        "rotation": 0
+      }
+    ],
+    "zooms": [
+      {
+        "id": "zoom_1",
+        "start": 0.3,
+        "end": 1.2,
+        "scale": 1.25,
+        "x": 0.5,
+        "y": 0.65
+      },
+      {
+        "id": "zoom_2",
+        "start": 3,
+        "end": 4.1,
+        "scale": 1.3,
+        "x": 0.35,
+        "y": 0.8
+      },
+      {
+        "id": "zoom_3",
+        "start": 11.5,
+        "end": 12.8,
+        "scale": 1.2,
+        "x": 0.55,
+        "y": 0.65
+      }
+    ],
+    "music": {
+      "trackId": "upbeat_01",
+      "volume": 0.18,
+      "startAt": 0,
+      "fadeIn": 0.3,
+      "fadeOut": 0.6
+    },
+    "styleNotes": "Fast-paced showcase zooming directly on key mouse click triggers and successful status badges."
+  },
+  "aiProvider": "gemini"
+}

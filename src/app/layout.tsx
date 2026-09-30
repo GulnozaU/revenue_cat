@@ -16,7 +16,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Cutline — Your style. Your video. AI does the first cut.",
+  title: "stylebox — Your style. Your video. AI does the first cut.",
   description:
     "Upload footage, pick an aesthetic, and refine a real first edit in a visual editor.",
 };

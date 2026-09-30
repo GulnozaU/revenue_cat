@@ -1,0 +1,425 @@
+{
+  "meta": {
+    "aestheticId": "fast_paced",
+    "format": "youtube_landscape",
+    "prompt": "Add zooms when the cursor is clicking",
+    "provider": "nvidia",
+    "model": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+  },
+  "plan": {
+    "sourceDuration": 25.466,
+    "format": "landscape_16_9",
+    "aestheticId": "fast_paced",
+    "duration": 25.466,
+    "clips": [
+      {
+        "id": "clip_1",
+        "sourceStart": 0,
+        "sourceEnd": 2,
+        "timelineStart": 0,
+        "timelineEnd": 2,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Initial welcome screen with cursor hovering over Create Post"
+      },
+      {
+        "id": "clip_2",
+        "sourceStart": 2,
+        "sourceEnd": 4,
+        "timelineStart": 2,
+        "timelineEnd": 4,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Clicking Create Post button to open post creation interface"
+      },
+      {
+        "id": "clip_3",
+        "sourceStart": 4,
+        "sourceEnd": 6,
+        "timelineStart": 4,
+        "timelineEnd": 6,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Typing post idea text in the input field"
+      },
+      {
+        "id": "clip_4",
+        "sourceStart": 6,
+        "sourceEnd": 8,
+        "timelineStart": 6,
+        "timelineEnd": 8,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Selecting tone and goal options from dropdown menus"
+      },
+      {
+        "id": "clip_5",
+        "sourceStart": 8,
+        "sourceEnd": 10,
+        "timelineStart": 8,
+        "timelineEnd": 10,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Clicking Generate Posts button to create content"
+      },
+      {
+        "id": "clip_6",
+        "sourceStart": 10,
+        "sourceEnd": 12,
+        "timelineStart": 10,
+        "timelineEnd": 12,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Reviewing generated post content and options"
+      },
+      {
+        "id": "clip_7",
+        "sourceStart": 12,
+        "sourceEnd": 14,
+        "timelineStart": 12,
+        "timelineEnd": 14,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Clicking Post now button to publish content"
+      },
+      {
+        "id": "clip_8",
+        "sourceStart": 14,
+        "sourceEnd": 16,
+        "timelineStart": 14,
+        "timelineEnd": 16,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Opening schedule dialog to set date and time"
+      },
+      {
+        "id": "clip_9",
+        "sourceStart": 16,
+        "sourceEnd": 18,
+        "timelineStart": 16,
+        "timelineEnd": 18,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Selecting date and time in the scheduling interface"
+      },
+      {
+        "id": "clip_10",
+        "sourceStart": 18,
+        "sourceEnd": 20,
+        "timelineStart": 18,
+        "timelineEnd": 20,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Confirming schedule settings and clicking Schedule post"
+      },
+      {
+        "id": "clip_11",
+        "sourceStart": 20,
+        "sourceEnd": 22,
+        "timelineStart": 20,
+        "timelineEnd": 22,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Viewing scheduled post confirmation and returning to main interface"
+      },
+      {
+        "id": "clip_12",
+        "sourceStart": 22,
+        "sourceEnd": 24,
+        "timelineStart": 22,
+        "timelineEnd": 24,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Navigating to Scheduled tab to view pending posts"
+      },
+      {
+        "id": "clip_13",
+        "sourceStart": 24,
+        "sourceEnd": 25.466,
+        "timelineStart": 24,
+        "timelineEnd": 25.466,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Final view of scheduled posts list"
+      }
+    ],
+    "cuts": [],
+    "captions": [
+      {
+        "id": "cap_1",
+        "start": 0,
+        "end": 2,
+        "text": "Welcome back, Guinzoa. Your command stream is live. What do you want to post today?",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_2",
+        "start": 2,
+        "end": 4,
+        "text": "What do you want to post about?",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_3",
+        "start": 4,
+        "end": 6,
+        "text": "Nect - place to write one idea and turn it into every platform perfect content",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_4",
+        "start": 6,
+        "end": 8,
+        "text": "Casual",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_5",
+        "start": 8,
+        "end": 10,
+        "text": "Drive engagement",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_6",
+        "start": 10,
+        "end": 12,
+        "text": "Generate Posts",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_7",
+        "start": 12,
+        "end": 14,
+        "text": "Post now",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_8",
+        "start": 14,
+        "end": 16,
+        "text": "Schedule to LinkedIn",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_9",
+        "start": 16,
+        "end": 18,
+        "text": "Saved to Drafts!",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_10",
+        "start": 18,
+        "end": 20,
+        "text": "Schedule post",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_11",
+        "start": 20,
+        "end": 22,
+        "text": "Scheduled for Tue, May 12, 5:45 PM",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_12",
+        "start": 22,
+        "end": 24,
+        "text": "Create Post",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      },
+      {
+        "id": "cap_13",
+        "start": 24,
+        "end": 25.466,
+        "text": "Scheduled Posts",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "none"
+      }
+    ],
+    "textOverlays": [],
+    "stickers": [
+      {
+        "id": "stk_1",
+        "assetId": "sparkle",
+        "start": 0,
+        "end": 1.5,
+        "x": 0.8,
+        "y": 0.2,
+        "scale": 0.3,
+        "rotation": 0
+      }
+    ],
+    "zooms": [
+      {
+        "id": "zoom_1",
+        "start": 1,
+        "end": 2,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_2",
+        "start": 3,
+        "end": 4,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_3",
+        "start": 5,
+        "end": 6,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_4",
+        "start": 7,
+        "end": 8,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_5",
+        "start": 9,
+        "end": 10,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_6",
+        "start": 11,
+        "end": 12,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_7",
+        "start": 13,
+        "end": 14,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_8",
+        "start": 15,
+        "end": 16,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_9",
+        "start": 17,
+        "end": 18,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_10",
+        "start": 19,
+        "end": 20,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_11",
+        "start": 21,
+        "end": 22,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_12",
+        "start": 23,
+        "end": 24,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      }
+    ],
+    "music": {
+      "trackId": "upbeat_01, chill_01, cinematic_01",
+      "volume": 0.16,
+      "startAt": 0,
+      "fadeIn": 0.4,
+      "fadeOut": 0.8
+    },
+    "styleNotes": "Fast-paced editing with kinetic captions, medium sticker usage, and frequent zooms during cursor interactions. Dark UI theme with orange accents."
+  }
+}

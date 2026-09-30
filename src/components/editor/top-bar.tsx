@@ -90,7 +90,7 @@ export function EditorTopBar() {
         toast.success("Export ready — downloading MP4");
         const a = document.createElement("a");
         a.href = url;
-        a.download = `${project.name || "cutline"}.mp4`;
+        a.download = `${project.name || "stylebox"}.mp4`;
         a.click();
       } else {
         setProject({
@@ -111,8 +111,8 @@ export function EditorTopBar() {
     <header className="flex h-14 shrink-0 items-center justify-between border-b border-[var(--editor-border)] bg-[var(--editor-panel)] px-4">
       <div className="flex min-w-0 items-center gap-3">
         <Link href="/dashboard" className="flex shrink-0 items-center gap-2">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--editor-accent)] text-[#3a1f2a] font-display text-xs font-bold">
-            C
+          <span className="inline-flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--editor-accent)] text-[#3a1f2a] font-display text-[9px] font-bold">
+            S
           </span>
         </Link>
         <span className="truncate text-sm font-medium">

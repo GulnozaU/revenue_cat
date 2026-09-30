@@ -214,7 +214,8 @@ export type ProjectRecord = {
 export function validateEditPlan(input: unknown):
   | { success: true; data: EditPlan }
   | { success: false; error: string } {
-  const parsed = EditPlanSchema.safeParse(input);
+  const sanitized = sanitizeRawEditPlan(input);
+  const parsed = EditPlanSchema.safeParse(sanitized);
   if (!parsed.success) {
     return {
       success: false,
@@ -222,6 +223,29 @@ export function validateEditPlan(input: unknown):
     };
   }
   return { success: true, data: parsed.data };
+}
+
+/** Soften LLM JSON before Zod so long captions don't reject the whole plan. */
+function sanitizeRawEditPlan(input: unknown): unknown {
+  if (!input || typeof input !== "object") return input;
+  const plan = { ...(input as Record<string, unknown>) };
+  if (Array.isArray(plan.captions)) {
+    plan.captions = plan.captions.map((c) => {
+      if (!c || typeof c !== "object") return c;
+      const cap = { ...(c as Record<string, unknown>) };
+      if (typeof cap.text === "string") cap.text = cap.text.slice(0, 240);
+      return cap;
+    });
+  }
+  if (Array.isArray(plan.textOverlays)) {
+    plan.textOverlays = plan.textOverlays.map((t) => {
+      if (!t || typeof t !== "object") return t;
+      const row = { ...(t as Record<string, unknown>) };
+      if (typeof row.text === "string") row.text = row.text.slice(0, 120);
+      return row;
+    });
+  }
+  return plan;
 }
 
 const MIN_CLIP_SEC = 0.2;
@@ -299,18 +323,20 @@ export function normalizeEditPlan(plan: EditPlan, sourceDuration: number): EditP
       .map((c, i) => ({
         ...c,
         id: c.id || `cap_${i + 1}`,
+        text: String(c.text ?? "").slice(0, 240),
         start: clamp(c.start, 0, duration),
         end: clamp(c.end, 0, duration),
       }))
-      .filter((c) => c.end - c.start >= 0.1),
+      .filter((c) => c.end - c.start >= 0.1 && c.text.trim().length > 0),
     textOverlays: (plan.textOverlays ?? [])
       .map((t, i) => ({
         ...t,
         id: t.id || `text_${i + 1}`,
+        text: String(t.text ?? "").slice(0, 120),
         start: clamp(t.start, 0, duration),
         end: clamp(t.end, 0, duration),
       }))
-      .filter((t) => t.end - t.start >= 0.1),
+      .filter((t) => t.end - t.start >= 0.1 && t.text.trim().length > 0),
     stickers: (plan.stickers ?? [])
       .map((s, i) => ({
         ...s,

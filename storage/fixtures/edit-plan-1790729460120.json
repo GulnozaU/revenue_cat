@@ -1,0 +1,203 @@
+{
+  "meta": {
+    "aestheticId": "fast_paced",
+    "format": "instagram_reel",
+    "prompt": "Add zooms when the cursor is cliking",
+    "provider": "gemini",
+    "model": "gemini-3.8-flash"
+  },
+  "plan": {
+    "sourceDuration": 125.35,
+    "format": "vertical_9_16",
+    "aestheticId": "fast_paced",
+    "duration": 14.2,
+    "clips": [
+      {
+        "id": "clip_1",
+        "sourceStart": 0,
+        "sourceEnd": 2,
+        "timelineStart": 0,
+        "timelineEnd": 2,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Clinic sign in click"
+      },
+      {
+        "id": "clip_2",
+        "sourceStart": 4,
+        "sourceEnd": 6.5,
+        "timelineStart": 2,
+        "timelineEnd": 4.5,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Clicking run 4 patients in parallel"
+      },
+      {
+        "id": "clip_3",
+        "sourceStart": 13,
+        "sourceEnd": 16,
+        "timelineStart": 4.5,
+        "timelineEnd": 7.5,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Clicking audit and live agent autofill"
+      },
+      {
+        "id": "clip_4",
+        "sourceStart": 23.5,
+        "sourceEnd": 26.5,
+        "timelineStart": 7.5,
+        "timelineEnd": 10.5,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Form completion and receipt confirmation"
+      },
+      {
+        "id": "clip_5",
+        "sourceStart": 31.5,
+        "sourceEnd": 35,
+        "timelineStart": 10.5,
+        "timelineEnd": 14,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Dashboard update and audit click"
+      },
+      {
+        "id": "clip_6",
+        "sourceStart": 125.15,
+        "sourceEnd": 125.35,
+        "timelineStart": 14,
+        "timelineEnd": 14.2,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Approval status achieved"
+      }
+    ],
+    "cuts": [],
+    "captions": [
+      {
+        "id": "cap_1",
+        "start": 0.2,
+        "end": 2,
+        "text": "Sign in to clinic console",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "pop"
+      },
+      {
+        "id": "cap_2",
+        "start": 2.2,
+        "end": 4.5,
+        "text": "Run batch agents in parallel",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "pop"
+      },
+      {
+        "id": "cap_3",
+        "start": 4.7,
+        "end": 7.5,
+        "text": "Automated prior auth live filling",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "pop"
+      },
+      {
+        "id": "cap_4",
+        "start": 7.7,
+        "end": 10.5,
+        "text": "Instant submission reference!",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "pop"
+      },
+      {
+        "id": "cap_5",
+        "start": 10.7,
+        "end": 14,
+        "text": "Track live status updates",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "pop"
+      }
+    ],
+    "textOverlays": [],
+    "stickers": [
+      {
+        "id": "stk_1",
+        "assetId": "fire",
+        "start": 2.2,
+        "end": 4.2,
+        "x": 0.8,
+        "y": 0.25,
+        "scale": 0.35,
+        "rotation": 10
+      }
+    ],
+    "zooms": [
+      {
+        "id": "zoom_1",
+        "start": 0.5,
+        "end": 1.5,
+        "scale": 1.15,
+        "x": 0.5,
+        "y": 0.65
+      },
+      {
+        "id": "zoom_2",
+        "start": 3,
+        "end": 4.3,
+        "scale": 1.2,
+        "x": 0.3,
+        "y": 0.78
+      },
+      {
+        "id": "zoom_3",
+        "start": 4.5,
+        "end": 5.5,
+        "scale": 1.18,
+        "x": 0.9,
+        "y": 0.17
+      },
+      {
+        "id": "zoom_4",
+        "start": 8,
+        "end": 10,
+        "scale": 1.22,
+        "x": 0.65,
+        "y": 0.15
+      },
+      {
+        "id": "zoom_5",
+        "start": 12,
+        "end": 13.5,
+        "scale": 1.18,
+        "x": 0.55,
+        "y": 0.6
+      }
+    ],
+    "music": {
+      "trackId": "upbeat_01",
+      "volume": 0.18,
+      "startAt": 0,
+      "fadeIn": 0.3,
+      "fadeOut": 0.6
+    },
+    "styleNotes": "High-energy pacing focusing on interactive button clicks with rapid punch zooms and kinetic subtitles."
+  }
+}

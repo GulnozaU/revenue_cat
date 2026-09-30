@@ -33,10 +33,10 @@ export default function SignInPage() {
     <div className="flex min-h-screen flex-col bg-[var(--bg)]">
       <header className="mx-auto flex w-full max-w-md items-center px-6 py-5">
         <Link href="/" className="flex items-center gap-2">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-sm font-bold">
-            C
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-[var(--accent)] text-[var(--accent-fg)] font-display text-[10px] font-bold">
+            S
           </span>
-          <span className="font-display text-lg font-semibold">Cutline</span>
+          <span className="font-display text-lg font-semibold">stylebox</span>
         </Link>
       </header>
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-6 pb-20">

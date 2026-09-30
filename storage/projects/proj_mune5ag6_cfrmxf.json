@@ -1,0 +1,55 @@
+{
+  "id": "proj_mune5ag6_cfrmxf",
+  "name": "Screen_Recording_2026-05-31_at_4_23_31_PM",
+  "format": "youtube_landscape",
+  "aestheticId": "fast_paced",
+  "prompt": "Add zooms when the cursor is clicking",
+  "assets": [
+    {
+      "id": "cb5caee6-638e-43c3-894f-35d7b629286a",
+      "filename": "Screen_Recording_2026-05-31_at_4_23_31_PM.mp4",
+      "mimeType": "video/mp4",
+      "sourcePath": "uploads/proj_mune5ag6_cfrmxf/cb5caee6-638e-43c3-894f-35d7b629286a.mp4",
+      "sourceUrl": "/api/files/uploads/proj_mune5ag6_cfrmxf/cb5caee6-638e-43c3-894f-35d7b629286a.mp4",
+      "duration": 125.35,
+      "width": 2408,
+      "height": 1330,
+      "fps": 30,
+      "sizeBytes": 11898244,
+      "hasAudio": true,
+      "thumbnailPath": "uploads/proj_mune5ag6_cfrmxf/cb5caee6-638e-43c3-894f-35d7b629286a_thumb.jpg",
+      "thumbnailUrl": "/api/files/uploads/proj_mune5ag6_cfrmxf/cb5caee6-638e-43c3-894f-35d7b629286a_thumb.jpg",
+      "proxyPath": "uploads/proj_mune5ag6_cfrmxf/cb5caee6-638e-43c3-894f-35d7b629286a.mp4",
+      "proxyUrl": "/api/files/uploads/proj_mune5ag6_cfrmxf/cb5caee6-638e-43c3-894f-35d7b629286a.mp4"
+    }
+  ],
+  "status": "error",
+  "createdAt": "2026-09-30T00:52:43.686Z",
+  "updatedAt": "2026-09-30T00:54:16.444Z",
+  "analysis": {
+    "transcript": {
+      "language": "und",
+      "fullText": "",
+      "duration": 125.35,
+      "provider": "silence-fallback",
+      "segments": [
+        {
+          "id": "seg_1",
+          "start": 0,
+          "end": 125.35,
+          "text": "[full take]"
+        }
+      ]
+    },
+    "silences": [],
+    "highlightCandidates": [
+      {
+        "start": 0,
+        "end": 125.35,
+        "score": 0.5,
+        "reason": "Segment"
+      }
+    ]
+  },
+  "error": "NVIDIA analysis failed: NVIDIA analysis failed (500): {\"error\":{\"message\":\"ValueError: Failed to load audio from data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAUutbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAB6aYAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgABSth0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAB6aYAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAA Gemini fallback failed: model is busy (high demand). Try again shortly."
+}
