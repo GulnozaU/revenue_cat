@@ -34,6 +34,8 @@ type ProjectStore = {
   future: EditPlan[];
   rendering: boolean;
   renderProgress: { ratio: number; message: string } | null;
+  /** After Apply preview/Export, show burned MP4; otherwise live source+overlays */
+  preferRenderedPreview: boolean;
 
   setAuth: (auth: { signedIn: boolean; email?: string }) => void;
   setShowAuthModal: (show: boolean, intent?: "save" | "export" | null) => void;
@@ -49,6 +51,7 @@ type ProjectStore = {
   redo: () => void;
   setRendering: (v: boolean) => void;
   setRenderProgress: (p: { ratio: number; message: string } | null) => void;
+  setPreferRenderedPreview: (v: boolean) => void;
 
   draftFormat: VideoFormat;
   draftAesthetic: AestheticId;
@@ -72,6 +75,7 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   future: [],
   rendering: false,
   renderProgress: null,
+  preferRenderedPreview: false,
   draftFormat: "instagram_reel",
   draftAesthetic: "clean_lifestyle",
   draftPrompt: "",
@@ -83,8 +87,10 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   setSelection: (sel) => set({ selection: sel }),
   setPlayhead: (t) => set({ playhead: t }),
   setIsPlaying: (p) => set({ isPlaying: p }),
-  setProject: (project) => set({ project, playhead: 0, isPlaying: false }),
+  setProject: (project) =>
+    set({ project, playhead: 0, isPlaying: false, preferRenderedPreview: false }),
   setSourceFile: (file) => set({ sourceFile: file }),
+  setPreferRenderedPreview: (v) => set({ preferRenderedPreview: v }),
   setPreviewBlobUrl: (url) => {
     const project = get().project;
     if (!project) return;
@@ -97,10 +103,14 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
       }
     }
     set({
+      preferRenderedPreview: Boolean(url),
       project: {
         ...project,
         previewUrl: url ?? undefined,
-        exportUrl: url && project.exportUrl?.startsWith("blob:") ? url : project.exportUrl,
+        exportUrl:
+          url && project.exportUrl?.startsWith("blob:")
+            ? url
+            : project.exportUrl,
       },
     });
   },
@@ -120,7 +130,11 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
         future: [],
       });
     }
-    set({ project: { ...project, editPlan: plan } });
+    // Caption/sticker edits should show live, not the old burned render
+    set({
+      project: { ...project, editPlan: plan },
+      preferRenderedPreview: false,
+    });
   },
 
   undo: () => {

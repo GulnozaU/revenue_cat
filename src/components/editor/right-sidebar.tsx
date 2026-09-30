@@ -140,38 +140,10 @@ export function RightSidebar() {
         throw new Error(err.error || "Improve failed");
       }
       const data = await res.json();
-      setProject(data.project);
+      setProject({ ...data.project, previewUrl: undefined });
+      useProjectStore.getState().setPreferRenderedPreview(false);
       setInstruction("");
-
-      let source: File | Blob | null = sourceFile;
-      if (!source && data.project.assets?.[0]?.sourceUrl) {
-        const media = await fetch(data.project.assets[0].sourceUrl);
-        if (media.ok) source = await media.blob();
-      }
-      if (source && data.project.editPlan) {
-        const { renderEditPlanInBrowser } = await import(
-          "@/lib/video/ffmpeg-browser"
-        );
-        const blob = await renderEditPlanInBrowser({
-          source,
-          plan: data.project.editPlan,
-          format: data.project.format,
-          quality: "preview",
-        });
-        const url = URL.createObjectURL(blob);
-        const prev = data.project.previewUrl;
-        if (prev?.startsWith("blob:")) {
-          try {
-            URL.revokeObjectURL(prev);
-          } catch {
-            /* ignore */
-          }
-        }
-        setProject({ ...data.project, previewUrl: url });
-        toast.success("AI Improve applied — real preview updated");
-      } else {
-        toast.success("AI Improve applied — hit Apply preview to render");
-      }
+      toast.success("Edit updated — tweak captions & stickers live, then Export");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Improve failed");
     } finally {
@@ -275,6 +247,20 @@ export function RightSidebar() {
                   updateCaption(selectedCaption.id, { text: e.target.value })
                 }
               />
+            </Field>
+            <Field label="Font">
+              <select
+                className="h-8 w-full rounded-md border border-[var(--editor-border)] bg-[var(--editor-panel-2)] px-2 text-sm text-[var(--editor-fg)]"
+                value={selectedCaption.fontId}
+                onChange={(e) =>
+                  updateCaption(selectedCaption.id, { fontId: e.target.value })
+                }
+              >
+                <option value="dm_sans">DM Sans</option>
+                <option value="arial">Clean Sans</option>
+                <option value="arial_bold">Bold Sans</option>
+                <option value="courier_bold">Typewriter</option>
+              </select>
             </Field>
             <Field label="Font size">
               <input

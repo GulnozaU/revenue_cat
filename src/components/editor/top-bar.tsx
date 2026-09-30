@@ -81,6 +81,8 @@ export function EditorTopBar() {
         }
       }
 
+      useProjectStore.getState().setPreferRenderedPreview(true);
+
       if (quality === "export") {
         setProject({
           ...project,
@@ -97,7 +99,7 @@ export function EditorTopBar() {
           ...project,
           previewUrl: url,
         });
-        toast.success("Preview re-rendered");
+        toast.success("Preview rendered");
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Video rendering failed.");
@@ -118,6 +120,11 @@ export function EditorTopBar() {
         <span className="truncate text-sm font-medium">
           {project?.name ?? "Untitled"}
         </span>
+        {project?.aiProvider === "mock" && (
+          <span className="rounded-md border border-[var(--editor-border)] px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-[var(--editor-muted)]">
+            Demo
+          </span>
+        )}
         {rendering && renderProgress && (
           <span className="hidden truncate text-xs text-[var(--editor-muted)] sm:inline">
             {Math.round(renderProgress.ratio * 100)}% · {renderProgress.message}

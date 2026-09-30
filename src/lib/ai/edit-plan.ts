@@ -5,8 +5,7 @@ import type {
   VideoAnalysis,
   VideoFormat,
 } from "@/lib/types/edit-plan";
-import { generateEditPlanWithNvidia } from "@/lib/ai/nvidia";
-import { generateEditPlanWithGemini } from "@/lib/ai/gemini";
+import { generateEditPlanViaProvider } from "@/lib/ai/provider";
 
 export async function buildAnalysis(input: {
   duration: number;
@@ -39,11 +38,12 @@ export async function buildAnalysis(input: {
   };
 }
 
-export type AiProvider = "nvidia" | "gemini";
+export type AiProvider = "mock" | "nvidia" | "gemini";
 
 /**
- * NVIDIA primary → Gemini fallback.
- * Never returns a mock/fake EditPlan.
+ * Entry point used by the pipeline.
+ * AI_MODE=mock → deterministic EditPlan (no external AI).
+ * AI_MODE=real → NVIDIA → Gemini.
  */
 export async function generateEditPlan(input: {
   prompt: string;
@@ -60,67 +60,14 @@ export async function generateEditPlan(input: {
     selection?: { type: string; id?: string; start?: number; end?: number };
   };
 }): Promise<{ plan: EditPlan; provider: AiProvider }> {
-  const shared = {
-    mimeType: input.mimeType,
+  return generateEditPlanViaProvider({
     prompt: input.prompt,
     format: input.format,
     aestheticId: input.aestheticId,
     sourceDuration: input.sourceDuration,
+    videoPath: input.videoPath,
+    videoBuffer: input.videoBuffer,
+    mimeType: input.mimeType,
     improve: input.improve,
-  };
-
-  let nvidiaError: string | null = null;
-
-  // Large base64 payloads are unreliable on serverless; prefer Gemini Files for big videos
-  const tooLargeForNvidiaInline = input.videoBuffer.byteLength > 12 * 1024 * 1024;
-
-  if (process.env.NVIDIA_API_KEY && !tooLargeForNvidiaInline) {
-    try {
-      return await generateEditPlanWithNvidia({
-        ...shared,
-        videoBuffer: input.videoBuffer,
-      });
-    } catch (err) {
-      nvidiaError = err instanceof Error ? err.message : String(err);
-      console.warn("[ai] NVIDIA failed, trying Gemini fallback:", nvidiaError);
-    }
-  } else if (!process.env.NVIDIA_API_KEY) {
-    nvidiaError = "NVIDIA_API_KEY is missing.";
-    console.warn("[ai] Skipping NVIDIA —", nvidiaError);
-  } else {
-    nvidiaError =
-      "Video exceeds NVIDIA inline size limit; using Gemini Files API.";
-    console.warn("[ai]", nvidiaError);
-  }
-
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error(
-      [
-        nvidiaError
-          ? `NVIDIA analysis failed: ${nvidiaError}`
-          : "NVIDIA analysis failed.",
-        "Gemini fallback failed: GEMINI_API_KEY is missing.",
-      ].join(" ")
-    );
-  }
-
-  try {
-    return await generateEditPlanWithGemini({
-      ...shared,
-      videoPath: input.videoPath,
-      videoBuffer: input.videoBuffer,
-    });
-  } catch (err) {
-    const geminiMsg = err instanceof Error ? err.message : String(err);
-    throw new Error(
-      [
-        nvidiaError
-          ? `NVIDIA analysis failed: ${nvidiaError}`
-          : "NVIDIA analysis failed.",
-        geminiMsg.startsWith("Gemini")
-          ? geminiMsg
-          : `Gemini fallback failed: ${geminiMsg}`,
-      ].join(" ")
-    );
-  }
+  });
 }

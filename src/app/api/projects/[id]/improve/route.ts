@@ -69,7 +69,8 @@ export async function POST(req: Request, ctx: Ctx) {
     }
 
     const asset = project.assets[0];
-    if (!videoBuffer) {
+    const { getAiMode } = await import("@/lib/ai/provider");
+    if (!videoBuffer && getAiMode() !== "mock") {
       try {
         videoBuffer = await fs.readFile(storagePath(asset.sourcePath));
       } catch {
@@ -81,6 +82,8 @@ export async function POST(req: Request, ctx: Ctx) {
           { status: 400 }
         );
       }
+    } else if (!videoBuffer) {
+      videoBuffer = Buffer.alloc(0);
     }
 
     const { plan, provider } = await generateEditPlan({

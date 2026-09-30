@@ -205,7 +205,7 @@ export type ProjectRecord = {
   previewUrl?: string;
   exportPath?: string;
   exportUrl?: string;
-  aiProvider?: "nvidia" | "gemini";
+  aiProvider?: "mock" | "nvidia" | "gemini";
   createdAt: string;
   updatedAt: string;
   error?: string;
@@ -391,12 +391,10 @@ function clamp(n: number, min: number, max: number) {
 }
 
 export const PROCESSING_STAGES = [
-  { id: "uploading", label: "Uploading footage" },
-  { id: "probing", label: "Reading video metadata" },
-  { id: "proxy", label: "Preparing for analysis" },
-  { id: "watching", label: "NVIDIA watching your video" },
-  { id: "planning", label: "Building structured edit plan" },
-  { id: "rendering", label: "Rendering preview in browser" },
+  { id: "analyzing", label: "Analyzing your footage…" },
+  { id: "moments", label: "Finding the best moments…" },
+  { id: "creating", label: "Creating your first edit…" },
+  { id: "timeline", label: "Building your timeline…" },
 ] as const;
 
 export type ProcessingStageId = (typeof PROCESSING_STAGES)[number]["id"];

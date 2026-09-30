@@ -79,7 +79,9 @@ function NewProjectInner() {
   const [aesthetic, setAesthetic] = useState<AestheticId>(
     AESTHETIC_ORDER.includes(initialAesthetic) ? initialAesthetic : "cute"
   );
-  const [prompt, setPrompt] = useState("");
+  const [prompt, setPrompt] = useState(
+    "Make this into a cute aesthetic Instagram Reel. Use soft captions, a pretty font, little sparkle and flower stickers, gentle background music, remove boring sections, add a few subtle zooms, and make the pacing feel smooth and cozy."
+  );
   const [dragging, setDragging] = useState(false);
   const [busy, setBusy] = useState(false);
 

@@ -9,6 +9,13 @@ export type FontDef = {
 
 export const FONT_LIBRARY: FontDef[] = [
   {
+    id: "dm_sans",
+    name: "DM Sans",
+    category: "Clean",
+    file: "ArialBold.ttf",
+    url: "/fonts/ArialBold.ttf",
+  },
+  {
     id: "arial",
     name: "Clean Sans",
     category: "Clean",
@@ -32,7 +39,7 @@ export const FONT_LIBRARY: FontDef[] = [
 ];
 
 export function getFont(id: string): FontDef {
-  return FONT_LIBRARY.find((f) => f.id === id) ?? FONT_LIBRARY[1];
+  return FONT_LIBRARY.find((f) => f.id === id) ?? FONT_LIBRARY[0];
 }
 
 export type StickerAsset = {
@@ -85,6 +92,15 @@ export type MusicTrack = {
 };
 
 export const MUSIC_LIBRARY: MusicTrack[] = [
+  {
+    id: "ocean_dreams",
+    title: "Ocean Dreams",
+    mood: "ambient",
+    url: "/music/ocean-dreams.mp3",
+    file: "ocean-dreams.mp3",
+    duration: 60,
+    bpm: 92,
+  },
   {
     id: "upbeat_01",
     title: "Pulse Drive",

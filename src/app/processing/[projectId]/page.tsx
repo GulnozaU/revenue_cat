@@ -14,7 +14,6 @@ export default function ProcessingPage() {
   const router = useRouter();
   const setProject = useProjectStore((s) => s.setProject);
   const setSourceFile = useProjectStore((s) => s.setSourceFile);
-  const setPreviewBlobUrl = useProjectStore((s) => s.setPreviewBlobUrl);
 
   const [stageIndex, setStageIndex] = useState(0);
   const [ready, setReady] = useState(false);
@@ -36,17 +35,9 @@ export default function ProcessingPage() {
           const data = await res.json();
           if (data.project?.status === "ready" && data.project.editPlan) {
             setProject(data.project);
-            if (data.project.previewUrl) {
-              setReady(true);
-              setStageIndex(PROCESSING_STAGES.length);
-              setDetail(
-                `Provider: ${data.project.aiProvider ?? "n/a"} · clips: ${data.project.editPlan?.clips?.length ?? 0}`
-              );
-              return;
-            }
-            setError(
-              "Edit plan exists but no rendered preview. Re-upload to render in the browser."
-            );
+            setReady(true);
+            setStageIndex(PROCESSING_STAGES.length);
+            setDetail("Your first edit is ready.");
             return;
           }
           if (data.project?.status === "error") {
@@ -58,17 +49,22 @@ export default function ProcessingPage() {
         return;
       }
 
+      // Fast demo stages (~1.6s total feel)
       tick = setInterval(() => {
-        setStageIndex((i) => Math.min(i + 1, PROCESSING_STAGES.length - 2));
-      }, 4000);
+        setStageIndex((i) => Math.min(i + 1, PROCESSING_STAGES.length - 1));
+      }, 450);
 
       try {
-        setDetail("Uploading video for NVIDIA analysis…");
+        setDetail("Analyzing your footage…");
         const form = new FormData();
         form.append("file", upload.file);
 
-        // Client-probed metadata (no server FFmpeg)
         const meta = await probeClientMeta(upload.file);
+        if (!(meta.duration > 0)) {
+          throw new Error(
+            "Couldn't read this video. Try another MP4 file."
+          );
+        }
         form.append("duration", String(meta.duration));
         form.append("width", String(meta.width));
         form.append("height", String(meta.height));
@@ -93,47 +89,29 @@ export default function ProcessingPage() {
         if (cancelled) return;
 
         if (!data.project?.editPlan) {
-          throw new Error("No edit plan returned from analysis.");
+          throw new Error("No edit plan returned.");
         }
 
-        setProject(data.project);
+        // Keep the REAL uploaded File for interactive preview + export
         setSourceFile(upload.file);
-        setStageIndex(PROCESSING_STAGES.length - 1);
-        setDetail(
-          `${data.project.aiProvider ?? "AI"} · ${data.project.editPlan.clips.length} clips — rendering in browser…`
-        );
-
-        // Real browser render with ffmpeg.wasm
-        const { renderEditPlanInBrowser } = await import(
-          "@/lib/video/ffmpeg-browser"
-        );
-        const blob = await renderEditPlanInBrowser({
-          source: upload.file,
-          plan: data.project.editPlan,
-          format: data.project.format,
-          quality: "preview",
-          onProgress: (p) => {
-            if (!cancelled) setDetail(p.message);
-          },
-        });
-
-        if (cancelled) return;
-
-        const url = URL.createObjectURL(blob);
-        setPreviewBlobUrl(url);
         setProject({
           ...data.project,
-          previewUrl: url,
+          // Live preview uses source File; no burn-in yet
+          previewUrl: undefined,
           status: "ready",
         });
 
         if (tick) clearInterval(tick);
         setStageIndex(PROCESSING_STAGES.length);
-        setDetail(
-          `Provider: ${data.project.aiProvider ?? "n/a"} · ${data.project.editPlan.clips.length} clips · real MP4 preview ready`
-        );
+        setDetail("Your first edit is ready — open the editor to refine it.");
         setReady(true);
-        delete (window as unknown as { __cutlineUpload?: unknown }).__cutlineUpload;
+        delete (window as unknown as { __cutlineUpload?: unknown })
+          .__cutlineUpload;
+
+        // Auto-advance into the editor for a snappy demo
+        setTimeout(() => {
+          if (!cancelled) router.push(`/editor/${params.projectId}`);
+        }, 600);
       } catch (err) {
         if (tick) clearInterval(tick);
         console.error(err);
@@ -151,7 +129,7 @@ export default function ProcessingPage() {
       cancelled = true;
       if (tick) clearInterval(tick);
     };
-  }, [params.projectId, setProject, setSourceFile, setPreviewBlobUrl]);
+  }, [params.projectId, setProject, setSourceFile, router]);
 
   return (
     <div className="min-h-screen bg-[var(--bg)]">
@@ -170,7 +148,7 @@ export default function ProcessingPage() {
             ? "Your first cut is ready."
             : error
               ? "Something went wrong"
-              : "Creating your first cut"}
+              : "Creating your first edit"}
         </h1>
         <p className="mt-2 text-[var(--fg-muted)]">{detail}</p>
 

@@ -111,11 +111,11 @@ export async function runProjectPipeline(
 
     onProgress?.({
       stage: "watching",
-      message: "NVIDIA is watching your video…",
+      message: "Analyzing your footage…",
     });
     onProgress?.({
       stage: "planning",
-      message: "Building structured edit plan",
+      message: "Creating your first edit…",
     });
 
     const { plan, provider } = await generateEditPlan({
