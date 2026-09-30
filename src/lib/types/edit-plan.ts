@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { fallbackAssetId, getAsset } from "@/lib/assets/assetRegistry";
+import { STICKER_ANIMATIONS } from "@/lib/assets/animations";
 
 export const VideoFormatSchema = z.enum([
   "instagram_reel",
@@ -106,7 +108,27 @@ export const StickerSchema = z.object({
   x: z.number().min(0).max(1).default(0.8),
   y: z.number().min(0).max(1).default(0.2),
   scale: z.number().min(0.1).max(3).default(0.35),
-  rotation: z.number().min(-180).max(180).default(0),
+  rotation: z.number().min(-360).max(360).default(0),
+  opacity: z.number().min(0).max(1).default(1),
+  animation: z
+    .enum([
+      "none",
+      "fade",
+      "pop",
+      "bounce",
+      "slide-up",
+      "slide-left",
+      "slide-right",
+      "float",
+      "wiggle",
+      "scale-in",
+      "scale-out",
+      "spin",
+      "pulse",
+    ])
+    .default("none"),
+  /** Set for Unicode emoji layers. Those are drawn as text, not image files. */
+  emoji: z.string().max(16).optional(),
 });
 export type Sticker = z.infer<typeof StickerSchema>;
 
@@ -239,6 +261,17 @@ function sanitizeRawEditPlan(input: unknown): unknown {
     });
   }
 
+  if (Array.isArray(plan.stickers)) {
+    const allowed = new Set<string>(STICKER_ANIMATIONS);
+    plan.stickers = plan.stickers.map((s) => {
+      if (!s || typeof s !== "object") return s;
+      const row = { ...(s as Record<string, unknown>) };
+      if (!allowed.has(String(row.animation ?? "none"))) row.animation = "none";
+      if (typeof row.opacity !== "number") row.opacity = 1;
+      return row;
+    });
+  }
+
   if (Array.isArray(plan.textOverlays)) {
     plan.textOverlays = plan.textOverlays.map((t) => {
       if (!t || typeof t !== "object") return t;
@@ -368,12 +401,19 @@ export function normalizeEditPlan(plan: EditPlan, sourceDuration: number): EditP
       }))
       .filter((t) => t.end - t.start >= 0.1 && t.text.trim().length > 0),
     stickers: (plan.stickers ?? [])
-      .map((s, i) => ({
-        ...s,
-        id: s.id || `stk_${i + 1}`,
-        start: clamp(s.start, 0, duration),
-        end: clamp(s.end, 0, duration),
-      }))
+      .map((s, i) => {
+        const emoji = s.emoji?.trim();
+        const known = Boolean(emoji) || Boolean(getAsset(s.assetId));
+        return {
+          ...s,
+          id: s.id || `stk_${i + 1}`,
+          assetId: known ? s.assetId : fallbackAssetId(),
+          opacity: s.opacity ?? 1,
+          animation: s.animation ?? "none",
+          start: clamp(s.start, 0, duration),
+          end: clamp(s.end, 0, duration),
+        };
+      })
       .filter((s) => s.end - s.start >= 0.1),
     zooms: (plan.zooms ?? [])
       .map((z, i) => ({

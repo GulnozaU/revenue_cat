@@ -6,8 +6,10 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input, Textarea, Label } from "@/components/ui/input";
 import { useProjectStore } from "@/store/project-store";
+import type { EditPlan } from "@/lib/types/edit-plan";
 import { getMusicTrack } from "@/lib/assets/library";
 import { FontPicker } from "@/components/editor/font-picker";
+import { STICKER_ANIMATIONS } from "@/lib/assets/animations";
 import { cn } from "@/lib/utils";
 
 const EXAMPLES = [
@@ -102,6 +104,25 @@ export function RightSidebar() {
       });
     }
     setSelection(null);
+  };
+
+  const patchSticker = (
+    patch: Partial<{
+      scale: number;
+      rotation: number;
+      opacity: number;
+      animation: NonNullable<EditPlan["stickers"][number]["animation"]>;
+      start: number;
+      end: number;
+    }>
+  ) => {
+    if (!selectedSticker) return;
+    setEditPlanLocal({
+      ...plan,
+      stickers: plan.stickers.map((s) =>
+        s.id === selectedSticker.id ? { ...s, ...patch } : s
+      ),
+    });
   };
 
   const runImprove = async () => {
@@ -371,16 +392,7 @@ export function RightSidebar() {
                 max={1.4}
                 step={0.05}
                 value={selectedSticker.scale}
-                onChange={(e) =>
-                  setEditPlanLocal({
-                    ...plan,
-                    stickers: plan.stickers.map((s) =>
-                      s.id === selectedSticker.id
-                        ? { ...s, scale: Number(e.target.value) }
-                        : s
-                    ),
-                  })
-                }
+                onChange={(e) => patchSticker({ scale: Number(e.target.value) })}
                 className="w-full accent-[var(--editor-accent)]"
               />
             </Field>
@@ -391,19 +403,82 @@ export function RightSidebar() {
                 max={180}
                 step={1}
                 value={selectedSticker.rotation || 0}
-                onChange={(e) =>
-                  setEditPlanLocal({
-                    ...plan,
-                    stickers: plan.stickers.map((s) =>
-                      s.id === selectedSticker.id
-                        ? { ...s, rotation: Number(e.target.value) }
-                        : s
-                    ),
-                  })
-                }
+                onChange={(e) => patchSticker({ rotation: Number(e.target.value) })}
                 className="w-full accent-[var(--editor-accent)]"
               />
             </Field>
+            <Field label="Opacity">
+              <input
+                type="range"
+                min={0.15}
+                max={1}
+                step={0.05}
+                value={selectedSticker.opacity ?? 1}
+                onChange={(e) => patchSticker({ opacity: Number(e.target.value) })}
+                className="w-full accent-[var(--editor-accent)]"
+              />
+            </Field>
+            <Field label="Animation">
+              <select
+                value={selectedSticker.animation ?? "none"}
+                onChange={(e) =>
+                  patchSticker({
+                    animation: e.target.value as NonNullable<
+                      typeof selectedSticker.animation
+                    >,
+                  })
+                }
+                className="h-8 w-full rounded-lg border border-[var(--editor-border)] bg-[var(--editor-panel-2)] px-2 text-xs"
+              >
+                {STICKER_ANIMATIONS.map((name) => (
+                  <option key={name} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <div className="grid grid-cols-2 gap-2">
+              <Field label="Start">
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={selectedSticker.start}
+                  onChange={(e) => patchSticker({ start: Number(e.target.value) })}
+                  className="h-8 bg-[var(--editor-panel-2)] border-[var(--editor-border)] text-[var(--editor-fg)]"
+                />
+              </Field>
+              <Field label="End">
+                <Input
+                  type="number"
+                  step="0.1"
+                  value={selectedSticker.end}
+                  onChange={(e) => patchSticker({ end: Number(e.target.value) })}
+                  className="h-8 bg-[var(--editor-panel-2)] border-[var(--editor-border)] text-[var(--editor-fg)]"
+                />
+              </Field>
+            </div>
+            <Button
+              size="sm"
+              variant="secondary"
+              className="w-full"
+              onClick={() => {
+                const id = `stk_${Date.now()}`;
+                setEditPlanLocal({
+                  ...plan,
+                  stickers: [
+                    ...plan.stickers,
+                    {
+                      ...selectedSticker,
+                      id,
+                      x: Math.min(0.92, selectedSticker.x + 0.08),
+                    },
+                  ],
+                });
+                setSelection({ type: "sticker", id });
+              }}
+            >
+              Duplicate
+            </Button>
           </div>
         )}
 

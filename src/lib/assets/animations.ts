@@ -1,0 +1,40 @@
+export const STICKER_ANIMATIONS = [
+  "none",
+  "fade",
+  "pop",
+  "bounce",
+  "slide-up",
+  "slide-left",
+  "slide-right",
+  "float",
+  "wiggle",
+  "scale-in",
+  "scale-out",
+  "spin",
+  "pulse",
+] as const;
+
+export type StickerAnimation = (typeof STICKER_ANIMATIONS)[number];
+
+export const UNICODE_EMOJI = [
+  "🎀",
+  "✨",
+  "🧸",
+  "🍓",
+  "☕",
+  "🌷",
+  "📚",
+  "🎧",
+  "✈️",
+  "📍",
+  "🫧",
+  "💿",
+  "⭐",
+  "🌸",
+  "🌙",
+  "🔥",
+  "📖",
+  "🎵",
+  "🏖️",
+  "💖",
+] as const;

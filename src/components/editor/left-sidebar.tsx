@@ -11,11 +11,9 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useProjectStore } from "@/store/project-store";
-import {
-  MUSIC_LIBRARY,
-  STICKER_LIBRARY,
-} from "@/lib/assets/library";
+import { MUSIC_LIBRARY } from "@/lib/assets/library";
 import { FontPicker } from "@/components/editor/font-picker";
+import { AssetPanel } from "@/components/editor/asset-panel";
 import { Button } from "@/components/ui/button";
 import { formatDuration } from "@/lib/utils";
 import { getEditorFont } from "@/data/fonts";
@@ -54,7 +52,7 @@ export function LeftSidebar() {
   };
 
   return (
-    <aside className="flex w-[300px] shrink-0 border-r border-[var(--editor-border)] bg-[var(--editor-panel)]">
+    <aside className="flex w-[300px] min-w-[300px] max-w-[300px] shrink-0 border-r border-[var(--editor-border)] bg-[var(--editor-panel)]">
       <div className="flex w-16 flex-col items-center gap-1 overflow-y-auto border-r border-[var(--editor-border)] py-3">
         {TABS.map((tab) => {
           const Icon = tab.icon;
@@ -78,7 +76,7 @@ export function LeftSidebar() {
         })}
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col overflow-y-auto p-3">
+      <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto p-3">
         {leftTab === "media" && (
           <div className="space-y-2">
             <p className="text-[11px] uppercase tracking-wider text-[var(--editor-subtle)]">
@@ -176,41 +174,7 @@ export function LeftSidebar() {
           </div>
         )}
 
-        {leftTab === "stickers" && plan && (
-          <div className="grid grid-cols-2 gap-2">
-            {STICKER_LIBRARY.filter((s) => s.category !== "Shapes").map((s) => (
-              <button
-                key={s.id}
-                type="button"
-                className="rounded-xl border border-[var(--editor-border)] bg-[var(--editor-panel-2)] p-2"
-                onClick={() => {
-                  const id = `stk_${Date.now()}`;
-                  const range = place(2.5);
-                  setEditPlanLocal({
-                    ...plan,
-                    stickers: [
-                      ...plan.stickers,
-                      {
-                        id,
-                        assetId: s.id,
-                        ...range,
-                        x: 0.72,
-                        y: 0.28,
-                        scale: 0.34,
-                        rotation: 0,
-                      },
-                    ],
-                  });
-                  setSelection({ type: "sticker", id });
-                }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={s.url} alt={s.name} className="mx-auto h-12 w-12 object-contain" />
-                <p className="mt-1 text-[10px]">{s.name}</p>
-              </button>
-            ))}
-          </div>
-        )}
+        {leftTab === "stickers" && plan && <AssetPanel />}
 
         {leftTab === "fonts" && plan && (
           <FontPicker

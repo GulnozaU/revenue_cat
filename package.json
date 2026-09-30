@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "smoke": "tsx scripts/smoke-pipeline.ts"
+    "smoke": "tsx scripts/smoke-pipeline.ts",
+    "assets:scan": "node scripts/scan-assets.mjs",
+    "assets:extract": "node scripts/extract-sticker-sheet.mjs && node scripts/scan-assets.mjs"
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.12.15",

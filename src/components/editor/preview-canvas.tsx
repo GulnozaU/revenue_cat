@@ -317,6 +317,57 @@ export function PreviewCanvas() {
     window.addEventListener("pointerup", up);
   };
 
+  const patchSticker = (
+    id: string,
+    patch: Partial<{ scale: number; rotation: number }>
+  ) => {
+    const latest = useProjectStore.getState().project?.editPlan;
+    if (!latest) return;
+    setEditPlanLocal(
+      {
+        ...latest,
+        stickers: latest.stickers.map((s) =>
+          s.id === id ? { ...s, ...patch } : s
+        ),
+      },
+      false
+    );
+  };
+
+  const resizeSticker = (id: string, startScale: number, event: React.PointerEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const origin = event.clientY;
+    const move = (ev: PointerEvent) => {
+      patchSticker(id, {
+        scale: clamp(startScale + (origin - ev.clientY) * 0.004, 0.12, 1.6),
+      });
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  };
+
+  const rotateSticker = (id: string, startRotation: number, event: React.PointerEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const origin = event.clientX;
+    const move = (ev: PointerEvent) => {
+      patchSticker(id, {
+        rotation: clamp(startRotation + (ev.clientX - origin) * 0.6, -180, 180),
+      });
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  };
+
   const addTitleAt = (clientX: number, clientY: number) => {
     const frame = frameRef.current;
     const current = useProjectStore.getState().project?.editPlan;
@@ -547,33 +598,73 @@ export function PreviewCanvas() {
               })}
 
               {stickers.map((s) => {
-                const asset = getSticker(s.assetId);
+                const selected =
+                  selection?.type === "sticker" && selection.id === s.id;
+                const motion = stickerMotion(
+                  s.animation ?? "none",
+                  playhead,
+                  s.start,
+                  s.end
+                );
+                const asset = s.emoji ? null : getSticker(s.assetId);
                 return (
-                  <button
+                  <div
                     key={s.id}
-                    type="button"
                     data-overlay
-                    className={`absolute z-20 cursor-grab bg-transparent active:cursor-grabbing ${
-                      selection?.type === "sticker" && selection.id === s.id
-                        ? "ring-2 ring-[var(--editor-accent)] rounded-lg"
-                        : ""
+                    id={`layer-${s.id}`}
+                    role="button"
+                    aria-label={s.emoji ? `Emoji ${s.emoji}` : asset?.name ?? "Sticker"}
+                    className={`absolute z-20 cursor-grab ${
+                      selected ? "rounded-lg ring-2 ring-[var(--editor-accent)]" : ""
                     }`}
                     style={{
                       left: `${s.x * 100}%`,
                       top: `${s.y * 100}%`,
-                      width: `${Math.max(12, s.scale * 36)}%`,
-                      transform: `translate(-50%, -50%) rotate(${s.rotation || 0}deg)`,
+                      width: s.emoji ? undefined : `${Math.max(14, s.scale * 42)}%`,
+                      opacity: (s.opacity ?? 1) * motion.opacity,
+                      transform: `translate(calc(-50% + ${motion.dx}px), calc(-50% + ${motion.dy}px)) rotate(${(s.rotation || 0) + motion.rot}deg) scale(${motion.scale})`,
                     }}
-                    onPointerDown={(e) => dragLayer("sticker", s.id, e)}
+                    onPointerDown={(e) => {
+                      const el = e.target as HTMLElement;
+                      if (el.closest("[data-resize]")) return;
+                      dragLayer("sticker", s.id, e);
+                    }}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={asset.url}
-                      alt={asset.name}
-                      className="pointer-events-none h-auto w-full object-contain drop-shadow-md"
-                      draggable={false}
-                    />
-                  </button>
+                    {s.emoji ? (
+                      <span
+                        className="block cursor-grab select-none leading-none"
+                        style={{ fontSize: `${Math.round(28 + s.scale * 72)}px` }}
+                      >
+                        {s.emoji}
+                      </span>
+                    ) : (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={asset?.url}
+                        alt={asset?.name ?? "Sticker"}
+                        draggable={false}
+                        className="pointer-events-none h-auto w-full object-contain drop-shadow-md"
+                      />
+                    )}
+                    {selected && (
+                      <>
+                        <span
+                          data-resize
+                          title="Resize"
+                          className="absolute -bottom-1.5 -right-1.5 h-3.5 w-3.5 cursor-ns-resize rounded-full border border-black/30 bg-white"
+                          onPointerDown={(e) => resizeSticker(s.id, s.scale, e)}
+                        />
+                        <span
+                          data-resize
+                          title="Rotate"
+                          className="absolute -top-1.5 left-1/2 h-3.5 w-3.5 -translate-x-1/2 cursor-ew-resize rounded-full border border-black/30 bg-[var(--editor-accent)]"
+                          onPointerDown={(e) =>
+                            rotateSticker(s.id, s.rotation || 0, e)
+                          }
+                        />
+                      </>
+                    )}
+                  </div>
                 );
               })}
             </>
@@ -648,6 +739,70 @@ export function PreviewCanvas() {
 
 function previewFont(fontSize: number) {
   return `clamp(12px, ${(fontSize / 10.8).toFixed(2)}cqw, 72px)`;
+}
+
+function stickerMotion(
+  animation: string,
+  playhead: number,
+  start: number,
+  end: number
+) {
+  const t = playhead - start;
+  const dur = Math.max(0.2, end - start);
+  const intro = Math.min(1, Math.max(0, t / 0.35));
+  const outro = Math.min(1, Math.max(0, (end - playhead) / 0.3));
+  let opacity = 1;
+  let scale = 1;
+  let dx = 0;
+  let dy = 0;
+  let rot = 0;
+  switch (animation) {
+    case "fade":
+      opacity = Math.min(intro, outro);
+      break;
+    case "pop":
+      scale = intro < 1 ? 0.45 + 0.7 * Math.sin(intro * Math.PI) : 1;
+      opacity = Math.min(1, intro * 1.4);
+      break;
+    case "bounce":
+      dy = -14 * Math.abs(Math.sin(t * 8)) * Math.max(0, 1 - t / 0.7);
+      break;
+    case "slide-up":
+      dy = 32 * (1 - intro);
+      opacity = intro;
+      break;
+    case "slide-left":
+      dx = -32 * (1 - intro);
+      opacity = intro;
+      break;
+    case "slide-right":
+      dx = 32 * (1 - intro);
+      opacity = intro;
+      break;
+    case "float":
+      dy = Math.sin(playhead * 2.2) * 7;
+      break;
+    case "wiggle":
+      rot = Math.sin(playhead * 8) * 8;
+      break;
+    case "scale-in":
+      scale = 0.15 + 0.85 * intro;
+      opacity = intro;
+      break;
+    case "scale-out":
+      scale = 0.15 + 0.85 * outro;
+      opacity = outro;
+      break;
+    case "spin":
+      rot = (t / dur) * 360;
+      break;
+    case "pulse":
+      scale = 1 + 0.08 * Math.sin(playhead * 6);
+      break;
+    default:
+      break;
+  }
+  return { opacity, scale, dx, dy, rot };
 }
 
 function clamp(n: number, min: number, max: number) {

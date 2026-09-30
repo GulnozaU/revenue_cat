@@ -386,6 +386,25 @@ export async function renderEditPlanInBrowser(opts: {
   }
 }
 
+function moveExpr(
+  base: number,
+  axis: "x" | "y",
+  animation: string,
+  start: number
+) {
+  const s = Number(start).toFixed(3);
+  const intro = `max(0\\,1-min(1\\,(t-${s})/0.35))`;
+  if (animation === "slide-up" && axis === "y") return `${base}+40*${intro}`;
+  if (animation === "slide-left" && axis === "x") return `${base}-48*${intro}`;
+  if (animation === "slide-right" && axis === "x") return `${base}+48*${intro}`;
+  if (animation === "float" && axis === "y") return `${base}+8*sin(2*PI*t)`;
+  if (animation === "wiggle" && axis === "x") return `${base}+6*sin(10*t)`;
+  if (animation === "bounce" && axis === "y") {
+    return `${base}-14*abs(sin(8*(t-${s})))*max(0\\,1-min(1\\,(t-${s})/0.6))`;
+  }
+  return String(base);
+}
+
 async function burnOverlaysBrowser(opts: {
   ffmpeg: FFmpeg;
   inputName: string;
@@ -401,36 +420,66 @@ async function burnOverlaysBrowser(opts: {
 
   type OverlayItem = {
     path: string;
-    x: number;
-    y: number;
+    xExpr: string;
+    yExpr: string;
     start: number;
     end: number;
+    filter?: string;
+    timed?: boolean;
   };
   const overlays: OverlayItem[] = [];
 
   for (const sticker of plan.stickers) {
-    const asset = getSticker(sticker.assetId);
-    const sw = Math.max(24, Math.round(width * sticker.scale));
-    const raw = ownBytes(await fetchFile(asset.url));
+    const sw = Math.max(28, Math.round(width * (sticker.scale || 0.3)));
     const stkName = track(`stk_${sticker.id}.png`);
-    await ffmpeg.writeFile(stkName, raw);
-    const scaled = track(`stk_${sticker.id}_s.png`);
-    const scaleCode = await ffmpeg.exec([
-      "-i",
-      stkName,
-      "-vf",
-      `scale=${sw}:-1`,
-      scaled,
-    ]);
-    if (scaleCode !== 0) {
-      throw new Error("Video rendering failed while scaling a sticker.");
+    if (sticker.emoji) {
+      const png = await renderTextPng({
+        text: sticker.emoji,
+        fontSize: Math.max(48, sw),
+        outline: false,
+        maxWidth: Math.max(64, sw * 2),
+        color: "#ffffff",
+      });
+      await ffmpeg.writeFile(stkName, ownBytes(png.data));
+    } else {
+      const asset = getSticker(sticker.assetId);
+      if (!asset?.url) {
+        throw new Error(`Missing sticker asset ${sticker.assetId}`);
+      }
+      await ffmpeg.writeFile(stkName, ownBytes(await fetchFile(asset.url)));
     }
+    const len = Math.max(0.25, sticker.end - sticker.start);
+    const opacity = sticker.opacity ?? 1;
+    const anim = sticker.animation || "none";
+    const rad = ((sticker.rotation || 0) * Math.PI) / 180;
+    const frames = Math.max(8, Math.ceil(len * 30) + 2);
+    let filter = `format=rgba,scale=${sw}:-1,loop=loop=${frames}:size=1:start=0,trim=duration=${len.toFixed(3)},setpts=PTS-STARTPTS`;
+    if (anim === "spin") {
+      filter += `,rotate=2*PI*t:c=none:ow=iw:oh=ih`;
+    } else if (Math.abs(rad) > 0.02) {
+      const a = rad.toFixed(4);
+      filter += `,rotate=${a}:c=none:ow=rotw(${a}):oh=roth(${a})`;
+    }
+    if (opacity < 0.999) {
+      filter += `,colorchannelmixer=aa=${opacity.toFixed(3)}`;
+    }
+    if (anim === "fade" || anim === "pop" || anim === "scale-in") {
+      filter += `,fade=t=in:st=0:d=0.25:alpha=1`;
+    }
+    if (anim === "fade" || anim === "scale-out") {
+      filter += `,fade=t=out:st=${Math.max(0.05, len - 0.25).toFixed(3)}:d=0.25:alpha=1`;
+    }
+    filter += `,setpts=PTS+${Number(sticker.start).toFixed(3)}/TB`;
+    const px = Math.round(sticker.x * width - sw / 2);
+    const py = Math.round(sticker.y * height - sw / 2);
     overlays.push({
-      path: scaled,
-      x: Math.round(sticker.x * width - sw / 2),
-      y: Math.round(sticker.y * height - sw / 2),
+      path: stkName,
+      filter,
+      xExpr: moveExpr(px, "x", anim, sticker.start),
+      yExpr: moveExpr(py, "y", anim, sticker.start),
       start: sticker.start,
       end: sticker.end,
+      timed: true,
     });
   }
 
@@ -455,8 +504,8 @@ async function burnOverlaysBrowser(opts: {
     await ffmpeg.writeFile(name, ownBytes(png.data));
     overlays.push({
       path: name,
-      x: Math.round((cap.x ?? 0.5) * width - png.width / 2),
-      y: Math.round((cap.y ?? 0.78) * height - png.height / 2),
+      xExpr: String(Math.round((cap.x ?? 0.5) * width - png.width / 2)),
+      yExpr: String(Math.round((cap.y ?? 0.78) * height - png.height / 2)),
       start: cap.start,
       end: cap.end,
     });
@@ -483,8 +532,8 @@ async function burnOverlaysBrowser(opts: {
     await ffmpeg.writeFile(name, ownBytes(png.data));
     overlays.push({
       path: name,
-      x: Math.round(t.x * width - png.width / 2),
-      y: Math.round(t.y * height - png.height / 2),
+      xExpr: String(Math.round(t.x * width - png.width / 2)),
+      yExpr: String(Math.round(t.y * height - png.height / 2)),
       start: t.start,
       end: t.end,
     });
@@ -505,10 +554,19 @@ async function burnOverlaysBrowser(opts: {
 
   for (const item of overlays) {
     inputs.push("-i", item.path);
-    const enable = `between(t\\,${item.start}\\,${item.end})`;
+    let label = `${inputIndex}:v`;
+    if (item.filter) {
+      const prep = `p${inputIndex}`;
+      filterParts.push(`[${inputIndex}:v]${item.filter}[${prep}]`);
+      label = prep;
+    }
     const out = `o${inputIndex}`;
+    const enable = item.timed
+      ? ""
+      : `:enable='between(t\\,${item.start}\\,${item.end})'`;
+    const eof = item.timed ? "pass" : "repeat";
     filterParts.push(
-      `[${lastLabel}][${inputIndex}:v]overlay=x=${item.x}:y=${item.y}:enable='${enable}'[${out}]`
+      `[${lastLabel}][${label}]overlay=x=${item.xExpr}:y=${item.yExpr}:eof_action=${eof}:format=auto${enable}[${out}]`
     );
     lastLabel = out;
     inputIndex++;

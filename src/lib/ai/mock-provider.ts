@@ -1,6 +1,7 @@
 import type { AestheticId, EditPlan, VideoFormat } from "@/lib/types/edit-plan";
 import { FORMAT_PRESETS } from "@/lib/types/edit-plan";
 import { assertValidPlan, type GenerateEditPlanInput } from "@/lib/ai/provider";
+import { stylePackForAesthetic } from "@/lib/assets/stylePacks";
 
 /**
  * Deterministic Shipathon demo analyzer — no network calls.
@@ -28,6 +29,26 @@ export async function generateEditPlanWithMock(
     input.aestheticId || "cute"
   );
   return { plan: assertValidPlan(plan, input.sourceDuration), provider: "mock" };
+}
+
+function packStickers(aestheticId: AestheticId, outDuration: number) {
+  const pack = stylePackForAesthetic(aestheticId);
+  const ids = pack.assets.length ? pack.assets : ["sparkle", "flower", "heart", "star"];
+  const slots = [
+    { start: 2, end: Math.min(5, outDuration), x: 0.82, y: 0.18, scale: 0.32, rotation: -8 },
+    { start: Math.min(8, outDuration * 0.4), end: Math.min(12, outDuration), x: 0.16, y: 0.24, scale: 0.3, rotation: 10 },
+    { start: Math.min(15, outDuration * 0.7), end: Math.min(19, outDuration), x: 0.78, y: 0.7, scale: 0.26, rotation: 6 },
+    { start: Math.min(6, outDuration * 0.3), end: Math.min(9, outDuration), x: 0.2, y: 0.68, scale: 0.22, rotation: -6 },
+  ];
+  return slots
+    .map((slot, i) => ({
+      id: `stk_${i + 1}`,
+      assetId: ids[i % ids.length],
+      ...slot,
+      opacity: 1,
+      animation: pack.animations[i % pack.animations.length] ?? "pop",
+    }))
+    .filter((s) => s.end > s.start + 0.2);
 }
 
 function sleep(ms: number) {
@@ -172,48 +193,7 @@ export function buildOceanReelEditPlan(
         y: 0.18,
       },
     ],
-    stickers: [
-      {
-        id: "stk_1",
-        assetId: "sparkle",
-        start: 2,
-        end: Math.min(5, outDuration),
-        x: 0.82,
-        y: 0.18,
-        scale: 0.32,
-        rotation: -8,
-      },
-      {
-        id: "stk_2",
-        assetId: "flower",
-        start: Math.min(8, outDuration * 0.4),
-        end: Math.min(12, outDuration),
-        x: 0.15,
-        y: 0.25,
-        scale: 0.3,
-        rotation: 12,
-      },
-      {
-        id: "stk_3",
-        assetId: "sparkle",
-        start: Math.min(15, outDuration * 0.7),
-        end: Math.min(19, outDuration),
-        x: 0.78,
-        y: 0.72,
-        scale: 0.26,
-        rotation: 6,
-      },
-      {
-        id: "stk_4",
-        assetId: "heart",
-        start: Math.min(6, outDuration * 0.3),
-        end: Math.min(9, outDuration),
-        x: 0.2,
-        y: 0.7,
-        scale: 0.22,
-        rotation: -6,
-      },
-    ].filter((s) => s.end > s.start + 0.2),
+    stickers: packStickers(aestheticId, outDuration),
     zooms: [
       {
         id: "zoom_1",

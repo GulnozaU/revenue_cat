@@ -3,6 +3,7 @@ import {
   getEditorFont,
   type EditorFont,
 } from "@/data/fonts";
+import { getAsset } from "@/lib/assets/assetRegistry";
 
 /** @deprecated Prefer EditorFont from @/data/fonts — kept for existing imports */
 export type FontDef = {
@@ -73,6 +74,17 @@ export const STICKER_LIBRARY: StickerAsset[] = [
 ];
 
 export function getSticker(id: string) {
+  const asset = getAsset(id);
+  if (asset?.src) {
+    return {
+      id: asset.id,
+      name: asset.name,
+      category: "Decorative" as const,
+      type: "image" as const,
+      url: asset.src,
+      file: asset.src.split("/").pop() ?? `${asset.id}.png`,
+    };
+  }
   return STICKER_LIBRARY.find((s) => s.id === id) ?? STICKER_LIBRARY[0];
 }
 

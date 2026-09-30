@@ -2,6 +2,8 @@ import type { AestheticId, VideoFormat } from "@/lib/types/edit-plan";
 import { FORMAT_PRESETS } from "@/lib/types/edit-plan";
 import { getStyle } from "@/lib/styles/presets";
 import { MUSIC_LIBRARY } from "@/lib/assets/library";
+import { assetCatalogText } from "@/lib/assets/assetRegistry";
+import { STYLE_PACKS } from "@/lib/assets/stylePacks";
 
 /** Shared EditPlan system prompt for NVIDIA + Gemini. */
 export function buildEditPlanSystemPrompt(
@@ -10,6 +12,7 @@ export function buildEditPlanSystemPrompt(
 ) {
   const style = getStyle(aestheticId);
   const tracks = MUSIC_LIBRARY.map((t) => t.id).join(", ");
+  const packs = STYLE_PACKS.map((pack) => pack.id).join(", ");
   return `You are a professional short-form video editor.
 Watch the attached video carefully. Return ONLY valid JSON for an EditPlan.
 
@@ -23,7 +26,8 @@ Schema:
   "cuts": [],
   "captions": [{ "id": "cap_1", "start": 0, "end": 2, "text": "...", "style": "${style.captionStyle}", "fontId": "${style.fontId}", "fontSize": 44, "x": 0.5, "y": 0.78, "animation": "none" }],
   "textOverlays": [],
-  "stickers": [{ "id": "stk_1", "assetId": "star|heart|sparkle|fire|arrow|circle", "start": 0, "end": 1.5, "x": 0.8, "y": 0.2, "scale": 0.3, "rotation": 0 }],
+  "styleId": "${packs}",
+  "stickers": [{ "id": "stk_1", "assetId": "<id from the asset catalog>", "start": 0, "end": 1.5, "x": 0.8, "y": 0.2, "scale": 0.3, "rotation": 0, "opacity": 1, "animation": "pop" }],
   "zooms": [{ "id": "zoom_1", "start": 1, "end": 2, "scale": 1.08, "x": 0.5, "y": 0.45 }],
   "music": { "trackId": "${tracks}", "volume": ${style.musicVolume}, "startAt": 0, "fadeIn": 0.4, "fadeOut": 0.8 } | null,
   "styleNotes": "..."
@@ -36,7 +40,12 @@ Rules:
 - Every clip MUST satisfy sourceEnd >= sourceStart + 0.25. Never emit zero-length clips.
 - Cut awkward pauses / dead air based on what you see and hear.
 - Captions should reflect actual spoken words or on-screen meaning.
-- Stickers only from: star, star2, heart, heart2, bow, flower, spark, sparkle, fire, arrow, circle.
+- sticker.assetId MUST be copied from this catalog. Never invent an asset id.
+Asset catalog:
+${assetCatalogText()}
+- styleId must be one of: ${packs}.
+- sticker.animation must be one of: none, fade, pop, bounce, slide-up, slide-left, slide-right, float, wiggle, scale-in, scale-out, spin, pulse.
+- For a Unicode emoji layer set "emoji" to one character and "assetId" to "emoji".
 - Music trackId only from: ${tracks}.
 - cuts must be an array of objects like { "at": 1.2, "type": "hard" } OR an empty array []. Never use bare strings or objects without "at".
 - Respect aesthetic "${style.name}": pacing=${style.pacing}, captionStyle=${style.captionStyle}, stickerUsage=${style.stickerUsage}, zoomFrequency=${style.zoomFrequency}.

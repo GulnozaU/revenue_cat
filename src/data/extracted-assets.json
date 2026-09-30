@@ -1,0 +1,3367 @@
+[
+  {
+    "id": "coquette-01",
+    "type": "sticker",
+    "name": "coquette 01",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/01.png",
+    "thumbnail": "/assets/stickers/coquette/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-02",
+    "type": "sticker",
+    "name": "coquette 02",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/02.png",
+    "thumbnail": "/assets/stickers/coquette/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-03",
+    "type": "sticker",
+    "name": "coquette 03",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/03.png",
+    "thumbnail": "/assets/stickers/coquette/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-04",
+    "type": "sticker",
+    "name": "coquette 04",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/04.png",
+    "thumbnail": "/assets/stickers/coquette/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-05",
+    "type": "sticker",
+    "name": "coquette 05",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/05.png",
+    "thumbnail": "/assets/stickers/coquette/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-06",
+    "type": "sticker",
+    "name": "coquette 06",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/06.png",
+    "thumbnail": "/assets/stickers/coquette/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-07",
+    "type": "sticker",
+    "name": "coquette 07",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/07.png",
+    "thumbnail": "/assets/stickers/coquette/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-08",
+    "type": "sticker",
+    "name": "coquette 08",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/08.png",
+    "thumbnail": "/assets/stickers/coquette/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-09",
+    "type": "sticker",
+    "name": "coquette 09",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/09.png",
+    "thumbnail": "/assets/stickers/coquette/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-10",
+    "type": "sticker",
+    "name": "coquette 10",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/10.png",
+    "thumbnail": "/assets/stickers/coquette/10.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-11",
+    "type": "sticker",
+    "name": "coquette 11",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/11.png",
+    "thumbnail": "/assets/stickers/coquette/11.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-12",
+    "type": "sticker",
+    "name": "coquette 12",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/12.png",
+    "thumbnail": "/assets/stickers/coquette/12.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-13",
+    "type": "sticker",
+    "name": "coquette 13",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/13.png",
+    "thumbnail": "/assets/stickers/coquette/13.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-14",
+    "type": "sticker",
+    "name": "coquette 14",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/14.png",
+    "thumbnail": "/assets/stickers/coquette/14.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-15",
+    "type": "sticker",
+    "name": "coquette 15",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/15.png",
+    "thumbnail": "/assets/stickers/coquette/15.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "coquette-16",
+    "type": "sticker",
+    "name": "coquette 16",
+    "category": "coquette",
+    "tags": [
+      "coquette",
+      "cute",
+      "romantic",
+      "pink",
+      "coquette"
+    ],
+    "src": "/assets/stickers/coquette/16.png",
+    "thumbnail": "/assets/stickers/coquette/16.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-01",
+    "type": "sticker",
+    "name": "y2k 01",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/01.png",
+    "thumbnail": "/assets/stickers/y2k/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-02",
+    "type": "sticker",
+    "name": "y2k 02",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/02.png",
+    "thumbnail": "/assets/stickers/y2k/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-03",
+    "type": "sticker",
+    "name": "y2k 03",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/03.png",
+    "thumbnail": "/assets/stickers/y2k/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-04",
+    "type": "sticker",
+    "name": "y2k 04",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/04.png",
+    "thumbnail": "/assets/stickers/y2k/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-05",
+    "type": "sticker",
+    "name": "y2k 05",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/05.png",
+    "thumbnail": "/assets/stickers/y2k/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-06",
+    "type": "sticker",
+    "name": "y2k 06",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/06.png",
+    "thumbnail": "/assets/stickers/y2k/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-07",
+    "type": "sticker",
+    "name": "y2k 07",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/07.png",
+    "thumbnail": "/assets/stickers/y2k/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-08",
+    "type": "sticker",
+    "name": "y2k 08",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/08.png",
+    "thumbnail": "/assets/stickers/y2k/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-09",
+    "type": "sticker",
+    "name": "y2k 09",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/09.png",
+    "thumbnail": "/assets/stickers/y2k/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-10",
+    "type": "sticker",
+    "name": "y2k 10",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/10.png",
+    "thumbnail": "/assets/stickers/y2k/10.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-11",
+    "type": "sticker",
+    "name": "y2k 11",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/11.png",
+    "thumbnail": "/assets/stickers/y2k/11.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-12",
+    "type": "sticker",
+    "name": "y2k 12",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/12.png",
+    "thumbnail": "/assets/stickers/y2k/12.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-13",
+    "type": "sticker",
+    "name": "y2k 13",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/13.png",
+    "thumbnail": "/assets/stickers/y2k/13.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "y2k-14",
+    "type": "sticker",
+    "name": "y2k 14",
+    "category": "y2k",
+    "tags": [
+      "y2k",
+      "retro",
+      "dreamy",
+      "2000s",
+      "y2k"
+    ],
+    "src": "/assets/stickers/y2k/14.png",
+    "thumbnail": "/assets/stickers/y2k/14.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "nature-01",
+    "type": "sticker",
+    "name": "nature 01",
+    "category": "nature",
+    "tags": [
+      "nature",
+      "plants",
+      "green",
+      "organic",
+      "nature"
+    ],
+    "src": "/assets/stickers/nature/01.png",
+    "thumbnail": "/assets/stickers/nature/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "nature-02",
+    "type": "sticker",
+    "name": "nature 02",
+    "category": "nature",
+    "tags": [
+      "nature",
+      "plants",
+      "green",
+      "organic",
+      "nature"
+    ],
+    "src": "/assets/stickers/nature/02.png",
+    "thumbnail": "/assets/stickers/nature/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "nature-03",
+    "type": "sticker",
+    "name": "nature 03",
+    "category": "nature",
+    "tags": [
+      "nature",
+      "plants",
+      "green",
+      "organic",
+      "nature"
+    ],
+    "src": "/assets/stickers/nature/03.png",
+    "thumbnail": "/assets/stickers/nature/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "nature-04",
+    "type": "sticker",
+    "name": "nature 04",
+    "category": "nature",
+    "tags": [
+      "nature",
+      "plants",
+      "green",
+      "organic",
+      "nature"
+    ],
+    "src": "/assets/stickers/nature/04.png",
+    "thumbnail": "/assets/stickers/nature/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "nature-05",
+    "type": "sticker",
+    "name": "nature 05",
+    "category": "nature",
+    "tags": [
+      "nature",
+      "plants",
+      "green",
+      "organic",
+      "nature"
+    ],
+    "src": "/assets/stickers/nature/05.png",
+    "thumbnail": "/assets/stickers/nature/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "travel-01",
+    "type": "sticker",
+    "name": "travel 01",
+    "category": "travel",
+    "tags": [
+      "travel",
+      "vacation",
+      "scrapbook",
+      "travel"
+    ],
+    "src": "/assets/stickers/travel/01.png",
+    "thumbnail": "/assets/stickers/travel/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "travel-02",
+    "type": "sticker",
+    "name": "travel 02",
+    "category": "travel",
+    "tags": [
+      "travel",
+      "vacation",
+      "scrapbook",
+      "travel"
+    ],
+    "src": "/assets/stickers/travel/02.png",
+    "thumbnail": "/assets/stickers/travel/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "travel-03",
+    "type": "sticker",
+    "name": "travel 03",
+    "category": "travel",
+    "tags": [
+      "travel",
+      "vacation",
+      "scrapbook",
+      "travel"
+    ],
+    "src": "/assets/stickers/travel/03.png",
+    "thumbnail": "/assets/stickers/travel/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "travel-04",
+    "type": "sticker",
+    "name": "travel 04",
+    "category": "travel",
+    "tags": [
+      "travel",
+      "vacation",
+      "scrapbook",
+      "travel"
+    ],
+    "src": "/assets/stickers/travel/04.png",
+    "thumbnail": "/assets/stickers/travel/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "travel-05",
+    "type": "sticker",
+    "name": "travel 05",
+    "category": "travel",
+    "tags": [
+      "travel",
+      "vacation",
+      "scrapbook",
+      "travel"
+    ],
+    "src": "/assets/stickers/travel/05.png",
+    "thumbnail": "/assets/stickers/travel/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "travel-06",
+    "type": "sticker",
+    "name": "travel 06",
+    "category": "travel",
+    "tags": [
+      "travel",
+      "vacation",
+      "scrapbook",
+      "travel"
+    ],
+    "src": "/assets/stickers/travel/06.png",
+    "thumbnail": "/assets/stickers/travel/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "travel-07",
+    "type": "sticker",
+    "name": "travel 07",
+    "category": "travel",
+    "tags": [
+      "travel",
+      "vacation",
+      "scrapbook",
+      "travel"
+    ],
+    "src": "/assets/stickers/travel/07.png",
+    "thumbnail": "/assets/stickers/travel/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "travel-08",
+    "type": "sticker",
+    "name": "travel 08",
+    "category": "travel",
+    "tags": [
+      "travel",
+      "vacation",
+      "scrapbook",
+      "travel"
+    ],
+    "src": "/assets/stickers/travel/08.png",
+    "thumbnail": "/assets/stickers/travel/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "travel-09",
+    "type": "sticker",
+    "name": "travel 09",
+    "category": "travel",
+    "tags": [
+      "travel",
+      "vacation",
+      "scrapbook",
+      "travel"
+    ],
+    "src": "/assets/stickers/travel/09.png",
+    "thumbnail": "/assets/stickers/travel/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "travel-10",
+    "type": "sticker",
+    "name": "travel 10",
+    "category": "travel",
+    "tags": [
+      "travel",
+      "vacation",
+      "scrapbook",
+      "travel"
+    ],
+    "src": "/assets/stickers/travel/10.png",
+    "thumbnail": "/assets/stickers/travel/10.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "study-01",
+    "type": "sticker",
+    "name": "study 01",
+    "category": "study",
+    "tags": [
+      "study",
+      "school",
+      "notes",
+      "study"
+    ],
+    "src": "/assets/stickers/study/01.png",
+    "thumbnail": "/assets/stickers/study/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "study-02",
+    "type": "sticker",
+    "name": "study 02",
+    "category": "study",
+    "tags": [
+      "study",
+      "school",
+      "notes",
+      "study"
+    ],
+    "src": "/assets/stickers/study/02.png",
+    "thumbnail": "/assets/stickers/study/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "study-03",
+    "type": "sticker",
+    "name": "study 03",
+    "category": "study",
+    "tags": [
+      "study",
+      "school",
+      "notes",
+      "study"
+    ],
+    "src": "/assets/stickers/study/03.png",
+    "thumbnail": "/assets/stickers/study/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "study-04",
+    "type": "sticker",
+    "name": "study 04",
+    "category": "study",
+    "tags": [
+      "study",
+      "school",
+      "notes",
+      "study"
+    ],
+    "src": "/assets/stickers/study/04.png",
+    "thumbnail": "/assets/stickers/study/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "study-05",
+    "type": "sticker",
+    "name": "study 05",
+    "category": "study",
+    "tags": [
+      "study",
+      "school",
+      "notes",
+      "study"
+    ],
+    "src": "/assets/stickers/study/05.png",
+    "thumbnail": "/assets/stickers/study/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "study-06",
+    "type": "sticker",
+    "name": "study 06",
+    "category": "study",
+    "tags": [
+      "study",
+      "school",
+      "notes",
+      "study"
+    ],
+    "src": "/assets/stickers/study/06.png",
+    "thumbnail": "/assets/stickers/study/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "study-07",
+    "type": "sticker",
+    "name": "study 07",
+    "category": "study",
+    "tags": [
+      "study",
+      "school",
+      "notes",
+      "study"
+    ],
+    "src": "/assets/stickers/study/07.png",
+    "thumbnail": "/assets/stickers/study/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "study-08",
+    "type": "sticker",
+    "name": "study 08",
+    "category": "study",
+    "tags": [
+      "study",
+      "school",
+      "notes",
+      "study"
+    ],
+    "src": "/assets/stickers/study/08.png",
+    "thumbnail": "/assets/stickers/study/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "study-09",
+    "type": "sticker",
+    "name": "study 09",
+    "category": "study",
+    "tags": [
+      "study",
+      "school",
+      "notes",
+      "study"
+    ],
+    "src": "/assets/stickers/study/09.png",
+    "thumbnail": "/assets/stickers/study/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-01",
+    "type": "sticker",
+    "name": "kawaii 01",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/01.png",
+    "thumbnail": "/assets/stickers/kawaii/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-02",
+    "type": "sticker",
+    "name": "kawaii 02",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/02.png",
+    "thumbnail": "/assets/stickers/kawaii/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-03",
+    "type": "sticker",
+    "name": "kawaii 03",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/03.png",
+    "thumbnail": "/assets/stickers/kawaii/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-04",
+    "type": "sticker",
+    "name": "kawaii 04",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/04.png",
+    "thumbnail": "/assets/stickers/kawaii/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-05",
+    "type": "sticker",
+    "name": "kawaii 05",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/05.png",
+    "thumbnail": "/assets/stickers/kawaii/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-06",
+    "type": "sticker",
+    "name": "kawaii 06",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/06.png",
+    "thumbnail": "/assets/stickers/kawaii/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-07",
+    "type": "sticker",
+    "name": "kawaii 07",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/07.png",
+    "thumbnail": "/assets/stickers/kawaii/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-08",
+    "type": "sticker",
+    "name": "kawaii 08",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/08.png",
+    "thumbnail": "/assets/stickers/kawaii/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-09",
+    "type": "sticker",
+    "name": "kawaii 09",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/09.png",
+    "thumbnail": "/assets/stickers/kawaii/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-10",
+    "type": "sticker",
+    "name": "kawaii 10",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/10.png",
+    "thumbnail": "/assets/stickers/kawaii/10.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-11",
+    "type": "sticker",
+    "name": "kawaii 11",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/11.png",
+    "thumbnail": "/assets/stickers/kawaii/11.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-12",
+    "type": "sticker",
+    "name": "kawaii 12",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/12.png",
+    "thumbnail": "/assets/stickers/kawaii/12.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "kawaii-13",
+    "type": "sticker",
+    "name": "kawaii 13",
+    "category": "kawaii",
+    "tags": [
+      "kawaii",
+      "cute",
+      "playful",
+      "kawaii"
+    ],
+    "src": "/assets/stickers/kawaii/13.png",
+    "thumbnail": "/assets/stickers/kawaii/13.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "gothic-01",
+    "type": "sticker",
+    "name": "gothic 01",
+    "category": "gothic",
+    "tags": [
+      "gothic",
+      "dark",
+      "moody",
+      "gothic"
+    ],
+    "src": "/assets/stickers/gothic/01.png",
+    "thumbnail": "/assets/stickers/gothic/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "gothic-02",
+    "type": "sticker",
+    "name": "gothic 02",
+    "category": "gothic",
+    "tags": [
+      "gothic",
+      "dark",
+      "moody",
+      "gothic"
+    ],
+    "src": "/assets/stickers/gothic/02.png",
+    "thumbnail": "/assets/stickers/gothic/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "gothic-03",
+    "type": "sticker",
+    "name": "gothic 03",
+    "category": "gothic",
+    "tags": [
+      "gothic",
+      "dark",
+      "moody",
+      "gothic"
+    ],
+    "src": "/assets/stickers/gothic/03.png",
+    "thumbnail": "/assets/stickers/gothic/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "gothic-04",
+    "type": "sticker",
+    "name": "gothic 04",
+    "category": "gothic",
+    "tags": [
+      "gothic",
+      "dark",
+      "moody",
+      "gothic"
+    ],
+    "src": "/assets/stickers/gothic/04.png",
+    "thumbnail": "/assets/stickers/gothic/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "gothic-05",
+    "type": "sticker",
+    "name": "gothic 05",
+    "category": "gothic",
+    "tags": [
+      "gothic",
+      "dark",
+      "moody",
+      "gothic"
+    ],
+    "src": "/assets/stickers/gothic/05.png",
+    "thumbnail": "/assets/stickers/gothic/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "gothic-06",
+    "type": "sticker",
+    "name": "gothic 06",
+    "category": "gothic",
+    "tags": [
+      "gothic",
+      "dark",
+      "moody",
+      "gothic"
+    ],
+    "src": "/assets/stickers/gothic/06.png",
+    "thumbnail": "/assets/stickers/gothic/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "gothic-07",
+    "type": "sticker",
+    "name": "gothic 07",
+    "category": "gothic",
+    "tags": [
+      "gothic",
+      "dark",
+      "moody",
+      "gothic"
+    ],
+    "src": "/assets/stickers/gothic/07.png",
+    "thumbnail": "/assets/stickers/gothic/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "minimal-01",
+    "type": "sticker",
+    "name": "minimal 01",
+    "category": "minimal",
+    "tags": [
+      "minimal",
+      "editorial",
+      "clean",
+      "minimal"
+    ],
+    "src": "/assets/stickers/minimal/01.png",
+    "thumbnail": "/assets/stickers/minimal/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "minimal-02",
+    "type": "sticker",
+    "name": "minimal 02",
+    "category": "minimal",
+    "tags": [
+      "minimal",
+      "editorial",
+      "clean",
+      "minimal"
+    ],
+    "src": "/assets/stickers/minimal/02.png",
+    "thumbnail": "/assets/stickers/minimal/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "minimal-03",
+    "type": "sticker",
+    "name": "minimal 03",
+    "category": "minimal",
+    "tags": [
+      "minimal",
+      "editorial",
+      "clean",
+      "minimal"
+    ],
+    "src": "/assets/stickers/minimal/03.png",
+    "thumbnail": "/assets/stickers/minimal/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "minimal-04",
+    "type": "sticker",
+    "name": "minimal 04",
+    "category": "minimal",
+    "tags": [
+      "minimal",
+      "editorial",
+      "clean",
+      "minimal"
+    ],
+    "src": "/assets/stickers/minimal/04.png",
+    "thumbnail": "/assets/stickers/minimal/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "minimal-05",
+    "type": "sticker",
+    "name": "minimal 05",
+    "category": "minimal",
+    "tags": [
+      "minimal",
+      "editorial",
+      "clean",
+      "minimal"
+    ],
+    "src": "/assets/stickers/minimal/05.png",
+    "thumbnail": "/assets/stickers/minimal/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "minimal-06",
+    "type": "sticker",
+    "name": "minimal 06",
+    "category": "minimal",
+    "tags": [
+      "minimal",
+      "editorial",
+      "clean",
+      "minimal"
+    ],
+    "src": "/assets/stickers/minimal/06.png",
+    "thumbnail": "/assets/stickers/minimal/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "minimal-07",
+    "type": "sticker",
+    "name": "minimal 07",
+    "category": "minimal",
+    "tags": [
+      "minimal",
+      "editorial",
+      "clean",
+      "minimal"
+    ],
+    "src": "/assets/stickers/minimal/07.png",
+    "thumbnail": "/assets/stickers/minimal/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "minimal-08",
+    "type": "sticker",
+    "name": "minimal 08",
+    "category": "minimal",
+    "tags": [
+      "minimal",
+      "editorial",
+      "clean",
+      "minimal"
+    ],
+    "src": "/assets/stickers/minimal/08.png",
+    "thumbnail": "/assets/stickers/minimal/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "minimal-09",
+    "type": "sticker",
+    "name": "minimal 09",
+    "category": "minimal",
+    "tags": [
+      "minimal",
+      "editorial",
+      "clean",
+      "minimal"
+    ],
+    "src": "/assets/stickers/minimal/09.png",
+    "thumbnail": "/assets/stickers/minimal/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "minimal-10",
+    "type": "sticker",
+    "name": "minimal 10",
+    "category": "minimal",
+    "tags": [
+      "minimal",
+      "editorial",
+      "clean",
+      "minimal"
+    ],
+    "src": "/assets/stickers/minimal/10.png",
+    "thumbnail": "/assets/stickers/minimal/10.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "minimal-11",
+    "type": "sticker",
+    "name": "minimal 11",
+    "category": "minimal",
+    "tags": [
+      "minimal",
+      "editorial",
+      "clean",
+      "minimal"
+    ],
+    "src": "/assets/stickers/minimal/11.png",
+    "thumbnail": "/assets/stickers/minimal/11.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "retro-01",
+    "type": "sticker",
+    "name": "retro 01",
+    "category": "retro",
+    "tags": [
+      "retro",
+      "vintage",
+      "playful",
+      "retro"
+    ],
+    "src": "/assets/stickers/retro/01.png",
+    "thumbnail": "/assets/stickers/retro/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "retro-02",
+    "type": "sticker",
+    "name": "retro 02",
+    "category": "retro",
+    "tags": [
+      "retro",
+      "vintage",
+      "playful",
+      "retro"
+    ],
+    "src": "/assets/stickers/retro/02.png",
+    "thumbnail": "/assets/stickers/retro/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "retro-03",
+    "type": "sticker",
+    "name": "retro 03",
+    "category": "retro",
+    "tags": [
+      "retro",
+      "vintage",
+      "playful",
+      "retro"
+    ],
+    "src": "/assets/stickers/retro/03.png",
+    "thumbnail": "/assets/stickers/retro/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "urban-01",
+    "type": "sticker",
+    "name": "urban 01",
+    "category": "urban",
+    "tags": [
+      "urban",
+      "street",
+      "bold",
+      "urban"
+    ],
+    "src": "/assets/stickers/urban/01.png",
+    "thumbnail": "/assets/stickers/urban/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "urban-02",
+    "type": "sticker",
+    "name": "urban 02",
+    "category": "urban",
+    "tags": [
+      "urban",
+      "street",
+      "bold",
+      "urban"
+    ],
+    "src": "/assets/stickers/urban/02.png",
+    "thumbnail": "/assets/stickers/urban/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "urban-03",
+    "type": "sticker",
+    "name": "urban 03",
+    "category": "urban",
+    "tags": [
+      "urban",
+      "street",
+      "bold",
+      "urban"
+    ],
+    "src": "/assets/stickers/urban/03.png",
+    "thumbnail": "/assets/stickers/urban/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "urban-04",
+    "type": "sticker",
+    "name": "urban 04",
+    "category": "urban",
+    "tags": [
+      "urban",
+      "street",
+      "bold",
+      "urban"
+    ],
+    "src": "/assets/stickers/urban/04.png",
+    "thumbnail": "/assets/stickers/urban/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "luxury-01",
+    "type": "sticker",
+    "name": "luxury 01",
+    "category": "luxury",
+    "tags": [
+      "luxury",
+      "elegant",
+      "gold",
+      "luxury"
+    ],
+    "src": "/assets/stickers/luxury/01.png",
+    "thumbnail": "/assets/stickers/luxury/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "luxury-02",
+    "type": "sticker",
+    "name": "luxury 02",
+    "category": "luxury",
+    "tags": [
+      "luxury",
+      "elegant",
+      "gold",
+      "luxury"
+    ],
+    "src": "/assets/stickers/luxury/02.png",
+    "thumbnail": "/assets/stickers/luxury/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "luxury-03",
+    "type": "sticker",
+    "name": "luxury 03",
+    "category": "luxury",
+    "tags": [
+      "luxury",
+      "elegant",
+      "gold",
+      "luxury"
+    ],
+    "src": "/assets/stickers/luxury/03.png",
+    "thumbnail": "/assets/stickers/luxury/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "luxury-04",
+    "type": "sticker",
+    "name": "luxury 04",
+    "category": "luxury",
+    "tags": [
+      "luxury",
+      "elegant",
+      "gold",
+      "luxury"
+    ],
+    "src": "/assets/stickers/luxury/04.png",
+    "thumbnail": "/assets/stickers/luxury/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "luxury-05",
+    "type": "sticker",
+    "name": "luxury 05",
+    "category": "luxury",
+    "tags": [
+      "luxury",
+      "elegant",
+      "gold",
+      "luxury"
+    ],
+    "src": "/assets/stickers/luxury/05.png",
+    "thumbnail": "/assets/stickers/luxury/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "luxury-06",
+    "type": "sticker",
+    "name": "luxury 06",
+    "category": "luxury",
+    "tags": [
+      "luxury",
+      "elegant",
+      "gold",
+      "luxury"
+    ],
+    "src": "/assets/stickers/luxury/06.png",
+    "thumbnail": "/assets/stickers/luxury/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "luxury-07",
+    "type": "sticker",
+    "name": "luxury 07",
+    "category": "luxury",
+    "tags": [
+      "luxury",
+      "elegant",
+      "gold",
+      "luxury"
+    ],
+    "src": "/assets/stickers/luxury/07.png",
+    "thumbnail": "/assets/stickers/luxury/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "luxury-08",
+    "type": "sticker",
+    "name": "luxury 08",
+    "category": "luxury",
+    "tags": [
+      "luxury",
+      "elegant",
+      "gold",
+      "luxury"
+    ],
+    "src": "/assets/stickers/luxury/08.png",
+    "thumbnail": "/assets/stickers/luxury/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "luxury-09",
+    "type": "sticker",
+    "name": "luxury 09",
+    "category": "luxury",
+    "tags": [
+      "luxury",
+      "elegant",
+      "gold",
+      "luxury"
+    ],
+    "src": "/assets/stickers/luxury/09.png",
+    "thumbnail": "/assets/stickers/luxury/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "luxury-10",
+    "type": "sticker",
+    "name": "luxury 10",
+    "category": "luxury",
+    "tags": [
+      "luxury",
+      "elegant",
+      "gold",
+      "luxury"
+    ],
+    "src": "/assets/stickers/luxury/10.png",
+    "thumbnail": "/assets/stickers/luxury/10.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "luxury-11",
+    "type": "sticker",
+    "name": "luxury 11",
+    "category": "luxury",
+    "tags": [
+      "luxury",
+      "elegant",
+      "gold",
+      "luxury"
+    ],
+    "src": "/assets/stickers/luxury/11.png",
+    "thumbnail": "/assets/stickers/luxury/11.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "vintage-01",
+    "type": "sticker",
+    "name": "vintage 01",
+    "category": "vintage",
+    "tags": [
+      "vintage",
+      "paper",
+      "nostalgic",
+      "vintage"
+    ],
+    "src": "/assets/stickers/vintage/01.png",
+    "thumbnail": "/assets/stickers/vintage/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "vintage-02",
+    "type": "sticker",
+    "name": "vintage 02",
+    "category": "vintage",
+    "tags": [
+      "vintage",
+      "paper",
+      "nostalgic",
+      "vintage"
+    ],
+    "src": "/assets/stickers/vintage/02.png",
+    "thumbnail": "/assets/stickers/vintage/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "vintage-03",
+    "type": "sticker",
+    "name": "vintage 03",
+    "category": "vintage",
+    "tags": [
+      "vintage",
+      "paper",
+      "nostalgic",
+      "vintage"
+    ],
+    "src": "/assets/stickers/vintage/03.png",
+    "thumbnail": "/assets/stickers/vintage/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "vintage-04",
+    "type": "sticker",
+    "name": "vintage 04",
+    "category": "vintage",
+    "tags": [
+      "vintage",
+      "paper",
+      "nostalgic",
+      "vintage"
+    ],
+    "src": "/assets/stickers/vintage/04.png",
+    "thumbnail": "/assets/stickers/vintage/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "vintage-05",
+    "type": "sticker",
+    "name": "vintage 05",
+    "category": "vintage",
+    "tags": [
+      "vintage",
+      "paper",
+      "nostalgic",
+      "vintage"
+    ],
+    "src": "/assets/stickers/vintage/05.png",
+    "thumbnail": "/assets/stickers/vintage/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "vintage-06",
+    "type": "sticker",
+    "name": "vintage 06",
+    "category": "vintage",
+    "tags": [
+      "vintage",
+      "paper",
+      "nostalgic",
+      "vintage"
+    ],
+    "src": "/assets/stickers/vintage/06.png",
+    "thumbnail": "/assets/stickers/vintage/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "vintage-07",
+    "type": "sticker",
+    "name": "vintage 07",
+    "category": "vintage",
+    "tags": [
+      "vintage",
+      "paper",
+      "nostalgic",
+      "vintage"
+    ],
+    "src": "/assets/stickers/vintage/07.png",
+    "thumbnail": "/assets/stickers/vintage/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-01",
+    "type": "sticker",
+    "name": "fantasy 01",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/01.png",
+    "thumbnail": "/assets/stickers/fantasy/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-02",
+    "type": "sticker",
+    "name": "fantasy 02",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/02.png",
+    "thumbnail": "/assets/stickers/fantasy/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-03",
+    "type": "sticker",
+    "name": "fantasy 03",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/03.png",
+    "thumbnail": "/assets/stickers/fantasy/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-04",
+    "type": "sticker",
+    "name": "fantasy 04",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/04.png",
+    "thumbnail": "/assets/stickers/fantasy/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-05",
+    "type": "sticker",
+    "name": "fantasy 05",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/05.png",
+    "thumbnail": "/assets/stickers/fantasy/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-06",
+    "type": "sticker",
+    "name": "fantasy 06",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/06.png",
+    "thumbnail": "/assets/stickers/fantasy/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-07",
+    "type": "sticker",
+    "name": "fantasy 07",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/07.png",
+    "thumbnail": "/assets/stickers/fantasy/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-08",
+    "type": "sticker",
+    "name": "fantasy 08",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/08.png",
+    "thumbnail": "/assets/stickers/fantasy/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-09",
+    "type": "sticker",
+    "name": "fantasy 09",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/09.png",
+    "thumbnail": "/assets/stickers/fantasy/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-10",
+    "type": "sticker",
+    "name": "fantasy 10",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/10.png",
+    "thumbnail": "/assets/stickers/fantasy/10.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-11",
+    "type": "sticker",
+    "name": "fantasy 11",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/11.png",
+    "thumbnail": "/assets/stickers/fantasy/11.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-12",
+    "type": "sticker",
+    "name": "fantasy 12",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/12.png",
+    "thumbnail": "/assets/stickers/fantasy/12.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fantasy-13",
+    "type": "sticker",
+    "name": "fantasy 13",
+    "category": "fantasy",
+    "tags": [
+      "fantasy",
+      "magic",
+      "storybook",
+      "fantasy"
+    ],
+    "src": "/assets/stickers/fantasy/13.png",
+    "thumbnail": "/assets/stickers/fantasy/13.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "music-01",
+    "type": "sticker",
+    "name": "music 01",
+    "category": "music",
+    "tags": [
+      "music",
+      "audio",
+      "pop",
+      "music"
+    ],
+    "src": "/assets/stickers/music/01.png",
+    "thumbnail": "/assets/stickers/music/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "music-02",
+    "type": "sticker",
+    "name": "music 02",
+    "category": "music",
+    "tags": [
+      "music",
+      "audio",
+      "pop",
+      "music"
+    ],
+    "src": "/assets/stickers/music/02.png",
+    "thumbnail": "/assets/stickers/music/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "music-03",
+    "type": "sticker",
+    "name": "music 03",
+    "category": "music",
+    "tags": [
+      "music",
+      "audio",
+      "pop",
+      "music"
+    ],
+    "src": "/assets/stickers/music/03.png",
+    "thumbnail": "/assets/stickers/music/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "music-04",
+    "type": "sticker",
+    "name": "music 04",
+    "category": "music",
+    "tags": [
+      "music",
+      "audio",
+      "pop",
+      "music"
+    ],
+    "src": "/assets/stickers/music/04.png",
+    "thumbnail": "/assets/stickers/music/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fitness-01",
+    "type": "sticker",
+    "name": "fitness 01",
+    "category": "fitness",
+    "tags": [
+      "fitness",
+      "sport",
+      "energy",
+      "fitness"
+    ],
+    "src": "/assets/stickers/fitness/01.png",
+    "thumbnail": "/assets/stickers/fitness/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "fitness-02",
+    "type": "sticker",
+    "name": "fitness 02",
+    "category": "fitness",
+    "tags": [
+      "fitness",
+      "sport",
+      "energy",
+      "fitness"
+    ],
+    "src": "/assets/stickers/fitness/02.png",
+    "thumbnail": "/assets/stickers/fitness/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "seasonal-01",
+    "type": "sticker",
+    "name": "seasonal 01",
+    "category": "seasonal",
+    "tags": [
+      "winter",
+      "holiday",
+      "seasonal",
+      "seasonal"
+    ],
+    "src": "/assets/stickers/seasonal/01.png",
+    "thumbnail": "/assets/stickers/seasonal/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "seasonal-02",
+    "type": "sticker",
+    "name": "seasonal 02",
+    "category": "seasonal",
+    "tags": [
+      "winter",
+      "holiday",
+      "seasonal",
+      "seasonal"
+    ],
+    "src": "/assets/stickers/seasonal/02.png",
+    "thumbnail": "/assets/stickers/seasonal/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "seasonal-03",
+    "type": "sticker",
+    "name": "seasonal 03",
+    "category": "seasonal",
+    "tags": [
+      "winter",
+      "holiday",
+      "seasonal",
+      "seasonal"
+    ],
+    "src": "/assets/stickers/seasonal/03.png",
+    "thumbnail": "/assets/stickers/seasonal/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "summer-01",
+    "type": "sticker",
+    "name": "summer 01",
+    "category": "summer",
+    "tags": [
+      "summer",
+      "sun",
+      "vacation",
+      "summer"
+    ],
+    "src": "/assets/stickers/summer/01.png",
+    "thumbnail": "/assets/stickers/summer/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "summer-02",
+    "type": "sticker",
+    "name": "summer 02",
+    "category": "summer",
+    "tags": [
+      "summer",
+      "sun",
+      "vacation",
+      "summer"
+    ],
+    "src": "/assets/stickers/summer/02.png",
+    "thumbnail": "/assets/stickers/summer/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "summer-03",
+    "type": "sticker",
+    "name": "summer 03",
+    "category": "summer",
+    "tags": [
+      "summer",
+      "sun",
+      "vacation",
+      "summer"
+    ],
+    "src": "/assets/stickers/summer/03.png",
+    "thumbnail": "/assets/stickers/summer/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "summer-04",
+    "type": "sticker",
+    "name": "summer 04",
+    "category": "summer",
+    "tags": [
+      "summer",
+      "sun",
+      "vacation",
+      "summer"
+    ],
+    "src": "/assets/stickers/summer/04.png",
+    "thumbnail": "/assets/stickers/summer/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "summer-05",
+    "type": "sticker",
+    "name": "summer 05",
+    "category": "summer",
+    "tags": [
+      "summer",
+      "sun",
+      "vacation",
+      "summer"
+    ],
+    "src": "/assets/stickers/summer/05.png",
+    "thumbnail": "/assets/stickers/summer/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "summer-06",
+    "type": "sticker",
+    "name": "summer 06",
+    "category": "summer",
+    "tags": [
+      "summer",
+      "sun",
+      "vacation",
+      "summer"
+    ],
+    "src": "/assets/stickers/summer/06.png",
+    "thumbnail": "/assets/stickers/summer/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "summer-07",
+    "type": "sticker",
+    "name": "summer 07",
+    "category": "summer",
+    "tags": [
+      "summer",
+      "sun",
+      "vacation",
+      "summer"
+    ],
+    "src": "/assets/stickers/summer/07.png",
+    "thumbnail": "/assets/stickers/summer/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "summer-08",
+    "type": "sticker",
+    "name": "summer 08",
+    "category": "summer",
+    "tags": [
+      "summer",
+      "sun",
+      "vacation",
+      "summer"
+    ],
+    "src": "/assets/stickers/summer/08.png",
+    "thumbnail": "/assets/stickers/summer/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "summer-09",
+    "type": "sticker",
+    "name": "summer 09",
+    "category": "summer",
+    "tags": [
+      "summer",
+      "sun",
+      "vacation",
+      "summer"
+    ],
+    "src": "/assets/stickers/summer/09.png",
+    "thumbnail": "/assets/stickers/summer/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "spring-01",
+    "type": "sticker",
+    "name": "spring 01",
+    "category": "spring",
+    "tags": [
+      "spring",
+      "floral",
+      "fresh",
+      "spring"
+    ],
+    "src": "/assets/stickers/spring/01.png",
+    "thumbnail": "/assets/stickers/spring/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "spring-02",
+    "type": "sticker",
+    "name": "spring 02",
+    "category": "spring",
+    "tags": [
+      "spring",
+      "floral",
+      "fresh",
+      "spring"
+    ],
+    "src": "/assets/stickers/spring/02.png",
+    "thumbnail": "/assets/stickers/spring/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "spring-03",
+    "type": "sticker",
+    "name": "spring 03",
+    "category": "spring",
+    "tags": [
+      "spring",
+      "floral",
+      "fresh",
+      "spring"
+    ],
+    "src": "/assets/stickers/spring/03.png",
+    "thumbnail": "/assets/stickers/spring/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "autumn-01",
+    "type": "sticker",
+    "name": "autumn 01",
+    "category": "autumn",
+    "tags": [
+      "autumn",
+      "warm",
+      "seasonal",
+      "autumn"
+    ],
+    "src": "/assets/stickers/autumn/01.png",
+    "thumbnail": "/assets/stickers/autumn/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "autumn-02",
+    "type": "sticker",
+    "name": "autumn 02",
+    "category": "autumn",
+    "tags": [
+      "autumn",
+      "warm",
+      "seasonal",
+      "autumn"
+    ],
+    "src": "/assets/stickers/autumn/02.png",
+    "thumbnail": "/assets/stickers/autumn/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "autumn-03",
+    "type": "sticker",
+    "name": "autumn 03",
+    "category": "autumn",
+    "tags": [
+      "autumn",
+      "warm",
+      "seasonal",
+      "autumn"
+    ],
+    "src": "/assets/stickers/autumn/03.png",
+    "thumbnail": "/assets/stickers/autumn/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "autumn-04",
+    "type": "sticker",
+    "name": "autumn 04",
+    "category": "autumn",
+    "tags": [
+      "autumn",
+      "warm",
+      "seasonal",
+      "autumn"
+    ],
+    "src": "/assets/stickers/autumn/04.png",
+    "thumbnail": "/assets/stickers/autumn/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "autumn-05",
+    "type": "sticker",
+    "name": "autumn 05",
+    "category": "autumn",
+    "tags": [
+      "autumn",
+      "warm",
+      "seasonal",
+      "autumn"
+    ],
+    "src": "/assets/stickers/autumn/05.png",
+    "thumbnail": "/assets/stickers/autumn/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "autumn-06",
+    "type": "sticker",
+    "name": "autumn 06",
+    "category": "autumn",
+    "tags": [
+      "autumn",
+      "warm",
+      "seasonal",
+      "autumn"
+    ],
+    "src": "/assets/stickers/autumn/06.png",
+    "thumbnail": "/assets/stickers/autumn/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "autumn-07",
+    "type": "sticker",
+    "name": "autumn 07",
+    "category": "autumn",
+    "tags": [
+      "autumn",
+      "warm",
+      "seasonal",
+      "autumn"
+    ],
+    "src": "/assets/stickers/autumn/07.png",
+    "thumbnail": "/assets/stickers/autumn/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "autumn-08",
+    "type": "sticker",
+    "name": "autumn 08",
+    "category": "autumn",
+    "tags": [
+      "autumn",
+      "warm",
+      "seasonal",
+      "autumn"
+    ],
+    "src": "/assets/stickers/autumn/08.png",
+    "thumbnail": "/assets/stickers/autumn/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "autumn-09",
+    "type": "sticker",
+    "name": "autumn 09",
+    "category": "autumn",
+    "tags": [
+      "autumn",
+      "warm",
+      "seasonal",
+      "autumn"
+    ],
+    "src": "/assets/stickers/autumn/09.png",
+    "thumbnail": "/assets/stickers/autumn/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "autumn-10",
+    "type": "sticker",
+    "name": "autumn 10",
+    "category": "autumn",
+    "tags": [
+      "autumn",
+      "warm",
+      "seasonal",
+      "autumn"
+    ],
+    "src": "/assets/stickers/autumn/10.png",
+    "thumbnail": "/assets/stickers/autumn/10.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "autumn-11",
+    "type": "sticker",
+    "name": "autumn 11",
+    "category": "autumn",
+    "tags": [
+      "autumn",
+      "warm",
+      "seasonal",
+      "autumn"
+    ],
+    "src": "/assets/stickers/autumn/11.png",
+    "thumbnail": "/assets/stickers/autumn/11.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "halloween-01",
+    "type": "sticker",
+    "name": "halloween 01",
+    "category": "halloween",
+    "tags": [
+      "halloween",
+      "spooky",
+      "october",
+      "halloween"
+    ],
+    "src": "/assets/stickers/halloween/01.png",
+    "thumbnail": "/assets/stickers/halloween/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "halloween-02",
+    "type": "sticker",
+    "name": "halloween 02",
+    "category": "halloween",
+    "tags": [
+      "halloween",
+      "spooky",
+      "october",
+      "halloween"
+    ],
+    "src": "/assets/stickers/halloween/02.png",
+    "thumbnail": "/assets/stickers/halloween/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "halloween-03",
+    "type": "sticker",
+    "name": "halloween 03",
+    "category": "halloween",
+    "tags": [
+      "halloween",
+      "spooky",
+      "october",
+      "halloween"
+    ],
+    "src": "/assets/stickers/halloween/03.png",
+    "thumbnail": "/assets/stickers/halloween/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "halloween-04",
+    "type": "sticker",
+    "name": "halloween 04",
+    "category": "halloween",
+    "tags": [
+      "halloween",
+      "spooky",
+      "october",
+      "halloween"
+    ],
+    "src": "/assets/stickers/halloween/04.png",
+    "thumbnail": "/assets/stickers/halloween/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "halloween-05",
+    "type": "sticker",
+    "name": "halloween 05",
+    "category": "halloween",
+    "tags": [
+      "halloween",
+      "spooky",
+      "october",
+      "halloween"
+    ],
+    "src": "/assets/stickers/halloween/05.png",
+    "thumbnail": "/assets/stickers/halloween/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "emoji-01",
+    "type": "sticker",
+    "name": "emoji 01",
+    "category": "emoji",
+    "tags": [
+      "emoji",
+      "face",
+      "reaction",
+      "emoji"
+    ],
+    "src": "/assets/stickers/emoji/01.png",
+    "thumbnail": "/assets/stickers/emoji/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "emoji-02",
+    "type": "sticker",
+    "name": "emoji 02",
+    "category": "emoji",
+    "tags": [
+      "emoji",
+      "face",
+      "reaction",
+      "emoji"
+    ],
+    "src": "/assets/stickers/emoji/02.png",
+    "thumbnail": "/assets/stickers/emoji/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "doodles-01",
+    "type": "doodle",
+    "name": "doodles 01",
+    "category": "doodles",
+    "tags": [
+      "doodle",
+      "handwritten",
+      "sketch",
+      "doodles"
+    ],
+    "src": "/assets/stickers/doodles/01.png",
+    "thumbnail": "/assets/stickers/doodles/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "doodles-02",
+    "type": "doodle",
+    "name": "doodles 02",
+    "category": "doodles",
+    "tags": [
+      "doodle",
+      "handwritten",
+      "sketch",
+      "doodles"
+    ],
+    "src": "/assets/stickers/doodles/02.png",
+    "thumbnail": "/assets/stickers/doodles/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "doodles-03",
+    "type": "doodle",
+    "name": "doodles 03",
+    "category": "doodles",
+    "tags": [
+      "doodle",
+      "handwritten",
+      "sketch",
+      "doodles"
+    ],
+    "src": "/assets/stickers/doodles/03.png",
+    "thumbnail": "/assets/stickers/doodles/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "frames-01",
+    "type": "frame",
+    "name": "frames 01",
+    "category": "frames",
+    "tags": [
+      "frame",
+      "border",
+      "layout",
+      "frames"
+    ],
+    "src": "/assets/stickers/frames/01.png",
+    "thumbnail": "/assets/stickers/frames/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "frames-02",
+    "type": "frame",
+    "name": "frames 02",
+    "category": "frames",
+    "tags": [
+      "frame",
+      "border",
+      "layout",
+      "frames"
+    ],
+    "src": "/assets/stickers/frames/02.png",
+    "thumbnail": "/assets/stickers/frames/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "frames-03",
+    "type": "frame",
+    "name": "frames 03",
+    "category": "frames",
+    "tags": [
+      "frame",
+      "border",
+      "layout",
+      "frames"
+    ],
+    "src": "/assets/stickers/frames/03.png",
+    "thumbnail": "/assets/stickers/frames/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "frames-04",
+    "type": "frame",
+    "name": "frames 04",
+    "category": "frames",
+    "tags": [
+      "frame",
+      "border",
+      "layout",
+      "frames"
+    ],
+    "src": "/assets/stickers/frames/04.png",
+    "thumbnail": "/assets/stickers/frames/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "frames-05",
+    "type": "frame",
+    "name": "frames 05",
+    "category": "frames",
+    "tags": [
+      "frame",
+      "border",
+      "layout",
+      "frames"
+    ],
+    "src": "/assets/stickers/frames/05.png",
+    "thumbnail": "/assets/stickers/frames/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "frames-06",
+    "type": "frame",
+    "name": "frames 06",
+    "category": "frames",
+    "tags": [
+      "frame",
+      "border",
+      "layout",
+      "frames"
+    ],
+    "src": "/assets/stickers/frames/06.png",
+    "thumbnail": "/assets/stickers/frames/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "frames-07",
+    "type": "frame",
+    "name": "frames 07",
+    "category": "frames",
+    "tags": [
+      "frame",
+      "border",
+      "layout",
+      "frames"
+    ],
+    "src": "/assets/stickers/frames/07.png",
+    "thumbnail": "/assets/stickers/frames/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "frames-08",
+    "type": "frame",
+    "name": "frames 08",
+    "category": "frames",
+    "tags": [
+      "frame",
+      "border",
+      "layout",
+      "frames"
+    ],
+    "src": "/assets/stickers/frames/08.png",
+    "thumbnail": "/assets/stickers/frames/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "frames-09",
+    "type": "frame",
+    "name": "frames 09",
+    "category": "frames",
+    "tags": [
+      "frame",
+      "border",
+      "layout",
+      "frames"
+    ],
+    "src": "/assets/stickers/frames/09.png",
+    "thumbnail": "/assets/stickers/frames/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "frames-10",
+    "type": "frame",
+    "name": "frames 10",
+    "category": "frames",
+    "tags": [
+      "frame",
+      "border",
+      "layout",
+      "frames"
+    ],
+    "src": "/assets/stickers/frames/10.png",
+    "thumbnail": "/assets/stickers/frames/10.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "frames-11",
+    "type": "frame",
+    "name": "frames 11",
+    "category": "frames",
+    "tags": [
+      "frame",
+      "border",
+      "layout",
+      "frames"
+    ],
+    "src": "/assets/stickers/frames/11.png",
+    "thumbnail": "/assets/stickers/frames/11.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "frames-12",
+    "type": "frame",
+    "name": "frames 12",
+    "category": "frames",
+    "tags": [
+      "frame",
+      "border",
+      "layout",
+      "frames"
+    ],
+    "src": "/assets/stickers/frames/12.png",
+    "thumbnail": "/assets/stickers/frames/12.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "tech-01",
+    "type": "sticker",
+    "name": "tech 01",
+    "category": "tech",
+    "tags": [
+      "tech",
+      "ui",
+      "digital",
+      "tech"
+    ],
+    "src": "/assets/stickers/tech/01.png",
+    "thumbnail": "/assets/stickers/tech/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "tech-02",
+    "type": "sticker",
+    "name": "tech 02",
+    "category": "tech",
+    "tags": [
+      "tech",
+      "ui",
+      "digital",
+      "tech"
+    ],
+    "src": "/assets/stickers/tech/02.png",
+    "thumbnail": "/assets/stickers/tech/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "tech-03",
+    "type": "sticker",
+    "name": "tech 03",
+    "category": "tech",
+    "tags": [
+      "tech",
+      "ui",
+      "digital",
+      "tech"
+    ],
+    "src": "/assets/stickers/tech/03.png",
+    "thumbnail": "/assets/stickers/tech/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "tech-04",
+    "type": "sticker",
+    "name": "tech 04",
+    "category": "tech",
+    "tags": [
+      "tech",
+      "ui",
+      "digital",
+      "tech"
+    ],
+    "src": "/assets/stickers/tech/04.png",
+    "thumbnail": "/assets/stickers/tech/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "tech-05",
+    "type": "sticker",
+    "name": "tech 05",
+    "category": "tech",
+    "tags": [
+      "tech",
+      "ui",
+      "digital",
+      "tech"
+    ],
+    "src": "/assets/stickers/tech/05.png",
+    "thumbnail": "/assets/stickers/tech/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "tech-06",
+    "type": "sticker",
+    "name": "tech 06",
+    "category": "tech",
+    "tags": [
+      "tech",
+      "ui",
+      "digital",
+      "tech"
+    ],
+    "src": "/assets/stickers/tech/06.png",
+    "thumbnail": "/assets/stickers/tech/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "tech-07",
+    "type": "sticker",
+    "name": "tech 07",
+    "category": "tech",
+    "tags": [
+      "tech",
+      "ui",
+      "digital",
+      "tech"
+    ],
+    "src": "/assets/stickers/tech/07.png",
+    "thumbnail": "/assets/stickers/tech/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "tech-08",
+    "type": "sticker",
+    "name": "tech 08",
+    "category": "tech",
+    "tags": [
+      "tech",
+      "ui",
+      "digital",
+      "tech"
+    ],
+    "src": "/assets/stickers/tech/08.png",
+    "thumbnail": "/assets/stickers/tech/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "tech-09",
+    "type": "sticker",
+    "name": "tech 09",
+    "category": "tech",
+    "tags": [
+      "tech",
+      "ui",
+      "digital",
+      "tech"
+    ],
+    "src": "/assets/stickers/tech/09.png",
+    "thumbnail": "/assets/stickers/tech/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "tech-10",
+    "type": "sticker",
+    "name": "tech 10",
+    "category": "tech",
+    "tags": [
+      "tech",
+      "ui",
+      "digital",
+      "tech"
+    ],
+    "src": "/assets/stickers/tech/10.png",
+    "thumbnail": "/assets/stickers/tech/10.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "tech-11",
+    "type": "sticker",
+    "name": "tech 11",
+    "category": "tech",
+    "tags": [
+      "tech",
+      "ui",
+      "digital",
+      "tech"
+    ],
+    "src": "/assets/stickers/tech/11.png",
+    "thumbnail": "/assets/stickers/tech/11.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "tech-12",
+    "type": "sticker",
+    "name": "tech 12",
+    "category": "tech",
+    "tags": [
+      "tech",
+      "ui",
+      "digital",
+      "tech"
+    ],
+    "src": "/assets/stickers/tech/12.png",
+    "thumbnail": "/assets/stickers/tech/12.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-01",
+    "type": "sticker",
+    "name": "abstract 01",
+    "category": "abstract",
+    "tags": [
+      "abstract",
+      "shape",
+      "gradient",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/01.png",
+    "thumbnail": "/assets/stickers/abstract/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-02",
+    "type": "sticker",
+    "name": "abstract 02",
+    "category": "abstract",
+    "tags": [
+      "abstract",
+      "shape",
+      "gradient",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/02.png",
+    "thumbnail": "/assets/stickers/abstract/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-03",
+    "type": "sticker",
+    "name": "abstract 03",
+    "category": "abstract",
+    "tags": [
+      "abstract",
+      "shape",
+      "gradient",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/03.png",
+    "thumbnail": "/assets/stickers/abstract/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-04",
+    "type": "sticker",
+    "name": "abstract 04",
+    "category": "abstract",
+    "tags": [
+      "abstract",
+      "shape",
+      "gradient",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/04.png",
+    "thumbnail": "/assets/stickers/abstract/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-05",
+    "type": "sticker",
+    "name": "abstract 05",
+    "category": "abstract",
+    "tags": [
+      "abstract",
+      "shape",
+      "gradient",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/05.png",
+    "thumbnail": "/assets/stickers/abstract/05.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-06",
+    "type": "sticker",
+    "name": "abstract 06",
+    "category": "abstract",
+    "tags": [
+      "abstract",
+      "shape",
+      "gradient",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/06.png",
+    "thumbnail": "/assets/stickers/abstract/06.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-07",
+    "type": "sticker",
+    "name": "abstract 07",
+    "category": "abstract",
+    "tags": [
+      "abstract",
+      "shape",
+      "gradient",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/07.png",
+    "thumbnail": "/assets/stickers/abstract/07.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-08",
+    "type": "sticker",
+    "name": "abstract 08",
+    "category": "abstract",
+    "tags": [
+      "abstract",
+      "shape",
+      "gradient",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/08.png",
+    "thumbnail": "/assets/stickers/abstract/08.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-09",
+    "type": "sticker",
+    "name": "abstract 09",
+    "category": "abstract",
+    "tags": [
+      "abstract",
+      "shape",
+      "gradient",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/09.png",
+    "thumbnail": "/assets/stickers/abstract/09.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "overlays-01",
+    "type": "overlay",
+    "name": "overlays 01",
+    "category": "overlays",
+    "tags": [
+      "overlay",
+      "light",
+      "texture",
+      "overlays"
+    ],
+    "src": "/assets/stickers/overlays/01.png",
+    "thumbnail": "/assets/stickers/overlays/01.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "overlays-02",
+    "type": "overlay",
+    "name": "overlays 02",
+    "category": "overlays",
+    "tags": [
+      "overlay",
+      "light",
+      "texture",
+      "overlays"
+    ],
+    "src": "/assets/stickers/overlays/02.png",
+    "thumbnail": "/assets/stickers/overlays/02.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "overlays-03",
+    "type": "overlay",
+    "name": "overlays 03",
+    "category": "overlays",
+    "tags": [
+      "overlay",
+      "light",
+      "texture",
+      "overlays"
+    ],
+    "src": "/assets/stickers/overlays/03.png",
+    "thumbnail": "/assets/stickers/overlays/03.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "overlays-04",
+    "type": "overlay",
+    "name": "overlays 04",
+    "category": "overlays",
+    "tags": [
+      "overlay",
+      "light",
+      "texture",
+      "overlays"
+    ],
+    "src": "/assets/stickers/overlays/04.png",
+    "thumbnail": "/assets/stickers/overlays/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "doodles-04",
+    "type": "doodle",
+    "name": "doodles 04",
+    "category": "doodles",
+    "tags": [
+      "text",
+      "phrase",
+      "caption",
+      "doodles"
+    ],
+    "src": "/assets/stickers/doodles/04.png",
+    "thumbnail": "/assets/stickers/doodles/04.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-10",
+    "type": "sticker",
+    "name": "abstract 10",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/10.png",
+    "thumbnail": "/assets/stickers/abstract/10.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-11",
+    "type": "sticker",
+    "name": "abstract 11",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/11.png",
+    "thumbnail": "/assets/stickers/abstract/11.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-12",
+    "type": "sticker",
+    "name": "abstract 12",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/12.png",
+    "thumbnail": "/assets/stickers/abstract/12.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-13",
+    "type": "sticker",
+    "name": "abstract 13",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/13.png",
+    "thumbnail": "/assets/stickers/abstract/13.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-14",
+    "type": "sticker",
+    "name": "abstract 14",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/14.png",
+    "thumbnail": "/assets/stickers/abstract/14.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-15",
+    "type": "sticker",
+    "name": "abstract 15",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/15.png",
+    "thumbnail": "/assets/stickers/abstract/15.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-16",
+    "type": "sticker",
+    "name": "abstract 16",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/16.png",
+    "thumbnail": "/assets/stickers/abstract/16.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-17",
+    "type": "sticker",
+    "name": "abstract 17",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/17.png",
+    "thumbnail": "/assets/stickers/abstract/17.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-18",
+    "type": "sticker",
+    "name": "abstract 18",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/18.png",
+    "thumbnail": "/assets/stickers/abstract/18.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-19",
+    "type": "sticker",
+    "name": "abstract 19",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/19.png",
+    "thumbnail": "/assets/stickers/abstract/19.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-20",
+    "type": "sticker",
+    "name": "abstract 20",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/20.png",
+    "thumbnail": "/assets/stickers/abstract/20.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-21",
+    "type": "sticker",
+    "name": "abstract 21",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/21.png",
+    "thumbnail": "/assets/stickers/abstract/21.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-22",
+    "type": "sticker",
+    "name": "abstract 22",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/22.png",
+    "thumbnail": "/assets/stickers/abstract/22.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-23",
+    "type": "sticker",
+    "name": "abstract 23",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/23.png",
+    "thumbnail": "/assets/stickers/abstract/23.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-24",
+    "type": "sticker",
+    "name": "abstract 24",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/24.png",
+    "thumbnail": "/assets/stickers/abstract/24.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-25",
+    "type": "sticker",
+    "name": "abstract 25",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/25.png",
+    "thumbnail": "/assets/stickers/abstract/25.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-26",
+    "type": "sticker",
+    "name": "abstract 26",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/26.png",
+    "thumbnail": "/assets/stickers/abstract/26.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-27",
+    "type": "sticker",
+    "name": "abstract 27",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/27.png",
+    "thumbnail": "/assets/stickers/abstract/27.thumb.png",
+    "animated": false
+  },
+  {
+    "id": "abstract-28",
+    "type": "sticker",
+    "name": "abstract 28",
+    "category": "abstract",
+    "tags": [
+      "motion",
+      "animated",
+      "accent",
+      "abstract"
+    ],
+    "src": "/assets/stickers/abstract/28.png",
+    "thumbnail": "/assets/stickers/abstract/28.thumb.png",
+    "animated": false
+  }
+]
