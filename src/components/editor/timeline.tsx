@@ -132,7 +132,7 @@ export function Timeline() {
 
           <Track label="Text">
             <div className="relative h-8 rounded-lg bg-[var(--editor-track)]" style={{ width }}>
-              {plan.textOverlays.map((t) => (
+              {(plan.textOverlays ?? []).map((t) => (
                 <button
                   key={t.id}
                   type="button"

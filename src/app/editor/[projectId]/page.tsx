@@ -20,7 +20,8 @@ export default function EditorPage() {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      if (project?.id === params.projectId && project.editPlan) {
+      const current = useProjectStore.getState().project;
+      if (current?.id === params.projectId && current.editPlan) {
         setLoading(false);
         return;
       }
@@ -35,6 +36,11 @@ export default function EditorPage() {
         router.replace("/upload");
         return;
       }
+      const latest = useProjectStore.getState().project;
+      if (latest?.id === params.projectId && latest.editPlan) {
+        setLoading(false);
+        return;
+      }
       setProject(data.project);
       setLoading(false);
     }
@@ -42,7 +48,7 @@ export default function EditorPage() {
     return () => {
       cancelled = true;
     };
-  }, [params.projectId, project?.id, project?.editPlan, router, setProject]);
+  }, [params.projectId, router, setProject]);
 
   if (loading || !project?.editPlan) {
     return (

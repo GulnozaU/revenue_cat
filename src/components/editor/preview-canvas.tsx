@@ -151,28 +151,53 @@ export function PreviewCanvas() {
   };
 
   const dragLayer = (
-    kind: "sticker" | "caption",
+    kind: "sticker" | "caption" | "text",
     id: string,
     event: React.PointerEvent
   ) => {
-    event.preventDefault();
     event.stopPropagation();
     const frame = frameRef.current;
     const current = useProjectStore.getState().project?.editPlan;
     if (!frame || !current) return;
-    setSelection(kind === "sticker" ? { type: "sticker", id } : { type: "caption", id });
+    setSelection(
+      kind === "sticker"
+        ? { type: "sticker", id }
+        : kind === "text"
+          ? { type: "text", id }
+          : { type: "caption", id }
+    );
+    const originX = event.clientX;
+    const originY = event.clientY;
     const rect = frame.getBoundingClientRect();
+    let dragging = false;
     const move = (ev: PointerEvent) => {
+      if (
+        !dragging &&
+        Math.hypot(ev.clientX - originX, ev.clientY - originY) < 4
+      ) {
+        return;
+      }
+      dragging = true;
       const latest = useProjectStore.getState().project?.editPlan;
       if (!latest) return;
       const x = clamp((ev.clientX - rect.left) / rect.width, 0.06, 0.94);
-      const y = clamp((ev.clientY - rect.top) / rect.height, 0.06, 0.94);
+      const y = clamp((ev.clientY - rect.top) / rect.height, 0.06, 0.9);
       if (kind === "sticker") {
         setEditPlanLocal(
           {
             ...latest,
             stickers: latest.stickers.map((s) =>
               s.id === id ? { ...s, x, y } : s
+            ),
+          },
+          false
+        );
+      } else if (kind === "text") {
+        setEditPlanLocal(
+          {
+            ...latest,
+            textOverlays: (latest.textOverlays ?? []).map((t) =>
+              t.id === id ? { ...t, x, y } : t
             ),
           },
           false
@@ -197,6 +222,43 @@ export function PreviewCanvas() {
     window.addEventListener("pointerup", up);
   };
 
+  const addTitleAt = (clientX: number, clientY: number) => {
+    const frame = frameRef.current;
+    const current = useProjectStore.getState().project?.editPlan;
+    if (!frame || !current) return;
+    const rect = frame.getBoundingClientRect();
+    const x = clamp((clientX - rect.left) / rect.width, 0.12, 0.88);
+    const y = clamp((clientY - rect.top) / rect.height, 0.08, 0.82);
+    const id = `text_${Date.now()}`;
+    const duration = current.duration || 1;
+    const ph = useProjectStore.getState().playhead;
+    let start = ph;
+    let end = Math.min(duration, start + 3);
+    if (end - start < 0.5) {
+      end = duration;
+      start = Math.max(0, end - 3);
+    }
+    setEditPlanLocal({
+      ...current,
+      textOverlays: [
+        ...(current.textOverlays ?? []),
+        {
+          id,
+          start,
+          end,
+          text: "Your title",
+          fontId: "satoshi",
+          fontSize: 56,
+          color: "#FFFFFF",
+          x,
+          y,
+        },
+      ],
+    });
+    setSelection({ type: "text", id });
+    setPlayhead(Math.min(end - 0.05, start + 0.05));
+  };
+
   if (!plan || !displaySrc) {
     return (
       <div className="flex flex-1 items-center justify-center bg-[#0c0e10] text-[var(--editor-muted)]">
@@ -213,6 +275,10 @@ export function PreviewCanvas() {
           data-preview-frame
           className="relative h-full max-h-full overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl"
           style={{ aspectRatio: aspect, maxWidth: "100%" }}
+          onDoubleClick={(e) => {
+            if ((e.target as HTMLElement).closest("[data-overlay]")) return;
+            addTitleAt(e.clientX, e.clientY);
+          }}
         >
           <div
             className="absolute inset-0 origin-center"
@@ -238,6 +304,7 @@ export function PreviewCanvas() {
                 return (
                   <div
                     key={t.id}
+                    data-overlay
                     className={`absolute z-20 max-w-[88%] -translate-x-1/2 ${
                       selected ? "ring-2 ring-[var(--editor-accent)] rounded-lg" : ""
                     }`}
@@ -245,6 +312,7 @@ export function PreviewCanvas() {
                       left: `${t.x * 100}%`,
                       top: `${t.y * 100}%`,
                     }}
+                    onDoubleClick={(e) => e.stopPropagation()}
                   >
                     {selected ? (
                       <input
@@ -280,10 +348,7 @@ export function PreviewCanvas() {
                           textShadow: "0 2px 8px rgba(0,0,0,0.65)",
                           color: t.color || "#fff",
                         }}
-                        onPointerDown={(e) => {
-                          setSelection({ type: "text", id: t.id });
-                          dragLayer("caption", t.id, e);
-                        }}
+                        onPointerDown={(e) => dragLayer("text", t.id, e)}
                       >
                         {t.text}
                       </button>
@@ -298,6 +363,7 @@ export function PreviewCanvas() {
                 return (
                   <div
                     key={caption.id}
+                    data-overlay
                     className={`absolute z-20 max-w-[88%] -translate-x-1/2 ${
                       selected ? "ring-2 ring-[var(--editor-accent)] rounded-lg" : ""
                     }`}
@@ -305,6 +371,7 @@ export function PreviewCanvas() {
                       left: `${(caption.x ?? 0.5) * 100}%`,
                       top: `${(caption.y ?? 0.78) * 100}%`,
                     }}
+                    onDoubleClick={(e) => e.stopPropagation()}
                   >
                     {selected ? (
                       <input
@@ -354,6 +421,7 @@ export function PreviewCanvas() {
                   <button
                     key={s.id}
                     type="button"
+                    data-overlay
                     className={`absolute z-20 cursor-grab active:cursor-grabbing ${
                       selection?.type === "sticker" && selection.id === s.id
                         ? "ring-2 ring-[var(--editor-accent)] rounded-lg"
@@ -388,6 +456,21 @@ export function PreviewCanvas() {
               loop
             />
           )}
+
+          <button
+            type="button"
+            className="absolute left-3 top-3 z-30 rounded-full bg-white px-3 py-1.5 text-xs font-semibold text-black shadow"
+            onClick={(e) => {
+              const frame = frameRef.current?.getBoundingClientRect();
+              addTitleAt(
+                (frame?.left ?? 0) + (frame?.width ?? 0) * 0.5,
+                (frame?.top ?? 0) + (frame?.height ?? 0) * 0.2
+              );
+              e.stopPropagation();
+            }}
+          >
+            Add text
+          </button>
 
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex items-center justify-center gap-3 bg-gradient-to-t from-black/70 to-transparent px-3 pb-3 pt-6">
             <button

@@ -25,7 +25,7 @@
   ],
   "status": "ready",
   "createdAt": "2026-09-30T01:42:21.160Z",
-  "updatedAt": "2026-09-30T01:42:23.993Z",
+  "updatedAt": "2026-09-30T02:02:26.540Z",
   "analysis": {
     "transcript": {
       "language": "und",
@@ -187,6 +187,17 @@
         "color": "#FFFFFF",
         "x": 0.5,
         "y": 0.18
+      },
+      {
+        "id": "text_1790733721003",
+        "start": 0,
+        "end": 3,
+        "text": "edited with Stylebox",
+        "fontId": "satoshi",
+        "fontSize": 56,
+        "color": "#FFFFFF",
+        "x": 0.5,
+        "y": 0.18
       }
     ],
     "stickers": [
@@ -264,7 +275,7 @@
       "fadeIn": 0.6,
       "fadeOut": 1.2
     },
-    "styleNotes": "Cute cozy Instagram Reel — soft captions, sparkles, gentle pacing."
+    "styleNotes": "Cute cozy Instagram Reel — soft captions, sparkles, gentle pacing. · make this text smaller"
   },
   "aiProvider": "mock"
 }
