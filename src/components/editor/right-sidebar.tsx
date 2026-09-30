@@ -269,7 +269,7 @@ export function RightSidebar() {
               <input
                 type="range"
                 min={18}
-                max={72}
+                max={110}
                 value={selectedCaption.fontSize ?? 44}
                 onChange={(e) =>
                   updateCaption(selectedCaption.id, {
@@ -300,30 +300,111 @@ export function RightSidebar() {
                 }
               />
             </Field>
+            <Field label="Font">
+              <FontPicker
+                compact
+                value={selectedText.fontId}
+                previewText={selectedText.text}
+                onChange={(fontId) =>
+                  setEditPlanLocal({
+                    ...plan,
+                    textOverlays: plan.textOverlays.map((t) =>
+                      t.id === selectedText.id ? { ...t, fontId } : t
+                    ),
+                  })
+                }
+              />
+            </Field>
+            <Field label="Size">
+              <input
+                type="range"
+                min={18}
+                max={120}
+                value={selectedText.fontSize}
+                onChange={(e) =>
+                  setEditPlanLocal({
+                    ...plan,
+                    textOverlays: plan.textOverlays.map((t) =>
+                      t.id === selectedText.id
+                        ? { ...t, fontSize: Number(e.target.value) }
+                        : t
+                    ),
+                  })
+                }
+                className="w-full accent-[var(--editor-accent)]"
+              />
+            </Field>
+            <Field label="Color">
+              <div className="flex flex-wrap gap-1.5">
+                {TEXT_COLORS.map((color) => (
+                  <button
+                    key={color}
+                    type="button"
+                    aria-label={color}
+                    onClick={() =>
+                      setEditPlanLocal({
+                        ...plan,
+                        textOverlays: plan.textOverlays.map((t) =>
+                          t.id === selectedText.id ? { ...t, color } : t
+                        ),
+                      })
+                    }
+                    className={`h-6 w-6 rounded-full border ${
+                      selectedText.color === color
+                        ? "border-white"
+                        : "border-white/20"
+                    }`}
+                    style={{ background: color }}
+                  />
+                ))}
+              </div>
+            </Field>
           </div>
         )}
 
         {selectedSticker && (
-          <Field label="Scale">
-            <input
-              type="range"
-              min={0.1}
-              max={1}
-              step={0.05}
-              value={selectedSticker.scale}
-              onChange={(e) =>
-                setEditPlanLocal({
-                  ...plan,
-                  stickers: plan.stickers.map((s) =>
-                    s.id === selectedSticker.id
-                      ? { ...s, scale: Number(e.target.value) }
-                      : s
-                  ),
-                })
-              }
-              className="w-full accent-[var(--editor-accent)]"
-            />
-          </Field>
+          <div className="space-y-3">
+            <Field label="Size">
+              <input
+                type="range"
+                min={0.15}
+                max={1.4}
+                step={0.05}
+                value={selectedSticker.scale}
+                onChange={(e) =>
+                  setEditPlanLocal({
+                    ...plan,
+                    stickers: plan.stickers.map((s) =>
+                      s.id === selectedSticker.id
+                        ? { ...s, scale: Number(e.target.value) }
+                        : s
+                    ),
+                  })
+                }
+                className="w-full accent-[var(--editor-accent)]"
+              />
+            </Field>
+            <Field label="Rotation">
+              <input
+                type="range"
+                min={-180}
+                max={180}
+                step={1}
+                value={selectedSticker.rotation || 0}
+                onChange={(e) =>
+                  setEditPlanLocal({
+                    ...plan,
+                    stickers: plan.stickers.map((s) =>
+                      s.id === selectedSticker.id
+                        ? { ...s, rotation: Number(e.target.value) }
+                        : s
+                    ),
+                  })
+                }
+                className="w-full accent-[var(--editor-accent)]"
+              />
+            </Field>
+          </div>
         )}
 
         {selection?.type === "music" && plan.music && (
@@ -390,6 +471,8 @@ export function RightSidebar() {
     </aside>
   );
 }
+
+const TEXT_COLORS = ["#FFFFFF", "#FFE56A", "#FF8FB8", "#111111", "#9BE7FF"];
 
 function Field({
   label,

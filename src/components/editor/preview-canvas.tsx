@@ -38,6 +38,9 @@ export function PreviewCanvas() {
   const frameRef = useRef<HTMLDivElement>(null);
   const playheadRef = useRef(playhead);
   const playingRef = useRef(isPlaying);
+  const planRef = useRef(project?.editPlan);
+  const clipIndexRef = useRef(0);
+  const seekingRef = useRef(false);
   const [ready, setReady] = useState(false);
   const [sourceUrl, setSourceUrl] = useState<string | null>(null);
 
@@ -51,6 +54,7 @@ export function PreviewCanvas() {
   useEffect(() => {
     playingRef.current = isPlaying;
   }, [isPlaying]);
+  planRef.current = plan;
 
   useEffect(() => {
     if (sourceFile) {
@@ -73,42 +77,15 @@ export function PreviewCanvas() {
   const zoom = plan ? activeZoom(plan, playhead) : null;
   const zoomScale = zoom?.scale ?? 1;
 
-  // Start/stop real playback. Seek once, then let the decoder run.
+  // Pause from here. Starting play happens in the button click so audio
+  // stays tied to the user gesture and we don't seek on every plan edit.
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !plan || !ready) return;
-
-    if (useRendered) {
-      video.muted = false;
-      if (isPlaying) video.play().catch(() => undefined);
-      else video.pause();
-      return;
-    }
-
-    video.muted = false;
-    video.volume = 1;
-
-    if (!isPlaying) {
-      video.pause();
-      musicRef.current?.pause();
-      return;
-    }
-
-    const mapped = timelineToSource(plan, playheadRef.current);
-    if (mapped && Math.abs(video.currentTime - mapped.sourceTime) > 0.25) {
-      video.currentTime = mapped.sourceTime;
-    }
-    video.play().catch(() => undefined);
-
-    const music = musicRef.current;
-    if (music && plan.music) {
-      music.volume = Math.min(0.45, plan.music.volume ?? 0.22);
-      if (Math.abs(music.currentTime - playheadRef.current) > 0.4) {
-        music.currentTime = playheadRef.current;
-      }
-      music.play().catch(() => undefined);
-    }
-  }, [isPlaying, ready, plan, useRendered]);
+    if (!video || !ready) return;
+    if (isPlaying) return;
+    video.pause();
+    musicRef.current?.pause();
+  }, [isPlaying, ready]);
 
   // Scrub only while paused — seeking during playback is what made it stutter.
   useEffect(() => {
@@ -120,34 +97,109 @@ export function PreviewCanvas() {
     if (Math.abs(video.currentTime - mapped.sourceTime) > 0.2) {
       video.currentTime = mapped.sourceTime;
     }
+    const index = plan.clips.findIndex((c) => c.id === mapped.clipId);
+    if (index >= 0) clipIndexRef.current = index;
   }, [playhead, isPlaying, ready, plan, useRendered]);
 
   useEffect(() => {
     setReady(false);
   }, [displaySrc]);
 
+  const seekVideo = (video: HTMLVideoElement, time: number) => {
+    seekingRef.current = true;
+    const done = () => {
+      seekingRef.current = false;
+      video.removeEventListener("seeked", done);
+    };
+    video.addEventListener("seeked", done);
+    video.currentTime = time;
+  };
+
   const onSourceTime = () => {
     const video = videoRef.current;
-    if (!video || !plan || useRendered || !playingRef.current) return;
-    const t = video.currentTime;
-    const clip = plan.clips.find(
-      (c) => t >= c.sourceStart - 0.04 && t < c.sourceEnd - 0.03
-    );
-    if (!clip) {
-      const idx = plan.clips.findIndex((c) => t >= c.sourceEnd - 0.08);
-      const next = idx >= 0 ? plan.clips[idx + 1] : plan.clips[0];
-      if (next && t >= (plan.clips[idx]?.sourceEnd ?? 0) - 0.08) {
-        video.currentTime = next.sourceStart;
-        setPlayhead(next.timelineStart);
-        return;
-      }
-      setPlayhead(plan.duration);
-      setIsPlaying(false);
-      video.pause();
+    const current = planRef.current;
+    if (!video || !current || useRendered || !playingRef.current || seekingRef.current) {
       return;
     }
+    const clips = current.clips;
+    const index = Math.min(clipIndexRef.current, clips.length - 1);
+    const clip = clips[index];
+    if (!clip) return;
+    const t = video.currentTime;
     const speed = clip.speed || 1;
-    setPlayhead(clip.timelineStart + (t - clip.sourceStart) / speed);
+
+    if (t < clip.sourceStart - 0.12) {
+      seekVideo(video, clip.sourceStart);
+      return;
+    }
+
+    if (t < clip.sourceEnd - 0.05) {
+      const timelineT =
+        clip.timelineStart + Math.max(0, t - clip.sourceStart) / speed;
+      setPlayhead(Math.min(clip.timelineEnd, timelineT));
+      return;
+    }
+
+    const next = clips[index + 1];
+    if (!next) {
+      setPlayhead(current.duration);
+      setIsPlaying(false);
+      video.pause();
+      musicRef.current?.pause();
+      return;
+    }
+    clipIndexRef.current = index + 1;
+    seekVideo(video, next.sourceStart + 0.02);
+    setPlayhead(next.timelineStart);
+  };
+
+  const togglePlay = () => {
+    const video = videoRef.current;
+    const current = planRef.current;
+    if (!video || !current) {
+      setIsPlaying(!isPlaying);
+      return;
+    }
+    if (isPlaying) {
+      video.pause();
+      musicRef.current?.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    video.muted = false;
+    video.volume = 1;
+
+    if (!useRendered) {
+      const at =
+        current.clips.findIndex(
+          (c) =>
+            playheadRef.current >= c.timelineStart &&
+            playheadRef.current < c.timelineEnd
+        ) ?? 0;
+      const index = at >= 0 ? at : 0;
+      clipIndexRef.current = index;
+      const clip = current.clips[index];
+      if (clip) {
+        const speed = clip.speed || 1;
+        const sourceTime =
+          clip.sourceStart +
+          Math.max(0, playheadRef.current - clip.timelineStart) * speed;
+        if (Math.abs(video.currentTime - sourceTime) > 0.18) {
+          video.currentTime = Math.min(sourceTime, clip.sourceEnd - 0.05);
+        }
+      }
+    }
+
+    video.play().catch(() => undefined);
+    const music = musicRef.current;
+    if (music && current.music && !useRendered) {
+      music.volume = Math.min(0.6, Math.max(0.18, current.music.volume ?? 0.3));
+      const dur = Number.isFinite(music.duration) && music.duration > 0 ? music.duration : 30;
+      music.currentTime = playheadRef.current % dur;
+      music.play().catch(() => undefined);
+    }
+    setIsPlaying(true);
   };
 
   const dragLayer = (
@@ -222,6 +274,49 @@ export function PreviewCanvas() {
     window.addEventListener("pointerup", up);
   };
 
+  const resizeFont = (
+    kind: "text" | "caption",
+    id: string,
+    startSize: number,
+    event: React.PointerEvent
+  ) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const origin = event.clientY;
+    const move = (ev: PointerEvent) => {
+      const latest = useProjectStore.getState().project?.editPlan;
+      if (!latest) return;
+      const fontSize = clamp(Math.round(startSize + (origin - ev.clientY) * 0.55), 18, 120);
+      if (kind === "text") {
+        setEditPlanLocal(
+          {
+            ...latest,
+            textOverlays: (latest.textOverlays ?? []).map((t) =>
+              t.id === id ? { ...t, fontSize } : t
+            ),
+          },
+          false
+        );
+      } else {
+        setEditPlanLocal(
+          {
+            ...latest,
+            captions: latest.captions.map((c) =>
+              c.id === id ? { ...c, fontSize } : c
+            ),
+          },
+          false
+        );
+      }
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  };
+
   const addTitleAt = (clientX: number, clientY: number) => {
     const frame = frameRef.current;
     const current = useProjectStore.getState().project?.editPlan;
@@ -269,12 +364,12 @@ export function PreviewCanvas() {
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col bg-[#0c0e10]">
-      <div className="flex min-h-0 flex-1 items-center justify-center px-4 py-3">
+      <div className="flex min-h-0 flex-1 items-center justify-center px-4 pt-3">
         <div
           ref={frameRef}
           data-preview-frame
-          className="relative h-full max-h-full overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl"
-          style={{ aspectRatio: aspect, maxWidth: "100%" }}
+          className="relative h-full max-h-full w-auto max-w-full overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl"
+          style={{ aspectRatio: aspect, containerType: "size" }}
           onDoubleClick={(e) => {
             if ((e.target as HTMLElement).closest("[data-overlay]")) return;
             addTitleAt(e.clientX, e.clientY);
@@ -288,7 +383,7 @@ export function PreviewCanvas() {
               key={displaySrc}
               ref={videoRef}
               src={displaySrc}
-              className="h-full w-full object-cover bg-black"
+              className="absolute inset-0 h-full w-full object-cover bg-black"
               playsInline
               onLoadedData={() => setReady(true)}
               onTimeUpdate={onSourceTime}
@@ -301,18 +396,24 @@ export function PreviewCanvas() {
               {texts.map((t) => {
                 const selected =
                   selection?.type === "text" && selection.id === t.id;
+                const fontSize = previewFont(t.fontSize);
                 return (
                   <div
                     key={t.id}
                     data-overlay
-                    className={`absolute z-20 max-w-[88%] -translate-x-1/2 ${
-                      selected ? "ring-2 ring-[var(--editor-accent)] rounded-lg" : ""
+                    className={`absolute z-20 w-[82%] -translate-x-1/2 -translate-y-1/2 ${
+                      selected ? "rounded-lg ring-2 ring-[var(--editor-accent)]" : ""
                     }`}
                     style={{
                       left: `${t.x * 100}%`,
                       top: `${t.y * 100}%`,
                     }}
                     onDoubleClick={(e) => e.stopPropagation()}
+                    onPointerDown={(e) => {
+                      const el = e.target as HTMLElement;
+                      if (el.closest("input") || el.closest("[data-resize]")) return;
+                      dragLayer("text", t.id, e);
+                    }}
                   >
                     {selected ? (
                       <input
@@ -331,27 +432,37 @@ export function PreviewCanvas() {
                             false
                           )
                         }
-                        className="w-[220px] bg-transparent text-center font-bold text-white outline-none"
+                        className="w-full bg-transparent text-center font-bold text-white outline-none"
                         style={{
                           fontFamily: fontCssFamily(t.fontId),
-                          fontSize: "clamp(16px, 4.2cqw, 32px)",
+                          fontSize,
+                          color: t.color || "#fff",
                           textShadow: "0 2px 8px rgba(0,0,0,0.65)",
                         }}
                       />
                     ) : (
-                      <button
-                        type="button"
-                        className="cursor-grab font-bold text-white active:cursor-grabbing"
+                      <p
+                        className="w-full cursor-grab text-center font-bold leading-tight text-white active:cursor-grabbing"
                         style={{
                           fontFamily: fontCssFamily(t.fontId),
-                          fontSize: "clamp(16px, 4.2cqw, 32px)",
-                          textShadow: "0 2px 8px rgba(0,0,0,0.65)",
+                          fontSize,
                           color: t.color || "#fff",
+                          textShadow: "0 2px 8px rgba(0,0,0,0.65)",
+                          overflowWrap: "anywhere",
                         }}
-                        onPointerDown={(e) => dragLayer("text", t.id, e)}
                       >
                         {t.text}
-                      </button>
+                      </p>
+                    )}
+                    {selected && (
+                      <span
+                        data-resize
+                        title="Drag to resize"
+                        className="absolute -bottom-1.5 -right-1.5 h-3.5 w-3.5 cursor-ns-resize rounded-full border border-black/30 bg-white"
+                        onPointerDown={(e) =>
+                          resizeFont("text", t.id, t.fontSize, e)
+                        }
+                      />
                     )}
                   </div>
                 );
@@ -360,18 +471,24 @@ export function PreviewCanvas() {
               {captions.map((caption) => {
                 const selected =
                   selection?.type === "caption" && selection.id === caption.id;
+                const fontSize = previewFont(caption.fontSize ?? 44);
                 return (
                   <div
                     key={caption.id}
                     data-overlay
-                    className={`absolute z-20 max-w-[88%] -translate-x-1/2 ${
-                      selected ? "ring-2 ring-[var(--editor-accent)] rounded-lg" : ""
+                    className={`absolute z-20 w-[86%] -translate-x-1/2 -translate-y-1/2 ${
+                      selected ? "rounded-lg ring-2 ring-[var(--editor-accent)]" : ""
                     }`}
                     style={{
                       left: `${(caption.x ?? 0.5) * 100}%`,
                       top: `${(caption.y ?? 0.78) * 100}%`,
                     }}
                     onDoubleClick={(e) => e.stopPropagation()}
+                    onPointerDown={(e) => {
+                      const el = e.target as HTMLElement;
+                      if (el.closest("input") || el.closest("[data-resize]")) return;
+                      dragLayer("caption", caption.id, e);
+                    }}
                   >
                     {selected ? (
                       <input
@@ -390,26 +507,40 @@ export function PreviewCanvas() {
                             false
                           )
                         }
-                        className="w-[240px] bg-black/25 px-2 text-center font-semibold text-white outline-none"
+                        className="w-full bg-black/20 text-center font-semibold text-white outline-none"
                         style={{
                           fontFamily: fontCssFamily(caption.fontId),
-                          fontSize: "clamp(13px, 3.6cqw, 26px)",
+                          fontSize,
                           textShadow: "0 2px 10px rgba(0,0,0,0.75)",
                         }}
                       />
                     ) : (
-                      <button
-                        type="button"
-                        className="cursor-grab px-2 font-semibold text-white active:cursor-grabbing"
+                      <p
+                        className="w-full cursor-grab px-1 text-center font-semibold leading-tight text-white active:cursor-grabbing"
                         style={{
                           fontFamily: fontCssFamily(caption.fontId),
-                          fontSize: "clamp(13px, 3.6cqw, 26px)",
+                          fontSize,
                           textShadow: "0 2px 10px rgba(0,0,0,0.75)",
+                          overflowWrap: "anywhere",
                         }}
-                        onPointerDown={(e) => dragLayer("caption", caption.id, e)}
                       >
                         {caption.text}
-                      </button>
+                      </p>
+                    )}
+                    {selected && (
+                      <span
+                        data-resize
+                        title="Drag to resize"
+                        className="absolute -bottom-1.5 -right-1.5 h-3.5 w-3.5 cursor-ns-resize rounded-full border border-black/30 bg-white"
+                        onPointerDown={(e) =>
+                          resizeFont(
+                            "caption",
+                            caption.id,
+                            caption.fontSize ?? 44,
+                            e
+                          )
+                        }
+                      />
                     )}
                   </div>
                 );
@@ -422,7 +553,7 @@ export function PreviewCanvas() {
                     key={s.id}
                     type="button"
                     data-overlay
-                    className={`absolute z-20 cursor-grab active:cursor-grabbing ${
+                    className={`absolute z-20 cursor-grab bg-transparent active:cursor-grabbing ${
                       selection?.type === "sticker" && selection.id === s.id
                         ? "ring-2 ring-[var(--editor-accent)] rounded-lg"
                         : ""
@@ -439,7 +570,7 @@ export function PreviewCanvas() {
                     <img
                       src={asset.url}
                       alt={asset.name}
-                      className="h-auto w-full drop-shadow-lg"
+                      className="pointer-events-none h-auto w-full object-contain drop-shadow-md"
                       draggable={false}
                     />
                   </button>
@@ -472,35 +603,6 @@ export function PreviewCanvas() {
             Add text
           </button>
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex items-center justify-center gap-3 bg-gradient-to-t from-black/70 to-transparent px-3 pb-3 pt-6">
-            <button
-              type="button"
-              className="pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full text-white/80 hover:text-white"
-              onClick={() => {
-                setIsPlaying(false);
-                setPlayhead(0);
-                if (videoRef.current) videoRef.current.currentTime = 0;
-                if (musicRef.current) musicRef.current.currentTime = 0;
-              }}
-            >
-              <SkipBack className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              className="pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full bg-[var(--editor-accent)] text-[#3a1f2a]"
-              onClick={() => setIsPlaying(!isPlaying)}
-            >
-              {isPlaying ? (
-                <Pause className="h-4 w-4" />
-              ) : (
-                <Play className="h-4 w-4 translate-x-px" />
-              )}
-            </button>
-            <span className="min-w-[92px] text-center font-mono text-[11px] text-white/90">
-              {formatTimecode(playhead)} / {formatTimecode(plan.duration)}
-            </span>
-          </div>
-
           {rendering && (
             <div className="absolute inset-0 z-40 flex flex-col items-center justify-center gap-2 bg-black/50 px-4 text-center text-sm text-white">
               <span>{renderProgress?.message || "Rendering…"}</span>
@@ -508,8 +610,44 @@ export function PreviewCanvas() {
           )}
         </div>
       </div>
+      <div className="flex shrink-0 items-center justify-center gap-3 px-3 py-2">
+        <button
+          type="button"
+          className="flex h-8 w-8 items-center justify-center rounded-full text-white/80 hover:text-white"
+          onClick={() => {
+            setIsPlaying(false);
+            clipIndexRef.current = 0;
+            setPlayhead(0);
+            const video = videoRef.current;
+            if (video && plan.clips[0]) {
+              video.currentTime = plan.clips[0].sourceStart;
+            }
+            if (musicRef.current) musicRef.current.currentTime = 0;
+          }}
+        >
+          <SkipBack className="h-4 w-4" />
+        </button>
+        <button
+          type="button"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--editor-accent)] text-[#3a1f2a]"
+          onClick={togglePlay}
+        >
+          {isPlaying ? (
+            <Pause className="h-4 w-4" />
+          ) : (
+            <Play className="h-4 w-4 translate-x-px" />
+          )}
+        </button>
+        <span className="min-w-[92px] text-center font-mono text-[11px] text-white/80">
+          {formatTimecode(playhead)} / {formatTimecode(plan.duration)}
+        </span>
+      </div>
     </div>
   );
+}
+
+function previewFont(fontSize: number) {
+  return `clamp(12px, ${(fontSize / 10.8).toFixed(2)}cqw, 72px)`;
 }
 
 function clamp(n: number, min: number, max: number) {
