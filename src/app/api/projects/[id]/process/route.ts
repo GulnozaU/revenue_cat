@@ -7,6 +7,10 @@ export const maxDuration = 300;
 
 type Ctx = { params: Promise<{ id: string }> };
 
+/**
+ * Upload video → NVIDIA/Gemini EditPlan.
+ * Does NOT render with system FFmpeg — browser uses ffmpeg.wasm.
+ */
 export async function POST(req: Request, ctx: Ctx) {
   try {
     const { id } = await ctx.params;
@@ -21,6 +25,14 @@ export async function POST(req: Request, ctx: Ctx) {
       return NextResponse.json({ error: "file required" }, { status: 400 });
     }
 
+    const duration = Number(form.get("duration") || 0);
+    const width = Number(form.get("width") || 0);
+    const height = Number(form.get("height") || 0);
+    const thumbnailDataUrl =
+      typeof form.get("thumbnailDataUrl") === "string"
+        ? (form.get("thumbnailDataUrl") as string)
+        : undefined;
+
     project.status = "uploading";
     await saveProject(project);
 
@@ -30,6 +42,10 @@ export async function POST(req: Request, ctx: Ctx) {
       filename: file.name,
       mimeType: file.type || "video/mp4",
       buffer,
+      duration: duration > 0 ? duration : 1,
+      width: width > 0 ? width : 1080,
+      height: height > 0 ? height : 1920,
+      thumbnailDataUrl,
     });
 
     project.assets = [asset];
@@ -39,8 +55,11 @@ export async function POST(req: Request, ctx: Ctx) {
         : project.name;
     await saveProject(project);
 
-    const updated = await runProjectPipeline(id);
-    return NextResponse.json({ project: updated });
+    const updated = await runProjectPipeline(id, buffer);
+    return NextResponse.json({
+      project: updated,
+      renderInBrowser: true,
+    });
   } catch (err) {
     console.error("[POST /api/projects/:id/process]", err);
     return NextResponse.json(

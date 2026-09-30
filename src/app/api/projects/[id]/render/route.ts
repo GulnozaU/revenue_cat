@@ -1,14 +1,15 @@
 import { NextResponse } from "next/server";
 import { loadProject, saveProject } from "@/lib/projects/store";
-import { reRenderProject } from "@/lib/pipeline";
 import { validateEditPlan, normalizeEditPlan } from "@/lib/types/edit-plan";
 import type { EditPlan } from "@/lib/types/edit-plan";
 
 export const runtime = "nodejs";
-export const maxDuration = 300;
 
 type Ctx = { params: Promise<{ id: string }> };
 
+/**
+ * Persist EditPlan only. Actual video rendering is client-side (ffmpeg.wasm).
+ */
 export async function POST(req: Request, ctx: Ctx) {
   try {
     const { id } = await ctx.params;
@@ -34,28 +35,17 @@ export async function POST(req: Request, ctx: Ctx) {
       await saveProject(project);
     }
 
-    const quality = body.quality ?? "preview";
-    const updated = await reRenderProject(id, quality);
-
-    if (quality === "export" && !updated.exportUrl) {
-      return NextResponse.json(
-        { error: "Export failed. Check the project and try again." },
-        { status: 500 }
-      );
-    }
-
     return NextResponse.json({
-      project: updated,
-      url: quality === "export" ? updated.exportUrl : updated.previewUrl,
+      project,
+      renderInBrowser: true,
+      message:
+        "Edit plan saved. Render the video in the browser with ffmpeg.wasm.",
     });
   } catch (err) {
     console.error("[render]", err);
     return NextResponse.json(
       {
-        error:
-          err instanceof Error
-            ? err.message
-            : "Export failed. Check the project and try again.",
+        error: err instanceof Error ? err.message : "Failed to save edit plan",
       },
       { status: 500 }
     );

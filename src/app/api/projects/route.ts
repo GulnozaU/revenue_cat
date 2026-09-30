@@ -27,12 +27,8 @@ export async function POST(req: Request) {
     return NextResponse.json({ project });
   } catch (err) {
     console.error("[POST /api/projects]", err);
-    return NextResponse.json(
-      {
-        error:
-          err instanceof Error ? err.message : "Failed to create project",
-      },
-      { status: 500 }
-    );
+    const message =
+      err instanceof Error ? err.message : "Failed to create project";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

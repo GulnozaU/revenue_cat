@@ -1,9 +1,10 @@
 import { promises as fs } from "fs";
 import path from "path";
 import type { ProjectRecord } from "@/lib/types/edit-plan";
+import { storagePath } from "@/lib/storage/paths";
 
 export async function listRecentProjects(limit = 12): Promise<ProjectRecord[]> {
-  const dir = path.join(/* turbopackIgnore: true */ process.cwd(), "storage", "projects");
+  const dir = storagePath("projects");
   try {
     const files = await fs.readdir(dir);
     const projects: ProjectRecord[] = [];

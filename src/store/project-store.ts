@@ -21,6 +21,8 @@ type LeftTab = "media" | "text" | "captions" | "stickers" | "music" | "effects" 
 
 type ProjectStore = {
   project: ProjectRecord | null;
+  /** Original uploaded File kept in-memory for ffmpeg.wasm rendering */
+  sourceFile: File | null;
   auth: { signedIn: boolean; email?: string };
   selection: Selection;
   leftTab: LeftTab;
@@ -31,6 +33,7 @@ type ProjectStore = {
   history: EditPlan[];
   future: EditPlan[];
   rendering: boolean;
+  renderProgress: { ratio: number; message: string } | null;
 
   setAuth: (auth: { signedIn: boolean; email?: string }) => void;
   setShowAuthModal: (show: boolean, intent?: "save" | "export" | null) => void;
@@ -39,12 +42,14 @@ type ProjectStore = {
   setPlayhead: (t: number) => void;
   setIsPlaying: (p: boolean) => void;
   setProject: (project: ProjectRecord | null) => void;
+  setSourceFile: (file: File | null) => void;
+  setPreviewBlobUrl: (url: string | null) => void;
   setEditPlanLocal: (plan: EditPlan, pushHistory?: boolean) => void;
   undo: () => void;
   redo: () => void;
   setRendering: (v: boolean) => void;
+  setRenderProgress: (p: { ratio: number; message: string } | null) => void;
 
-  // Draft fields before server create
   draftFormat: VideoFormat;
   draftAesthetic: AestheticId;
   draftPrompt: string;
@@ -55,6 +60,7 @@ type ProjectStore = {
 
 export const useProjectStore = create<ProjectStore>((set, get) => ({
   project: null,
+  sourceFile: null,
   auth: { signedIn: false },
   selection: null,
   leftTab: "media",
@@ -65,6 +71,7 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   history: [],
   future: [],
   rendering: false,
+  renderProgress: null,
   draftFormat: "instagram_reel",
   draftAesthetic: "clean_lifestyle",
   draftPrompt: "",
@@ -77,7 +84,28 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   setPlayhead: (t) => set({ playhead: t }),
   setIsPlaying: (p) => set({ isPlaying: p }),
   setProject: (project) => set({ project, playhead: 0, isPlaying: false }),
+  setSourceFile: (file) => set({ sourceFile: file }),
+  setPreviewBlobUrl: (url) => {
+    const project = get().project;
+    if (!project) return;
+    const prev = project.previewUrl;
+    if (prev?.startsWith("blob:")) {
+      try {
+        URL.revokeObjectURL(prev);
+      } catch {
+        /* ignore */
+      }
+    }
+    set({
+      project: {
+        ...project,
+        previewUrl: url ?? undefined,
+        exportUrl: url && project.exportUrl?.startsWith("blob:") ? url : project.exportUrl,
+      },
+    });
+  },
   setRendering: (v) => set({ rendering: v }),
+  setRenderProgress: (p) => set({ renderProgress: p }),
 
   setDraftFormat: (f) => set({ draftFormat: f }),
   setDraftAesthetic: (a) => set({ draftAesthetic: a }),

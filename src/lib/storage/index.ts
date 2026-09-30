@@ -28,7 +28,16 @@ export class LocalStorageProvider implements StorageProvider {
   private root: string;
 
   constructor(root = path.join(process.cwd(), "storage")) {
-    this.root = root;
+    // Prefer shared storage root (uses /tmp on Vercel)
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { getStorageRoot } = require("@/lib/storage/paths") as {
+        getStorageRoot: () => string;
+      };
+      this.root = root.includes("storage") ? getStorageRoot() : root;
+    } catch {
+      this.root = root;
+    }
   }
 
   private resolve(key: string) {

@@ -107,27 +107,33 @@ export function RightSidebar() {
     setImproving(true);
     setRendering(true);
     try {
-      // Persist current plan first
       await fetch(`/api/projects/${project.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ editPlan: plan }),
       });
 
-      const res = await fetch(`/api/projects/${project.id}/improve`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          instruction: instruction.trim(),
-          selection: selection
+      const sourceFile = useProjectStore.getState().sourceFile;
+      const form = new FormData();
+      form.append("instruction", instruction.trim());
+      form.append(
+        "selection",
+        JSON.stringify(
+          selection
             ? {
                 type: selection.type,
                 id: "id" in selection ? selection.id : undefined,
                 start: playhead,
                 end: playhead + 1.5,
               }
-            : { type: "range", start: playhead, end: playhead + 2 },
-        }),
+            : { type: "range", start: playhead, end: playhead + 2 }
+        )
+      );
+      if (sourceFile) form.append("file", sourceFile);
+
+      const res = await fetch(`/api/projects/${project.id}/improve`, {
+        method: "POST",
+        body: form,
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
@@ -136,7 +142,36 @@ export function RightSidebar() {
       const data = await res.json();
       setProject(data.project);
       setInstruction("");
-      toast.success("AI Improve applied + preview re-rendered");
+
+      let source: File | Blob | null = sourceFile;
+      if (!source && data.project.assets?.[0]?.sourceUrl) {
+        const media = await fetch(data.project.assets[0].sourceUrl);
+        if (media.ok) source = await media.blob();
+      }
+      if (source && data.project.editPlan) {
+        const { renderEditPlanInBrowser } = await import(
+          "@/lib/video/ffmpeg-browser"
+        );
+        const blob = await renderEditPlanInBrowser({
+          source,
+          plan: data.project.editPlan,
+          format: data.project.format,
+          quality: "preview",
+        });
+        const url = URL.createObjectURL(blob);
+        const prev = data.project.previewUrl;
+        if (prev?.startsWith("blob:")) {
+          try {
+            URL.revokeObjectURL(prev);
+          } catch {
+            /* ignore */
+          }
+        }
+        setProject({ ...data.project, previewUrl: url });
+        toast.success("AI Improve applied — real preview updated");
+      } else {
+        toast.success("AI Improve applied — hit Apply preview to render");
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Improve failed");
     } finally {

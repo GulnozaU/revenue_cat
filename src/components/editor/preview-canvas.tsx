@@ -19,12 +19,14 @@ export function PreviewCanvas() {
   const setPlayhead = useProjectStore((s) => s.setPlayhead);
   const setIsPlaying = useProjectStore((s) => s.setIsPlaying);
   const rendering = useProjectStore((s) => s.rendering);
+  const renderProgress = useProjectStore((s) => s.renderProgress);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [ready, setReady] = useState(false);
 
   const plan = project?.editPlan;
-  const src = project?.previewUrl || project?.assets[0]?.proxyUrl;
+  // Prefer real rendered blob; fall back to source only as last resort
+  const src = project?.previewUrl || project?.assets[0]?.sourceUrl;
   const format = project?.format ?? "instagram_reel";
   const aspect = FORMAT_PRESETS[format].aspect === "9:16" ? "9/16" : "16/9";
 
@@ -84,8 +86,13 @@ export function PreviewCanvas() {
             onEnded={() => setIsPlaying(false)}
           />
           {rendering && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-sm text-white">
-              Rendering…
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/50 px-4 text-center text-sm text-white">
+              <span>{renderProgress?.message || "Rendering with ffmpeg.wasm…"}</span>
+              {renderProgress && (
+                <span className="text-xs opacity-80">
+                  {Math.round(renderProgress.ratio * 100)}%
+                </span>
+              )}
             </div>
           )}
         </div>

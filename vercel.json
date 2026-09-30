@@ -1,0 +1,16 @@
+{
+  "functions": {
+    "src/app/api/projects/[id]/process/route.ts": {
+      "maxDuration": 300,
+      "memory": 1024
+    },
+    "src/app/api/projects/[id]/improve/route.ts": {
+      "maxDuration": 300,
+      "memory": 1024
+    },
+    "src/app/api/ai/analyze-video/route.ts": {
+      "maxDuration": 300,
+      "memory": 1024
+    }
+  }
+}

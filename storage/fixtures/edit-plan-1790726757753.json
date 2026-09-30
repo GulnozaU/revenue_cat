@@ -1,0 +1,205 @@
+{
+  "meta": {
+    "aestheticId": "fast_paced",
+    "format": "instagram_reel",
+    "prompt": "Add zooms and effects when the cursor is clicking",
+    "provider": "gemini",
+    "model": "gemini-3.8-flash"
+  },
+  "plan": {
+    "sourceDuration": 125.35,
+    "format": "vertical_9_16",
+    "aestheticId": "fast_paced",
+    "duration": 15,
+    "clips": [
+      {
+        "id": "clip_1",
+        "sourceStart": 4,
+        "sourceEnd": 7,
+        "timelineStart": 0,
+        "timelineEnd": 3,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Launch batch prior authorization run"
+      },
+      {
+        "id": "clip_2",
+        "sourceStart": 14.5,
+        "sourceEnd": 19.5,
+        "timelineStart": 3,
+        "timelineEnd": 8,
+        "speed": 1,
+        "action": "keep",
+        "reason": "AI agent filling out portal form live"
+      },
+      {
+        "id": "clip_3",
+        "sourceStart": 24,
+        "sourceEnd": 27.5,
+        "timelineStart": 8,
+        "timelineEnd": 11.5,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Authorization reference generated instantly"
+      },
+      {
+        "id": "clip_4",
+        "sourceStart": 36.5,
+        "sourceEnd": 40,
+        "timelineStart": 11.5,
+        "timelineEnd": 15,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Submission receipt and review progress review"
+      },
+      {
+        "id": "clip_5",
+        "sourceStart": 125.35,
+        "sourceEnd": 125.35,
+        "timelineStart": 15,
+        "timelineEnd": 15,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Dashboard updates with approved prior authorization"
+      }
+    ],
+    "cuts": [],
+    "captions": [
+      {
+        "id": "cap_1",
+        "start": 0.2,
+        "end": 2.8,
+        "text": "Run prior authorizations in parallel",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "none"
+      },
+      {
+        "id": "cap_2",
+        "start": 3.2,
+        "end": 7.8,
+        "text": "AI agent fills payer portal live",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "none"
+      },
+      {
+        "id": "cap_3",
+        "start": 8.2,
+        "end": 11.2,
+        "text": "Instant submission reference!",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "none"
+      },
+      {
+        "id": "cap_4",
+        "start": 11.6,
+        "end": 14.8,
+        "text": "Full audit trail tracked",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "none"
+      },
+      {
+        "id": "cap_5",
+        "start": 15.2,
+        "end": 17.8,
+        "text": "Authorization Approved! ✅",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "none"
+      }
+    ],
+    "textOverlays": [],
+    "stickers": [
+      {
+        "id": "stk_1",
+        "assetId": "fire",
+        "start": 1.2,
+        "end": 2.8,
+        "x": 0.35,
+        "y": 0.65,
+        "scale": 0.35,
+        "rotation": 0
+      },
+      {
+        "id": "stk_2",
+        "assetId": "sparkle",
+        "start": 8.5,
+        "end": 10.5,
+        "x": 0.65,
+        "y": 0.2,
+        "scale": 0.4,
+        "rotation": 15
+      },
+      {
+        "id": "stk_3",
+        "assetId": "circle",
+        "start": 15.5,
+        "end": 17.5,
+        "x": 0.45,
+        "y": 0.2,
+        "scale": 0.35,
+        "rotation": 0
+      }
+    ],
+    "zooms": [
+      {
+        "id": "zoom_1",
+        "start": 0.8,
+        "end": 2.5,
+        "scale": 1.2,
+        "x": 0.35,
+        "y": 0.72
+      },
+      {
+        "id": "zoom_2",
+        "start": 4,
+        "end": 7.5,
+        "scale": 1.25,
+        "x": 0.48,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_3",
+        "start": 8,
+        "end": 11,
+        "scale": 1.3,
+        "x": 0.55,
+        "y": 0.22
+      },
+      {
+        "id": "zoom_4",
+        "start": 15,
+        "end": 17.8,
+        "scale": 1.2,
+        "x": 0.45,
+        "y": 0.22
+      }
+    ],
+    "music": {
+      "trackId": "upbeat_01",
+      "volume": 0.16,
+      "startAt": 0,
+      "fadeIn": 0.4,
+      "fadeOut": 0.8
+    },
+    "styleNotes": "Fast-paced UI workflow demo with punchy zooms on action points and rapid transitions between agent stages."
+  }
+}

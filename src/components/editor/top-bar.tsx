@@ -9,17 +9,42 @@ import { useProjectStore } from "@/store/project-store";
 export function EditorTopBar() {
   const project = useProjectStore((s) => s.project);
   const setProject = useProjectStore((s) => s.setProject);
+  const sourceFile = useProjectStore((s) => s.sourceFile);
+  const setSourceFile = useProjectStore((s) => s.setSourceFile);
   const undo = useProjectStore((s) => s.undo);
   const redo = useProjectStore((s) => s.redo);
   const history = useProjectStore((s) => s.history);
   const future = useProjectStore((s) => s.future);
   const setRendering = useProjectStore((s) => s.setRendering);
+  const setRenderProgress = useProjectStore((s) => s.setRenderProgress);
   const rendering = useProjectStore((s) => s.rendering);
+  const renderProgress = useProjectStore((s) => s.renderProgress);
+
+  const resolveSource = async (): Promise<File | Blob> => {
+    if (sourceFile) return sourceFile;
+    const url = project?.assets[0]?.sourceUrl;
+    if (!url) {
+      throw new Error(
+        "Source video is not available in this session. Re-upload the video to export."
+      );
+    }
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error("Could not load source video for rendering.");
+    }
+    const blob = await res.blob();
+    const file = new File([blob], project?.assets[0]?.filename || "source.mp4", {
+      type: blob.type || "video/mp4",
+    });
+    setSourceFile(file);
+    return file;
+  };
 
   const persistAndRender = async (quality: "preview" | "export") => {
     if (!project?.editPlan) return;
 
     setRendering(true);
+    setRenderProgress({ ratio: 0, message: "Starting browser render…" });
     try {
       await fetch(`/api/projects/${project.id}`, {
         method: "PATCH",
@@ -27,41 +52,58 @@ export function EditorTopBar() {
         body: JSON.stringify({ editPlan: project.editPlan, name: project.name }),
       });
 
-      const res = await fetch(`/api/projects/${project.id}/render`, {
+      // Persist plan only (no server FFmpeg)
+      await fetch(`/api/projects/${project.id}/render`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          quality,
-          editPlan: project.editPlan,
-          signedIn: true,
-        }),
+        body: JSON.stringify({ editPlan: project.editPlan, quality }),
       });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(
-          (err as { error?: string }).error ||
-            (quality === "export" ? "Export failed" : "Render failed")
-        );
+
+      const source = await resolveSource();
+      const { renderEditPlanInBrowser } = await import(
+        "@/lib/video/ffmpeg-browser"
+      );
+      const blob = await renderEditPlanInBrowser({
+        source,
+        plan: project.editPlan,
+        format: project.format,
+        quality,
+        onProgress: (p) => setRenderProgress(p),
+      });
+
+      const url = URL.createObjectURL(blob);
+      const prev = project.previewUrl;
+      if (prev?.startsWith("blob:")) {
+        try {
+          URL.revokeObjectURL(prev);
+        } catch {
+          /* ignore */
+        }
       }
-      const data = await res.json();
-      setProject(data.project);
 
       if (quality === "export") {
-        if (!data.project.exportUrl) {
-          throw new Error("Export finished but no file URL was returned.");
-        }
+        setProject({
+          ...project,
+          previewUrl: url,
+          exportUrl: url,
+        });
         toast.success("Export ready — downloading MP4");
         const a = document.createElement("a");
-        a.href = data.project.exportUrl;
+        a.href = url;
         a.download = `${project.name || "cutline"}.mp4`;
         a.click();
       } else {
+        setProject({
+          ...project,
+          previewUrl: url,
+        });
         toast.success("Preview re-rendered");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Render failed");
+      toast.error(err instanceof Error ? err.message : "Video rendering failed.");
     } finally {
       setRendering(false);
+      setRenderProgress(null);
     }
   };
 
@@ -76,6 +118,11 @@ export function EditorTopBar() {
         <span className="truncate text-sm font-medium">
           {project?.name ?? "Untitled"}
         </span>
+        {rendering && renderProgress && (
+          <span className="hidden truncate text-xs text-[var(--editor-muted)] sm:inline">
+            {Math.round(renderProgress.ratio * 100)}% · {renderProgress.message}
+          </span>
+        )}
       </div>
 
       <div className="flex items-center gap-1">

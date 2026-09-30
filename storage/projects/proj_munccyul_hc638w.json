@@ -1,0 +1,62 @@
+{
+  "id": "proj_munccyul_hc638w",
+  "name": "Demo Video 1- Post generator",
+  "format": "instagram_reel",
+  "aestheticId": "fast_paced",
+  "prompt": "Add zooms when the cursor is clicking",
+  "assets": [
+    {
+      "id": "022cccaf-148d-4a84-9520-39eef17a820a",
+      "filename": "Demo Video 1- Post generator .mp4",
+      "mimeType": "video/mp4",
+      "sourcePath": "uploads/proj_munccyul_hc638w/022cccaf-148d-4a84-9520-39eef17a820a.mp4",
+      "sourceUrl": "/api/files/uploads/proj_munccyul_hc638w/022cccaf-148d-4a84-9520-39eef17a820a.mp4",
+      "duration": 7.032698,
+      "width": 1280,
+      "height": 720,
+      "fps": 29.99999856459337,
+      "sizeBytes": 741687,
+      "hasAudio": true,
+      "thumbnailPath": "uploads/proj_munccyul_hc638w/022cccaf-148d-4a84-9520-39eef17a820a_thumb.jpg",
+      "thumbnailUrl": "/api/files/uploads/proj_munccyul_hc638w/022cccaf-148d-4a84-9520-39eef17a820a_thumb.jpg",
+      "proxyPath": "uploads/proj_munccyul_hc638w/022cccaf-148d-4a84-9520-39eef17a820a_proxy.mp4",
+      "proxyUrl": "/api/files/uploads/proj_munccyul_hc638w/022cccaf-148d-4a84-9520-39eef17a820a_proxy.mp4",
+      "audioPath": "uploads/proj_munccyul_hc638w/022cccaf-148d-4a84-9520-39eef17a820a_audio.wav"
+    }
+  ],
+  "status": "error",
+  "createdAt": "2026-09-30T00:02:42.669Z",
+  "updatedAt": "2026-09-30T00:02:51.475Z",
+  "analysis": {
+    "transcript": {
+      "language": "und",
+      "fullText": "[full take]",
+      "duration": 7.032698,
+      "provider": "silence-fallback",
+      "segments": [
+        {
+          "id": "seg_1",
+          "start": 0,
+          "end": 7.032698,
+          "text": "[full take]"
+        }
+      ]
+    },
+    "silences": [
+      {
+        "start": 0,
+        "end": 7.012437,
+        "duration": 7.012437
+      }
+    ],
+    "highlightCandidates": [
+      {
+        "start": 0,
+        "end": 7.032698,
+        "score": 0.19062655409265203,
+        "reason": "Spoken segment"
+      }
+    ]
+  },
+  "error": "{\"error\":{\"code\":404,\"message\":\"This model models/gemini-2.0-flash is no longer available. Please update your code to use models/gemini-3.8-flash for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).\",\"status\":\"NOT_FOUND\"}}"
+}

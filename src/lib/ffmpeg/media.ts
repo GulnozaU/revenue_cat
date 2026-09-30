@@ -1,3 +1,8 @@
+/**
+ * LOCAL DEV ONLY — system FFmpeg via child_process.
+ * Production rendering uses `@/lib/video/ffmpeg-browser` (ffmpeg.wasm).
+ * Do not import this module from production API routes that must run on Vercel.
+ */
 import { execFile } from "child_process";
 import { promisify } from "util";
 import path from "path";
@@ -97,7 +102,6 @@ export async function generateThumbnail(
   ]);
 }
 
-/** Low-res proxy for fast preview (~720p max, faster encode). */
 export async function generateProxy(
   sourcePath: string,
   outputPath: string
@@ -145,7 +149,6 @@ export async function extractAudioWav(
   ]);
 }
 
-/** Detect silence regions via ffmpeg silencedetect. */
 export async function detectSilences(
   mediaPath: string,
   noiseDb = -35,
@@ -181,25 +184,8 @@ export async function detectSilences(
   return regions;
 }
 
-export function storagePath(...parts: string[]) {
-  return path.join(process.cwd(), "storage", ...parts);
-}
-
 export function publicAssetPath(...parts: string[]) {
   return path.join(process.cwd(), "public", "assets", ...parts);
 }
 
-export function toPublicApiUrl(absoluteOrStorageRelative: string): string {
-  const cwd = process.cwd();
-  let rel = absoluteOrStorageRelative;
-  if (rel.startsWith(cwd)) {
-    rel = rel.slice(cwd.length).replace(/^\/+/, "");
-  }
-  if (rel.startsWith("storage/")) {
-    return `/api/files/${rel.slice("storage/".length).split("/").map(encodeURIComponent).join("/")}`;
-  }
-  if (rel.startsWith("public/")) {
-    return `/${rel.slice("public/".length)}`;
-  }
-  return `/api/files/${rel.split("/").map(encodeURIComponent).join("/")}`;
-}
+export { storagePath, toPublicApiUrl } from "@/lib/storage/paths";

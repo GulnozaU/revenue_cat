@@ -20,7 +20,7 @@ export default function EditorPage() {
   useEffect(() => {
     let cancelled = false;
     async function load() {
-      if (project?.id === params.projectId && project.editPlan && project.previewUrl) {
+      if (project?.id === params.projectId && project.editPlan) {
         setLoading(false);
         return;
       }

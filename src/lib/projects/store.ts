@@ -5,17 +5,26 @@ import type {
   ProjectRecord,
   VideoFormat,
 } from "@/lib/types/edit-plan";
+import {
+  ensureStorageDirs,
+  humanizeStorageError,
+  storagePath,
+} from "@/lib/storage/paths";
 
 function projectsRoot() {
-  return path.join(/* turbopackIgnore: true */ process.cwd(), "storage", "projects");
+  return storagePath("projects");
 }
 
 export async function saveProject(project: ProjectRecord): Promise<void> {
-  const dir = projectsRoot();
-  await fs.mkdir(dir, { recursive: true });
-  const file = path.join(/* turbopackIgnore: true */ dir, `${project.id}.json`);
-  project.updatedAt = new Date().toISOString();
-  await fs.writeFile(file, JSON.stringify(project, null, 2), "utf8");
+  try {
+    await ensureStorageDirs();
+    const dir = projectsRoot();
+    const file = path.join(/* turbopackIgnore: true */ dir, `${project.id}.json`);
+    project.updatedAt = new Date().toISOString();
+    await fs.writeFile(file, JSON.stringify(project, null, 2), "utf8");
+  } catch (err) {
+    throw new Error(humanizeStorageError(err));
+  }
 }
 
 export async function loadProject(id: string): Promise<ProjectRecord | null> {

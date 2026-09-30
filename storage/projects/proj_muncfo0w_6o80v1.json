@@ -1,0 +1,259 @@
+{
+  "id": "proj_muncfo0w_6o80v1",
+  "name": "Screen_Recording_2026-05-31_at_4_23_31_PM",
+  "format": "instagram_reel",
+  "aestheticId": "fast_paced",
+  "prompt": "Add zooms and effects when the cursor is clicking",
+  "assets": [
+    {
+      "id": "c327adae-dc9b-4164-a079-0efba551d0c6",
+      "filename": "Screen_Recording_2026-05-31_at_4_23_31_PM.mp4",
+      "mimeType": "video/mp4",
+      "sourcePath": "uploads/proj_muncfo0w_6o80v1/c327adae-dc9b-4164-a079-0efba551d0c6.mp4",
+      "sourceUrl": "/api/files/uploads/proj_muncfo0w_6o80v1/c327adae-dc9b-4164-a079-0efba551d0c6.mp4",
+      "duration": 125.35,
+      "width": 2408,
+      "height": 1330,
+      "fps": 60,
+      "sizeBytes": 11898244,
+      "hasAudio": false,
+      "thumbnailPath": "uploads/proj_muncfo0w_6o80v1/c327adae-dc9b-4164-a079-0efba551d0c6_thumb.jpg",
+      "thumbnailUrl": "/api/files/uploads/proj_muncfo0w_6o80v1/c327adae-dc9b-4164-a079-0efba551d0c6_thumb.jpg",
+      "proxyPath": "uploads/proj_muncfo0w_6o80v1/c327adae-dc9b-4164-a079-0efba551d0c6_proxy.mp4",
+      "proxyUrl": "/api/files/uploads/proj_muncfo0w_6o80v1/c327adae-dc9b-4164-a079-0efba551d0c6_proxy.mp4",
+      "audioPath": "uploads/proj_muncfo0w_6o80v1/c327adae-dc9b-4164-a079-0efba551d0c6_audio.wav"
+    }
+  ],
+  "status": "error",
+  "createdAt": "2026-09-30T00:04:48.607Z",
+  "updatedAt": "2026-09-30T00:06:00.674Z",
+  "analysis": {
+    "transcript": {
+      "language": "und",
+      "fullText": "[full take]",
+      "duration": 125.35,
+      "provider": "silence-fallback",
+      "segments": [
+        {
+          "id": "seg_1",
+          "start": 0,
+          "end": 125.35,
+          "text": "[full take]"
+        }
+      ]
+    },
+    "silences": [
+      {
+        "start": 0,
+        "end": 125.35,
+        "duration": 125.35
+      }
+    ],
+    "highlightCandidates": [
+      {
+        "start": 0,
+        "end": 125.35,
+        "score": 0.15227933215567838,
+        "reason": "Spoken segment"
+      }
+    ]
+  },
+  "editPlan": {
+    "sourceDuration": 125.35,
+    "format": "vertical_9_16",
+    "aestheticId": "fast_paced",
+    "duration": 15,
+    "clips": [
+      {
+        "id": "clip_1",
+        "sourceStart": 4,
+        "sourceEnd": 7,
+        "timelineStart": 0,
+        "timelineEnd": 3,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Launch batch prior authorization run"
+      },
+      {
+        "id": "clip_2",
+        "sourceStart": 14.5,
+        "sourceEnd": 19.5,
+        "timelineStart": 3,
+        "timelineEnd": 8,
+        "speed": 1,
+        "action": "keep",
+        "reason": "AI agent filling out portal form live"
+      },
+      {
+        "id": "clip_3",
+        "sourceStart": 24,
+        "sourceEnd": 27.5,
+        "timelineStart": 8,
+        "timelineEnd": 11.5,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Authorization reference generated instantly"
+      },
+      {
+        "id": "clip_4",
+        "sourceStart": 36.5,
+        "sourceEnd": 40,
+        "timelineStart": 11.5,
+        "timelineEnd": 15,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Submission receipt and review progress review"
+      },
+      {
+        "id": "clip_5",
+        "sourceStart": 125.35,
+        "sourceEnd": 125.35,
+        "timelineStart": 15,
+        "timelineEnd": 15,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Dashboard updates with approved prior authorization"
+      }
+    ],
+    "cuts": [],
+    "captions": [
+      {
+        "id": "cap_1",
+        "start": 0.2,
+        "end": 2.8,
+        "text": "Run prior authorizations in parallel",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "none"
+      },
+      {
+        "id": "cap_2",
+        "start": 3.2,
+        "end": 7.8,
+        "text": "AI agent fills payer portal live",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "none"
+      },
+      {
+        "id": "cap_3",
+        "start": 8.2,
+        "end": 11.2,
+        "text": "Instant submission reference!",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "none"
+      },
+      {
+        "id": "cap_4",
+        "start": 11.6,
+        "end": 14.8,
+        "text": "Full audit trail tracked",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "none"
+      },
+      {
+        "id": "cap_5",
+        "start": 15.2,
+        "end": 17.8,
+        "text": "Authorization Approved! ✅",
+        "style": "kinetic",
+        "fontId": "arial_bold",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "none"
+      }
+    ],
+    "textOverlays": [],
+    "stickers": [
+      {
+        "id": "stk_1",
+        "assetId": "fire",
+        "start": 1.2,
+        "end": 2.8,
+        "x": 0.35,
+        "y": 0.65,
+        "scale": 0.35,
+        "rotation": 0
+      },
+      {
+        "id": "stk_2",
+        "assetId": "sparkle",
+        "start": 8.5,
+        "end": 10.5,
+        "x": 0.65,
+        "y": 0.2,
+        "scale": 0.4,
+        "rotation": 15
+      },
+      {
+        "id": "stk_3",
+        "assetId": "circle",
+        "start": 15.5,
+        "end": 17.5,
+        "x": 0.45,
+        "y": 0.2,
+        "scale": 0.35,
+        "rotation": 0
+      }
+    ],
+    "zooms": [
+      {
+        "id": "zoom_1",
+        "start": 0.8,
+        "end": 2.5,
+        "scale": 1.2,
+        "x": 0.35,
+        "y": 0.72
+      },
+      {
+        "id": "zoom_2",
+        "start": 4,
+        "end": 7.5,
+        "scale": 1.25,
+        "x": 0.48,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_3",
+        "start": 8,
+        "end": 11,
+        "scale": 1.3,
+        "x": 0.55,
+        "y": 0.22
+      },
+      {
+        "id": "zoom_4",
+        "start": 15,
+        "end": 17.8,
+        "scale": 1.2,
+        "x": 0.45,
+        "y": 0.22
+      }
+    ],
+    "music": {
+      "trackId": "upbeat_01",
+      "volume": 0.16,
+      "startAt": 0,
+      "fadeIn": 0.4,
+      "fadeOut": 0.8
+    },
+    "styleNotes": "Fast-paced UI workflow demo with punchy zooms on action points and rapid transitions between agent stages."
+  },
+  "aiProvider": "gemini",
+  "error": "Command failed: ffmpeg -y -ss 125.35 -to 125.35 -i /Users/gulnozausmon/Build/Hackathons/revenue_cat/storage/uploads/proj_muncfo0w_6o80v1/c327adae-dc9b-4164-a079-0efba551d0c6.mp4 -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -vf scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280 -c:v libx264 -preset veryfast -crf 28 -c:a aac -shortest -pix_fmt yuv420p /Users/gulnozausmon/Build/Hackathons/revenue_cat/storage/tmp/render_1790726757756/clip_4.mp4\nffmpeg version 9.0.2 Copyright (c) 2000-2026 the FFmpeg developers\n  built with Apple clang version 21.0.0 (clang-2100.3.34.2)\n  configuration: --prefix=/opt/homebrew/Cellar/ffmpeg/9.0.2 --enable-shared --enable-pthreads --enable-version3 --cc=clang --host-cflags= --host-ldflags= --enable-ffplay --enable-gpl --enable-libsvtav1 --enable-libopus --enable-libx264 --enable-libmp3lame --enable-libdav1d --enable-libvmaf --enable-libvpx --enable-libx265 --enable-openssl --enable-videotoolbox --enable-audiotoolbox --enable-neon\n  libavutil      61.  1.102 / 61.  1.102\n  libavcodec     63.  1.102 / 63.  1.102\n  libavformat    63.  1.102 / 63.  1.102\n  libavdevice    63.  1.102 / 63.  1.102\n  libavfilter    12.  1.102 / 12.  1.102\n  libswscale     10.  1.102 / 10.  1.102\n  libswresample   7.  1.102 /  7.  1.102\n[in#0 @ 0xbc5018000] -to value smaller than -ss; aborting.\nError opening input file /Users/gulnozausmon/Build/Hackathons/revenue_cat/storage/uploads/proj_muncfo0w_6o80v1/c327adae-dc9b-4164-a079-0efba551d0c6.mp4.\nError opening input files: Invalid argument\n"
+}

@@ -1,10 +1,10 @@
-import path from "path";
-
 export type FontDef = {
   id: string;
   name: string;
   category: "Cute" | "Clean" | "Bold" | "Minimal" | "Handwritten";
   file: string;
+  /** Public URL served from /public/fonts */
+  url: string;
 };
 
 export const FONT_LIBRARY: FontDef[] = [
@@ -13,28 +13,26 @@ export const FONT_LIBRARY: FontDef[] = [
     name: "Clean Sans",
     category: "Clean",
     file: "Arial.ttf",
+    url: "/fonts/Arial.ttf",
   },
   {
     id: "arial_bold",
     name: "Bold Sans",
     category: "Bold",
     file: "ArialBold.ttf",
+    url: "/fonts/ArialBold.ttf",
   },
   {
     id: "courier_bold",
     name: "Typewriter",
     category: "Minimal",
     file: "CourierBold.ttf",
+    url: "/fonts/CourierBold.ttf",
   },
 ];
 
 export function getFont(id: string): FontDef {
   return FONT_LIBRARY.find((f) => f.id === id) ?? FONT_LIBRARY[1];
-}
-
-export function getFontAbsolutePath(id: string): string {
-  const font = getFont(id);
-  return path.join(process.cwd(), "public", "assets", "fonts", font.file);
 }
 
 export type StickerAsset = {
@@ -74,11 +72,6 @@ export const STICKER_LIBRARY: StickerAsset[] = [
 
 export function getSticker(id: string) {
   return STICKER_LIBRARY.find((s) => s.id === id) ?? STICKER_LIBRARY[0];
-}
-
-export function getStickerAbsolutePath(id: string): string {
-  const s = getSticker(id);
-  return path.join(process.cwd(), "public", "assets", "stickers", s.file);
 }
 
 export type MusicTrack = {
@@ -123,9 +116,4 @@ export const MUSIC_LIBRARY: MusicTrack[] = [
 
 export function getMusicTrack(id: string) {
   return MUSIC_LIBRARY.find((t) => t.id === id) ?? MUSIC_LIBRARY[0];
-}
-
-export function getMusicAbsolutePath(id: string): string {
-  const t = getMusicTrack(id);
-  return path.join(process.cwd(), "public", "assets", "music", t.file);
 }

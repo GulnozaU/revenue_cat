@@ -205,7 +205,7 @@ export type ProjectRecord = {
   previewUrl?: string;
   exportPath?: string;
   exportUrl?: string;
-  aiProvider?: "gemini" | "mock";
+  aiProvider?: "nvidia" | "gemini";
   createdAt: string;
   updatedAt: string;
   error?: string;
@@ -224,38 +224,109 @@ export function validateEditPlan(input: unknown):
   return { success: true, data: parsed.data };
 }
 
+const MIN_CLIP_SEC = 0.2;
+
 export function normalizeEditPlan(plan: EditPlan, sourceDuration: number): EditPlan {
-  let cursor = 0;
-  const clips = plan.clips
+  const safeDuration = Math.max(0.5, sourceDuration || plan.sourceDuration || 1);
+
+  let clips = (plan.clips ?? [])
     .filter((c) => c.action !== "remove")
     .map((c, i) => {
-      const sourceStart = clamp(c.sourceStart, 0, sourceDuration);
-      const sourceEnd = clamp(c.sourceEnd, sourceStart + 0.05, sourceDuration);
-      const speed = c.speed || 1;
-      const len = (sourceEnd - sourceStart) / speed;
-      const next = {
+      let sourceStart = Number(c.sourceStart);
+      let sourceEnd = Number(c.sourceEnd);
+      if (!Number.isFinite(sourceStart)) sourceStart = 0;
+      if (!Number.isFinite(sourceEnd)) sourceEnd = sourceStart + 1;
+
+      sourceStart = clamp(sourceStart, 0, Math.max(0, safeDuration - MIN_CLIP_SEC));
+      sourceEnd = clamp(sourceEnd, sourceStart + MIN_CLIP_SEC, safeDuration);
+      // Re-clamp start if end couldn't grow (near EOF)
+      if (sourceEnd - sourceStart < MIN_CLIP_SEC) {
+        sourceEnd = safeDuration;
+        sourceStart = Math.max(0, sourceEnd - Math.max(MIN_CLIP_SEC, 1));
+      }
+
+      const speed = Math.min(4, Math.max(0.25, c.speed || 1));
+      return {
         ...c,
         id: c.id || `clip_${i + 1}`,
-        sourceStart,
-        sourceEnd,
+        sourceStart: Number(sourceStart.toFixed(3)),
+        sourceEnd: Number(sourceEnd.toFixed(3)),
         speed,
         action: "keep" as const,
-        timelineStart: Number(cursor.toFixed(3)),
-        timelineEnd: Number((cursor + len).toFixed(3)),
+        timelineStart: 0,
+        timelineEnd: 0,
       };
-      cursor += len;
-      return next;
-    });
+    })
+    .filter((c) => c.sourceEnd - c.sourceStart >= MIN_CLIP_SEC - 0.001);
+
+  if (clips.length === 0) {
+    const take = Math.min(safeDuration, 12);
+    clips = [
+      {
+        id: "clip_1",
+        sourceStart: 0,
+        sourceEnd: take,
+        timelineStart: 0,
+        timelineEnd: take,
+        speed: 1,
+        action: "keep",
+        reason: "Fallback full take",
+      },
+    ];
+  }
+
+  let cursor = 0;
+  clips = clips.map((c, i) => {
+    const len = (c.sourceEnd - c.sourceStart) / (c.speed || 1);
+    const next = {
+      ...c,
+      id: c.id || `clip_${i + 1}`,
+      timelineStart: Number(cursor.toFixed(3)),
+      timelineEnd: Number((cursor + len).toFixed(3)),
+    };
+    cursor += len;
+    return next;
+  });
+
+  const duration = Number(cursor.toFixed(3));
 
   return {
     ...plan,
-    sourceDuration,
-    duration: Number(cursor.toFixed(3)) || plan.duration,
+    sourceDuration: safeDuration,
+    duration,
     clips,
-    captions: plan.captions.map((c, i) => ({ ...c, id: c.id || `cap_${i + 1}` })),
-    textOverlays: plan.textOverlays.map((t, i) => ({ ...t, id: t.id || `text_${i + 1}` })),
-    stickers: plan.stickers.map((s, i) => ({ ...s, id: s.id || `stk_${i + 1}` })),
-    zooms: plan.zooms.map((z, i) => ({ ...z, id: z.id || `zoom_${i + 1}` })),
+    captions: (plan.captions ?? [])
+      .map((c, i) => ({
+        ...c,
+        id: c.id || `cap_${i + 1}`,
+        start: clamp(c.start, 0, duration),
+        end: clamp(c.end, 0, duration),
+      }))
+      .filter((c) => c.end - c.start >= 0.1),
+    textOverlays: (plan.textOverlays ?? [])
+      .map((t, i) => ({
+        ...t,
+        id: t.id || `text_${i + 1}`,
+        start: clamp(t.start, 0, duration),
+        end: clamp(t.end, 0, duration),
+      }))
+      .filter((t) => t.end - t.start >= 0.1),
+    stickers: (plan.stickers ?? [])
+      .map((s, i) => ({
+        ...s,
+        id: s.id || `stk_${i + 1}`,
+        start: clamp(s.start, 0, duration),
+        end: clamp(s.end, 0, duration),
+      }))
+      .filter((s) => s.end - s.start >= 0.1),
+    zooms: (plan.zooms ?? [])
+      .map((z, i) => ({
+        ...z,
+        id: z.id || `zoom_${i + 1}`,
+        start: clamp(z.start, 0, duration),
+        end: clamp(z.end, 0, duration),
+      }))
+      .filter((z) => z.end - z.start >= 0.1),
   };
 }
 
@@ -266,10 +337,10 @@ function clamp(n: number, min: number, max: number) {
 export const PROCESSING_STAGES = [
   { id: "uploading", label: "Uploading footage" },
   { id: "probing", label: "Reading video metadata" },
-  { id: "proxy", label: "Building edit proxy" },
-  { id: "watching", label: "Gemini watching your video" },
+  { id: "proxy", label: "Preparing for analysis" },
+  { id: "watching", label: "NVIDIA watching your video" },
   { id: "planning", label: "Building structured edit plan" },
-  { id: "rendering", label: "Rendering preview with FFmpeg" },
+  { id: "rendering", label: "Rendering preview in browser" },
 ] as const;
 
 export type ProcessingStageId = (typeof PROCESSING_STAGES)[number]["id"];

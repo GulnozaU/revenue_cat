@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import { getStorage } from "@/lib/storage";
 import { promises as fs } from "fs";
 import path from "path";
+import { getStorage } from "@/lib/storage";
+import { storagePath } from "@/lib/storage/paths";
 
 export const runtime = "nodejs";
 
@@ -11,8 +12,7 @@ export async function GET(_req: Request, { params }: Params) {
   const { key } = await params;
   const objectKey = key.map(decodeURIComponent).join("/");
 
-  // Prefer direct filesystem under storage/
-  const abs = path.join(process.cwd(), "storage", objectKey);
+  const abs = storagePath(...objectKey.split("/"));
   try {
     const data = await fs.readFile(abs);
     const ext = objectKey.split(".").pop()?.toLowerCase();
@@ -41,13 +41,22 @@ export async function GET(_req: Request, { params }: Params) {
       },
     });
   } catch {
-    const storage = getStorage();
-    const data = await storage.get(objectKey);
-    if (!data) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    // Fallback: also try legacy cwd/storage for local files
+    try {
+      const legacy = path.join(process.cwd(), "storage", objectKey);
+      const data = await fs.readFile(legacy);
+      return new NextResponse(new Uint8Array(data), {
+        headers: { "Content-Type": "application/octet-stream" },
+      });
+    } catch {
+      const storage = getStorage();
+      const data = await storage.get(objectKey);
+      if (!data) {
+        return NextResponse.json({ error: "Not found" }, { status: 404 });
+      }
+      return new NextResponse(new Uint8Array(data), {
+        headers: { "Content-Type": "application/octet-stream" },
+      });
     }
-    return new NextResponse(new Uint8Array(data), {
-      headers: { "Content-Type": "application/octet-stream" },
-    });
   }
 }

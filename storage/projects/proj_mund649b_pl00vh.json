@@ -1,0 +1,62 @@
+{
+  "id": "proj_mund649b_pl00vh",
+  "name": "Screen_Recording_2026-05-31_at_4_23_31_PM",
+  "format": "instagram_reel",
+  "aestheticId": "fast_paced",
+  "prompt": "add zooms when the cursor is clicking",
+  "assets": [
+    {
+      "id": "12b1581e-be09-4ef9-bd3a-743957a65400",
+      "filename": "Screen_Recording_2026-05-31_at_4_23_31_PM.mp4",
+      "mimeType": "video/mp4",
+      "sourcePath": "uploads/proj_mund649b_pl00vh/12b1581e-be09-4ef9-bd3a-743957a65400.mp4",
+      "sourceUrl": "/api/files/uploads/proj_mund649b_pl00vh/12b1581e-be09-4ef9-bd3a-743957a65400.mp4",
+      "duration": 125.35,
+      "width": 2408,
+      "height": 1330,
+      "fps": 60,
+      "sizeBytes": 11898244,
+      "hasAudio": false,
+      "thumbnailPath": "uploads/proj_mund649b_pl00vh/12b1581e-be09-4ef9-bd3a-743957a65400_thumb.jpg",
+      "thumbnailUrl": "/api/files/uploads/proj_mund649b_pl00vh/12b1581e-be09-4ef9-bd3a-743957a65400_thumb.jpg",
+      "proxyPath": "uploads/proj_mund649b_pl00vh/12b1581e-be09-4ef9-bd3a-743957a65400_proxy.mp4",
+      "proxyUrl": "/api/files/uploads/proj_mund649b_pl00vh/12b1581e-be09-4ef9-bd3a-743957a65400_proxy.mp4",
+      "audioPath": "uploads/proj_mund649b_pl00vh/12b1581e-be09-4ef9-bd3a-743957a65400_audio.wav"
+    }
+  ],
+  "status": "error",
+  "createdAt": "2026-09-30T00:25:22.700Z",
+  "updatedAt": "2026-09-30T00:26:49.446Z",
+  "analysis": {
+    "transcript": {
+      "language": "und",
+      "fullText": "[full take]",
+      "duration": 125.35,
+      "provider": "silence-fallback",
+      "segments": [
+        {
+          "id": "seg_1",
+          "start": 0,
+          "end": 125.35,
+          "text": "[full take]"
+        }
+      ]
+    },
+    "silences": [
+      {
+        "start": 0,
+        "end": 125.35,
+        "duration": 125.35
+      }
+    ],
+    "highlightCandidates": [
+      {
+        "start": 0,
+        "end": 125.35,
+        "score": 0.15227933215567838,
+        "reason": "Spoken segment"
+      }
+    ]
+  },
+  "error": "Invalid Gemini edit plan: cuts.0.at: Invalid input: expected number, received undefined; cuts.0.type: Invalid option: expected one of \"hard\"|\"fade\"; cuts.1.at: Invalid input: expected number, received undefined; cuts.1.type: Invalid option: expected one of \"hard\"|\"fade\"; cuts.2.at: Invalid input: expected number, received undefined; cuts.2.type: Invalid option: expected one of \"hard\"|\"fade\"; cuts.3.at: Invalid input: expected number, received undefined; cuts.3.type: Invalid option: expected one of \"hard\"|\"fade\"; cuts.4.at: Invalid input: expected number, received undefined; cuts.4.type: Invalid option: expected one of \"hard\"|\"fade\""
+}

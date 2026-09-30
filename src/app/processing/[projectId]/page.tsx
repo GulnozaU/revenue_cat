@@ -13,6 +13,8 @@ export default function ProcessingPage() {
   const params = useParams<{ projectId: string }>();
   const router = useRouter();
   const setProject = useProjectStore((s) => s.setProject);
+  const setSourceFile = useProjectStore((s) => s.setSourceFile);
+  const setPreviewBlobUrl = useProjectStore((s) => s.setPreviewBlobUrl);
 
   const [stageIndex, setStageIndex] = useState(0);
   const [ready, setReady] = useState(false);
@@ -32,12 +34,18 @@ export default function ProcessingPage() {
         const res = await fetch(`/api/projects/${params.projectId}`);
         if (res.ok) {
           const data = await res.json();
-          if (data.project?.status === "ready" && data.project.previewUrl) {
+          if (data.project?.status === "ready" && data.project.editPlan) {
             setProject(data.project);
-            setReady(true);
-            setStageIndex(PROCESSING_STAGES.length);
-            setDetail(
-              `Provider: ${data.project.aiProvider ?? "n/a"} · clips: ${data.project.editPlan?.clips?.length ?? 0}`
+            if (data.project.previewUrl) {
+              setReady(true);
+              setStageIndex(PROCESSING_STAGES.length);
+              setDetail(
+                `Provider: ${data.project.aiProvider ?? "n/a"} · clips: ${data.project.editPlan?.clips?.length ?? 0}`
+              );
+              return;
+            }
+            setError(
+              "Edit plan exists but no rendered preview. Re-upload to render in the browser."
             );
             return;
           }
@@ -55,16 +63,23 @@ export default function ProcessingPage() {
       }, 4000);
 
       try {
-        setDetail("Uploading video and asking Gemini to watch it…");
+        setDetail("Uploading video for NVIDIA analysis…");
         const form = new FormData();
         form.append("file", upload.file);
+
+        // Client-probed metadata (no server FFmpeg)
+        const meta = await probeClientMeta(upload.file);
+        form.append("duration", String(meta.duration));
+        form.append("width", String(meta.width));
+        form.append("height", String(meta.height));
+        if (meta.thumbnailDataUrl) {
+          form.append("thumbnailDataUrl", meta.thumbnailDataUrl);
+        }
 
         const res = await fetch(`/api/projects/${params.projectId}/process`, {
           method: "POST",
           body: form,
         });
-
-        if (tick) clearInterval(tick);
 
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
@@ -77,10 +92,45 @@ export default function ProcessingPage() {
         const data = await res.json();
         if (cancelled) return;
 
+        if (!data.project?.editPlan) {
+          throw new Error("No edit plan returned from analysis.");
+        }
+
         setProject(data.project);
+        setSourceFile(upload.file);
+        setStageIndex(PROCESSING_STAGES.length - 1);
+        setDetail(
+          `${data.project.aiProvider ?? "AI"} · ${data.project.editPlan.clips.length} clips — rendering in browser…`
+        );
+
+        // Real browser render with ffmpeg.wasm
+        const { renderEditPlanInBrowser } = await import(
+          "@/lib/video/ffmpeg-browser"
+        );
+        const blob = await renderEditPlanInBrowser({
+          source: upload.file,
+          plan: data.project.editPlan,
+          format: data.project.format,
+          quality: "preview",
+          onProgress: (p) => {
+            if (!cancelled) setDetail(p.message);
+          },
+        });
+
+        if (cancelled) return;
+
+        const url = URL.createObjectURL(blob);
+        setPreviewBlobUrl(url);
+        setProject({
+          ...data.project,
+          previewUrl: url,
+          status: "ready",
+        });
+
+        if (tick) clearInterval(tick);
         setStageIndex(PROCESSING_STAGES.length);
         setDetail(
-          `Gemini provider: ${data.project.aiProvider ?? "n/a"} · ${data.project.editPlan?.clips?.length ?? 0} clips · ${data.project.editPlan?.captions?.length ?? 0} captions`
+          `Provider: ${data.project.aiProvider ?? "n/a"} · ${data.project.editPlan.clips.length} clips · real MP4 preview ready`
         );
         setReady(true);
         delete (window as unknown as { __cutlineUpload?: unknown }).__cutlineUpload;
@@ -101,7 +151,7 @@ export default function ProcessingPage() {
       cancelled = true;
       if (tick) clearInterval(tick);
     };
-  }, [params.projectId, setProject]);
+  }, [params.projectId, setProject, setSourceFile, setPreviewBlobUrl]);
 
   return (
     <div className="min-h-screen bg-[var(--bg)]">
@@ -181,4 +231,49 @@ export default function ProcessingPage() {
       </main>
     </div>
   );
+}
+
+async function probeClientMeta(file: File): Promise<{
+  duration: number;
+  width: number;
+  height: number;
+  thumbnailDataUrl?: string;
+}> {
+  const url = URL.createObjectURL(file);
+  try {
+    return await new Promise((resolve) => {
+      const video = document.createElement("video");
+      video.preload = "metadata";
+      video.muted = true;
+      video.src = url;
+      video.onloadedmetadata = () => {
+        const duration = video.duration || 0;
+        const width = video.videoWidth || 0;
+        const height = video.videoHeight || 0;
+        video.currentTime = Math.min(1, duration / 4 || 0);
+        video.onseeked = () => {
+          try {
+            const canvas = document.createElement("canvas");
+            canvas.width = 160;
+            canvas.height =
+              Math.round((160 * height) / Math.max(width, 1)) || 90;
+            canvas
+              .getContext("2d")
+              ?.drawImage(video, 0, 0, canvas.width, canvas.height);
+            resolve({
+              duration,
+              width,
+              height,
+              thumbnailDataUrl: canvas.toDataURL("image/jpeg", 0.7),
+            });
+          } catch {
+            resolve({ duration, width, height });
+          }
+        };
+      };
+      video.onerror = () => resolve({ duration: 0, width: 0, height: 0 });
+    });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }

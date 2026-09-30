@@ -1,8 +1,7 @@
-export { renderEditPlan } from "@/lib/ffmpeg/render";
+/** Re-export timeline helpers. Production render = ffmpeg-browser. */
 export {
   timelineToSource,
   activeCaption,
   activeZoom,
   activeTexts,
-  activeStickers,
 } from "@/lib/renderer/timeline";

@@ -5,79 +5,45 @@ import type {
   VideoAnalysis,
   VideoFormat,
 } from "@/lib/types/edit-plan";
+import { generateEditPlanWithNvidia } from "@/lib/ai/nvidia";
 import { generateEditPlanWithGemini } from "@/lib/ai/gemini";
-import { detectSilences } from "@/lib/ffmpeg/media";
 
 export async function buildAnalysis(input: {
-  audioPath: string;
   duration: number;
-  transcript: Transcript;
+  transcript?: Transcript;
 }): Promise<VideoAnalysis> {
-  const silences =
-    input.transcript.provider === "silence-fallback"
-      ? await detectSilences(input.audioPath)
-      : findSilencesFromTranscript(input.transcript);
-
-  const highlightCandidates = input.transcript.segments
-    .map((seg) => {
-      const words = seg.text.split(/\s+/).filter(Boolean).length;
-      const density = words / Math.max(0.25, seg.end - seg.start);
-      const punchy =
-        /you|how|why|secret|best|never|always|watch|look|today|wait/i.test(
-          seg.text
-        );
-      const score = Math.min(1, density / 3.5) * 0.5 + (punchy ? 0.4 : 0.15);
-      return {
-        start: seg.start,
-        end: seg.end,
-        score,
-        reason: punchy ? "Hook / emphasis line" : "Spoken segment",
-      };
-    })
-    .sort((a, b) => b.score - a.score);
+  const transcript: Transcript = input.transcript ?? {
+    language: "und",
+    fullText: "",
+    duration: input.duration,
+    provider: "silence-fallback",
+    segments: [
+      {
+        id: "seg_1",
+        start: 0,
+        end: input.duration,
+        text: "[full take]",
+      },
+    ],
+  };
 
   return {
-    transcript: input.transcript,
-    silences,
-    highlightCandidates,
+    transcript,
+    silences: [],
+    highlightCandidates: transcript.segments.map((seg) => ({
+      start: seg.start,
+      end: seg.end,
+      score: 0.5,
+      reason: "Segment",
+    })),
   };
 }
 
-function findSilencesFromTranscript(transcript: Transcript) {
-  const silences: VideoAnalysis["silences"] = [];
-  const segs = [...transcript.segments].sort((a, b) => a.start - b.start);
-  if (!segs.length) return silences;
-  if (segs[0].start > 0.4) {
-    silences.push({
-      start: 0,
-      end: segs[0].start,
-      duration: segs[0].start,
-    });
-  }
-  for (let i = 0; i < segs.length - 1; i++) {
-    const gap = segs[i + 1].start - segs[i].end;
-    if (gap >= 0.35) {
-      silences.push({
-        start: segs[i].end,
-        end: segs[i + 1].start,
-        duration: gap,
-      });
-    }
-  }
-  const last = segs[segs.length - 1];
-  if (transcript.duration - last.end >= 0.4) {
-    silences.push({
-      start: last.end,
-      end: transcript.duration,
-      duration: transcript.duration - last.end,
-    });
-  }
-  return silences;
-}
+export type AiProvider = "nvidia" | "gemini";
 
 /**
- * Primary AI path: Gemini watches the actual MP4.
- * No OpenAI dependency.
+ * NVIDIA primary → Gemini fallback.
+ * Never returns a mock/fake EditPlan.
  */
 export async function generateEditPlan(input: {
   prompt: string;
@@ -86,20 +52,75 @@ export async function generateEditPlan(input: {
   analysis: VideoAnalysis;
   sourceDuration: number;
   videoPath: string;
+  videoBuffer: Buffer;
   mimeType: string;
   improve?: {
     instruction: string;
     currentPlan: EditPlan;
     selection?: { type: string; id?: string; start?: number; end?: number };
   };
-}): Promise<{ plan: EditPlan; provider: "gemini" | "mock" }> {
-  return generateEditPlanWithGemini({
-    videoPath: input.videoPath,
+}): Promise<{ plan: EditPlan; provider: AiProvider }> {
+  const shared = {
     mimeType: input.mimeType,
     prompt: input.prompt,
     format: input.format,
     aestheticId: input.aestheticId,
     sourceDuration: input.sourceDuration,
     improve: input.improve,
-  });
+  };
+
+  let nvidiaError: string | null = null;
+
+  // Large base64 payloads are unreliable on serverless; prefer Gemini Files for big videos
+  const tooLargeForNvidiaInline = input.videoBuffer.byteLength > 12 * 1024 * 1024;
+
+  if (process.env.NVIDIA_API_KEY && !tooLargeForNvidiaInline) {
+    try {
+      return await generateEditPlanWithNvidia({
+        ...shared,
+        videoBuffer: input.videoBuffer,
+      });
+    } catch (err) {
+      nvidiaError = err instanceof Error ? err.message : String(err);
+      console.warn("[ai] NVIDIA failed, trying Gemini fallback:", nvidiaError);
+    }
+  } else if (!process.env.NVIDIA_API_KEY) {
+    nvidiaError = "NVIDIA_API_KEY is missing.";
+    console.warn("[ai] Skipping NVIDIA —", nvidiaError);
+  } else {
+    nvidiaError =
+      "Video exceeds NVIDIA inline size limit; using Gemini Files API.";
+    console.warn("[ai]", nvidiaError);
+  }
+
+  if (!process.env.GEMINI_API_KEY) {
+    throw new Error(
+      [
+        nvidiaError
+          ? `NVIDIA analysis failed: ${nvidiaError}`
+          : "NVIDIA analysis failed.",
+        "Gemini fallback failed: GEMINI_API_KEY is missing.",
+      ].join(" ")
+    );
+  }
+
+  try {
+    return await generateEditPlanWithGemini({
+      ...shared,
+      videoPath: input.videoPath,
+      videoBuffer: input.videoBuffer,
+    });
+  } catch (err) {
+    const geminiMsg = err instanceof Error ? err.message : String(err);
+    throw new Error(
+      [
+        nvidiaError
+          ? `NVIDIA analysis failed: ${nvidiaError}`
+          : "NVIDIA analysis failed.",
+        geminiMsg.startsWith("Gemini")
+          ? geminiMsg
+          : `Gemini fallback failed: ${geminiMsg}`,
+      ].join(" ")
+    );
+  }
 }

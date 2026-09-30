@@ -1,0 +1,62 @@
+{
+  "id": "proj_munc76nv_eztmlp",
+  "name": "Nect_demo",
+  "format": "instagram_reel",
+  "aestheticId": "educational",
+  "prompt": "add zooms and effects when the cursor is clicking",
+  "assets": [
+    {
+      "id": "9b3cde6e-3624-4e02-b7eb-12f430e4e1d3",
+      "filename": "Nect_demo.mp4",
+      "mimeType": "video/mp4",
+      "sourcePath": "uploads/proj_munc76nv_eztmlp/9b3cde6e-3624-4e02-b7eb-12f430e4e1d3.mp4",
+      "sourceUrl": "/api/files/uploads/proj_munc76nv_eztmlp/9b3cde6e-3624-4e02-b7eb-12f430e4e1d3.mp4",
+      "duration": 25.466,
+      "width": 1280,
+      "height": 720,
+      "fps": 30,
+      "sizeBytes": 2236701,
+      "hasAudio": true,
+      "thumbnailPath": "uploads/proj_munc76nv_eztmlp/9b3cde6e-3624-4e02-b7eb-12f430e4e1d3_thumb.jpg",
+      "thumbnailUrl": "/api/files/uploads/proj_munc76nv_eztmlp/9b3cde6e-3624-4e02-b7eb-12f430e4e1d3_thumb.jpg",
+      "proxyPath": "uploads/proj_munc76nv_eztmlp/9b3cde6e-3624-4e02-b7eb-12f430e4e1d3_proxy.mp4",
+      "proxyUrl": "/api/files/uploads/proj_munc76nv_eztmlp/9b3cde6e-3624-4e02-b7eb-12f430e4e1d3_proxy.mp4",
+      "audioPath": "uploads/proj_munc76nv_eztmlp/9b3cde6e-3624-4e02-b7eb-12f430e4e1d3_audio.wav"
+    }
+  ],
+  "status": "error",
+  "createdAt": "2026-09-29T23:58:12.859Z",
+  "updatedAt": "2026-09-29T23:58:16.070Z",
+  "analysis": {
+    "transcript": {
+      "language": "und",
+      "fullText": "[full take]",
+      "duration": 25.466,
+      "provider": "silence-fallback",
+      "segments": [
+        {
+          "id": "seg_1",
+          "start": 0,
+          "end": 25.466,
+          "text": "[full take]"
+        }
+      ]
+    },
+    "silences": [
+      {
+        "start": 0,
+        "end": 25.425875,
+        "duration": 25.425875
+      }
+    ],
+    "highlightCandidates": [
+      {
+        "start": 0,
+        "end": 25.466,
+        "score": 0.161219441047447,
+        "reason": "Spoken segment"
+      }
+    ]
+  },
+  "error": "{\"error\":{\"code\":401,\"message\":\"Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.\",\"status\":\"UNAUTHENTICATED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.ErrorInfo\",\"reason\":\"ACCESS_TOKEN_TYPE_UNSUPPORTED\",\"metadata\":{\"method\":\"google.ai.generativelanguage.v1beta.FileService.CreateFile\",\"service\":\"generativelanguage.googleapis.com\"}}]}}"
+}
