@@ -36,6 +36,8 @@ type ProjectStore = {
   renderProgress: { ratio: number; message: string } | null;
   /** After Apply preview/Export, show burned MP4; otherwise live source+overlays */
   preferRenderedPreview: boolean;
+  /** Edit plan that the current preview/export blob was rendered from */
+  renderedPlanKey: string | null;
 
   setAuth: (auth: { signedIn: boolean; email?: string }) => void;
   setShowAuthModal: (show: boolean, intent?: "save" | "export" | null) => void;
@@ -52,6 +54,7 @@ type ProjectStore = {
   setRendering: (v: boolean) => void;
   setRenderProgress: (p: { ratio: number; message: string } | null) => void;
   setPreferRenderedPreview: (v: boolean) => void;
+  rememberRender: (url: string, planKey: string) => void;
 
   draftFormat: VideoFormat;
   draftAesthetic: AestheticId;
@@ -76,6 +79,7 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
   rendering: false,
   renderProgress: null,
   preferRenderedPreview: false,
+  renderedPlanKey: null,
   draftFormat: "instagram_reel",
   draftAesthetic: "clean_lifestyle",
   draftPrompt: "",
@@ -91,6 +95,24 @@ export const useProjectStore = create<ProjectStore>((set, get) => ({
     set({ project, playhead: 0, isPlaying: false, preferRenderedPreview: false }),
   setSourceFile: (file) => set({ sourceFile: file }),
   setPreferRenderedPreview: (v) => set({ preferRenderedPreview: v }),
+  rememberRender: (url, planKey) => {
+    const project = get().project;
+    if (!project) return;
+    for (const prev of [project.previewUrl, project.exportUrl]) {
+      if (prev?.startsWith("blob:") && prev !== url) {
+        try {
+          URL.revokeObjectURL(prev);
+        } catch {
+          /* ignore */
+        }
+      }
+    }
+    set({
+      renderedPlanKey: planKey,
+      preferRenderedPreview: true,
+      project: { ...project, previewUrl: url, exportUrl: url },
+    });
+  },
   setPreviewBlobUrl: (url) => {
     const project = get().project;
     if (!project) return;

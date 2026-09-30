@@ -59,8 +59,25 @@ export default function ProcessingPage() {
 
       try {
         setDetail("Analyzing your footage…");
+        const stored = useProjectStore.getState().project;
         const form = new FormData();
         form.append("filename", upload.file.name);
+        form.append(
+          "name",
+          stored?.id === params.projectId ? stored.name : upload.file.name
+        );
+        form.append(
+          "format",
+          stored?.id === params.projectId ? stored.format : "instagram_reel"
+        );
+        form.append(
+          "aestheticId",
+          stored?.id === params.projectId ? stored.aestheticId : "cute"
+        );
+        form.append(
+          "prompt",
+          stored?.id === params.projectId ? stored.prompt : ""
+        );
 
         const meta = await probeClientMeta(upload.file);
         if (!(meta.duration > 0)) {

@@ -3,7 +3,57 @@ import { randomUUID } from "crypto";
 import { loadProject, saveProject } from "@/lib/projects/store";
 import { ingestUploadedFile, runProjectPipeline } from "@/lib/pipeline";
 import { getAiMode } from "@/lib/ai/provider";
-import type { VideoAsset } from "@/lib/types/edit-plan";
+import type {
+  AestheticId,
+  ProjectRecord,
+  VideoAsset,
+  VideoFormat,
+} from "@/lib/types/edit-plan";
+
+const FORMATS = new Set<VideoFormat>([
+  "instagram_reel",
+  "tiktok",
+  "youtube_short",
+  "youtube_landscape",
+]);
+const AESTHETICS = new Set<AestheticId>([
+  "cute",
+  "vlog",
+  "clean_lifestyle",
+  "fast_paced",
+  "cinematic",
+  "educational",
+  "food",
+  "travel",
+]);
+
+/** Recreate a draft when create and process landed on different servers. */
+function draftFromForm(id: string, form: FormData): ProjectRecord {
+  const now = new Date().toISOString();
+  const filename = String(form.get("filename") || "upload.mp4");
+  const formatRaw = String(form.get("format") || "instagram_reel");
+  const aestheticRaw = String(form.get("aestheticId") || "cute");
+  return {
+    id,
+    name:
+      String(form.get("name") || "").trim() ||
+      filename.replace(/\.[^.]+$/, "") ||
+      "Untitled",
+    format: FORMATS.has(formatRaw as VideoFormat)
+      ? (formatRaw as VideoFormat)
+      : "instagram_reel",
+    aestheticId: AESTHETICS.has(aestheticRaw as AestheticId)
+      ? (aestheticRaw as AestheticId)
+      : "cute",
+    prompt:
+      String(form.get("prompt") || "").trim() ||
+      "Make this into a cute aesthetic Instagram Reel.",
+    assets: [],
+    status: "draft",
+    createdAt: now,
+    updatedAt: now,
+  };
+}
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -17,12 +67,12 @@ type Ctx = { params: Promise<{ id: string }> };
 export async function POST(req: Request, ctx: Ctx) {
   try {
     const { id } = await ctx.params;
-    const project = await loadProject(id);
-    if (!project) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
-
     const form = await req.formData();
+    let project = await loadProject(id);
+    if (!project) {
+      project = draftFromForm(id, form);
+      await saveProject(project);
+    }
     const file = form.get("file");
     const duration = Number(form.get("duration") || 0);
     const width = Number(form.get("width") || 0);

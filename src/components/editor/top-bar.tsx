@@ -5,10 +5,21 @@ import { Redo2, Undo2, Download, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useProjectStore } from "@/store/project-store";
+import type { EditPlan } from "@/lib/types/edit-plan";
+
+function editPlanKey(plan: EditPlan) {
+  return JSON.stringify(plan);
+}
+
+function downloadMp4(url: string, name: string) {
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${name || "stylebox"}.mp4`;
+  a.click();
+}
 
 export function EditorTopBar() {
   const project = useProjectStore((s) => s.project);
-  const setProject = useProjectStore((s) => s.setProject);
   const sourceFile = useProjectStore((s) => s.sourceFile);
   const setSourceFile = useProjectStore((s) => s.setSourceFile);
   const undo = useProjectStore((s) => s.undo);
@@ -19,6 +30,17 @@ export function EditorTopBar() {
   const setRenderProgress = useProjectStore((s) => s.setRenderProgress);
   const rendering = useProjectStore((s) => s.rendering);
   const renderProgress = useProjectStore((s) => s.renderProgress);
+  const renderedPlanKey = useProjectStore((s) => s.renderedPlanKey);
+  const rememberRender = useProjectStore((s) => s.rememberRender);
+
+  const readyUrl =
+    project?.editPlan &&
+    renderedPlanKey === editPlanKey(project.editPlan) &&
+    (project.exportUrl?.startsWith("blob:")
+      ? project.exportUrl
+      : project.previewUrl?.startsWith("blob:")
+        ? project.previewUrl
+        : null);
 
   const resolveSource = async (): Promise<File | Blob> => {
     if (sourceFile) return sourceFile;
@@ -42,9 +64,29 @@ export function EditorTopBar() {
 
   const persistAndRender = async (quality: "preview" | "export") => {
     if (!project?.editPlan) return;
+    const planKey = editPlanKey(project.editPlan);
+    const cached =
+      useProjectStore.getState().renderedPlanKey === planKey
+        ? useProjectStore.getState().project?.exportUrl ||
+          useProjectStore.getState().project?.previewUrl
+        : null;
+
+    if (cached?.startsWith("blob:")) {
+      if (quality === "export") {
+        downloadMp4(cached, project.name);
+        toast.success("Downloaded");
+      } else {
+        useProjectStore.getState().setPreferRenderedPreview(true);
+        toast.success("Already rendered — Export downloads this file");
+      }
+      return;
+    }
 
     setRendering(true);
-    setRenderProgress({ ratio: 0, message: "Starting browser render…" });
+    setRenderProgress({
+      ratio: 0,
+      message: "Encoding your edit in the browser…",
+    });
     try {
       await fetch(`/api/projects/${project.id}`, {
         method: "PATCH",
@@ -72,34 +114,13 @@ export function EditorTopBar() {
       });
 
       const url = URL.createObjectURL(blob);
-      const prev = project.previewUrl;
-      if (prev?.startsWith("blob:")) {
-        try {
-          URL.revokeObjectURL(prev);
-        } catch {
-          /* ignore */
-        }
-      }
-
-      useProjectStore.getState().setPreferRenderedPreview(true);
+      rememberRender(url, planKey);
 
       if (quality === "export") {
-        setProject({
-          ...project,
-          previewUrl: url,
-          exportUrl: url,
-        });
-        toast.success("Export ready — downloading MP4");
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `${project.name || "stylebox"}.mp4`;
-        a.click();
+        downloadMp4(url, project.name);
+        toast.success("Downloaded");
       } else {
-        setProject({
-          ...project,
-          previewUrl: url,
-        });
-        toast.success("Preview rendered");
+        toast.success("Preview ready — Export will download this file");
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Video rendering failed.");
@@ -170,7 +191,7 @@ export function EditorTopBar() {
           onClick={() => persistAndRender("export")}
         >
           <Download className="h-3.5 w-3.5" />
-          Export MP4
+          {readyUrl ? "Download MP4" : "Export MP4"}
         </Button>
       </div>
     </header>
