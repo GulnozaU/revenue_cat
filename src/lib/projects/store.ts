@@ -47,6 +47,7 @@ export async function createProject(input: {
   format: VideoFormat;
   aestheticId: AestheticId;
   prompt: string;
+  session?: "demo" | "try";
 }): Promise<ProjectRecord> {
   const now = new Date().toISOString();
   const project: ProjectRecord = {
@@ -55,6 +56,7 @@ export async function createProject(input: {
     format: input.format,
     aestheticId: input.aestheticId,
     prompt: input.prompt,
+    session: input.session ?? "try",
     assets: [],
     status: "draft",
     createdAt: now,

@@ -227,6 +227,8 @@ export type ProjectRecord = {
   previewUrl?: string;
   exportPath?: string;
   exportUrl?: string;
+  /** demo = sample clip + scripted edit. try = uploaded footage + real AI. */
+  session?: "demo" | "try";
   aiProvider?: "mock" | "nvidia" | "gemini";
   createdAt: string;
   updatedAt: string;

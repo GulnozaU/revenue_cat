@@ -92,7 +92,8 @@ export async function ingestUploadedFile(opts: {
 export async function runProjectPipeline(
   projectId: string,
   videoBuffer: Buffer,
-  onProgress?: (p: PipelineProgress) => void
+  onProgress?: (p: PipelineProgress) => void,
+  mode?: "mock" | "real"
 ): Promise<ProjectRecord> {
   const project = await loadProject(projectId);
   if (!project) throw new Error("Project not found");
@@ -127,6 +128,7 @@ export async function runProjectPipeline(
       videoPath: sourceAbs,
       videoBuffer,
       mimeType: asset.mimeType,
+      mode,
     });
 
     project.editPlan = plan;

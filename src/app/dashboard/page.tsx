@@ -35,14 +35,23 @@ export default async function DashboardPage() {
           </h1>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-8 grid gap-4 md:grid-cols-[1.4fr_1fr]">
           <Link
             href="/new"
             className="flex min-h-[140px] flex-col items-start justify-end rounded-[28px] border border-dashed border-[var(--border)] bg-[var(--surface)] p-8 transition-colors hover:border-[var(--accent)]/50 hover:bg-[var(--accent-soft)]"
           >
             <span className="font-display text-2xl font-semibold">+ New video</span>
             <span className="mt-2 text-sm text-[var(--fg-muted)]">
-              Upload footage · pick an aesthetic · get a real first cut
+              Upload your footage and write a prompt. This is a real edit.
+            </span>
+          </Link>
+          <Link
+            href="/demo"
+            className="flex min-h-[140px] flex-col items-start justify-end rounded-[28px] border border-[var(--border)] bg-[var(--surface)] p-8 transition-colors hover:border-[var(--accent)]/50"
+          >
+            <span className="font-display text-2xl font-semibold">See demo</span>
+            <span className="mt-2 text-sm text-[var(--fg-muted)]">
+              Opens with a clip, captions, and stickers already placed.
             </span>
           </Link>
         </div>

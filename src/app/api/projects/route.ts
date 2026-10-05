@@ -11,6 +11,7 @@ export async function POST(req: Request) {
       format?: VideoFormat;
       aestheticId?: AestheticId;
       prompt?: string;
+      session?: "demo" | "try";
     };
 
     if (!body.prompt?.trim()) {
@@ -22,6 +23,7 @@ export async function POST(req: Request) {
       format: body.format ?? "instagram_reel",
       aestheticId: body.aestheticId ?? "clean_lifestyle",
       prompt: body.prompt.trim(),
+      session: body.session === "demo" ? "demo" : "try",
     });
 
     return NextResponse.json({ project });

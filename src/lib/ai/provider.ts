@@ -36,9 +36,10 @@ export type GenerateEditPlanResult = {
  * Route to mock (Shipathon demo) or real NVIDIA→Gemini providers.
  */
 export async function generateEditPlanViaProvider(
-  input: GenerateEditPlanInput
+  input: GenerateEditPlanInput & { mode?: AiMode }
 ): Promise<GenerateEditPlanResult> {
-  if (getAiMode() === "mock") {
+  const mode = input.mode ?? getAiMode();
+  if (mode === "mock") {
     const { generateEditPlanWithMock } = await import("@/lib/ai/mock-provider");
     return generateEditPlanWithMock(input);
   }

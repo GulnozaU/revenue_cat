@@ -125,6 +125,7 @@ function NewProjectInner() {
           format,
           aestheticId: aesthetic,
           prompt: finalPrompt,
+          session: "try",
         }),
       });
       if (!createRes.ok) {
@@ -167,10 +168,10 @@ function NewProjectInner() {
           {step === 4 && "Describe the vibe"}
         </h1>
         <p className="mt-2 text-[var(--fg-muted)]">
-          {step === 1 && "Drop an MP4 — Gemini will watch the actual file."}
+          {step === 1 && "Drop your footage. This is a real edit, not the sample demo."}
           {step === 2 && "We'll crop and frame for the destination."}
           {step === 3 && "Presets control pacing, captions, stickers, and music."}
-          {step === 4 && "Optional. Helps Gemini prioritize moments."}
+          {step === 4 && "Your prompt is sent with the video and used to build the first cut."}
         </p>
 
         {step === 1 && (

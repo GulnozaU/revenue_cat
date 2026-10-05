@@ -69,8 +69,8 @@ export async function POST(req: Request, ctx: Ctx) {
     }
 
     const asset = project.assets[0];
-    const { getAiMode } = await import("@/lib/ai/provider");
-    if (!videoBuffer && getAiMode() !== "mock") {
+    const useReal = project.session !== "demo";
+    if (!videoBuffer && useReal) {
       try {
         videoBuffer = await fs.readFile(storagePath(asset.sourcePath));
       } catch {
@@ -105,6 +105,7 @@ export async function POST(req: Request, ctx: Ctx) {
       videoPath: asset.sourcePath,
       videoBuffer,
       mimeType: asset.mimeType,
+      mode: project.session === "demo" ? "mock" : "real",
       improve: {
         instruction,
         currentPlan: current.data,

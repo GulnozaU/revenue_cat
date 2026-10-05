@@ -59,6 +59,8 @@ export async function generateEditPlan(input: {
     currentPlan: EditPlan;
     selection?: { type: string; id?: string; start?: number; end?: number };
   };
+  /** demo sessions stay on the scripted plan. try sessions call the real providers. */
+  mode?: "mock" | "real";
 }): Promise<{ plan: EditPlan; provider: AiProvider }> {
   return generateEditPlanViaProvider({
     prompt: input.prompt,
@@ -69,5 +71,6 @@ export async function generateEditPlan(input: {
     videoBuffer: input.videoBuffer,
     mimeType: input.mimeType,
     improve: input.improve,
+    mode: input.mode,
   });
 }

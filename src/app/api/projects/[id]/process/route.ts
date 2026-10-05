@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { loadProject, saveProject } from "@/lib/projects/store";
 import { ingestUploadedFile, runProjectPipeline } from "@/lib/pipeline";
-import { getAiMode } from "@/lib/ai/provider";
 import type {
   AestheticId,
   ProjectRecord,
@@ -48,6 +47,7 @@ function draftFromForm(id: string, form: FormData): ProjectRecord {
     prompt:
       String(form.get("prompt") || "").trim() ||
       "Make this into a cute aesthetic Instagram Reel.",
+    session: String(form.get("session") || "") === "demo" ? "demo" : "try",
     assets: [],
     status: "draft",
     createdAt: now,
@@ -83,14 +83,18 @@ export async function POST(req: Request, ctx: Ctx) {
         ? (form.get("thumbnailDataUrl") as string)
         : undefined;
 
-    // Demo mode: keep the MP4 in the browser. Don't upload the whole file.
-    const mockWithoutFile =
-      getAiMode() === "mock" && !(file instanceof File);
+    const session =
+      String(form.get("session") || project.session || "") === "demo"
+        ? "demo"
+        : "try";
+    project.session = session;
+    // Demo keeps the sample MP4 in the browser. Try uploads the real file for AI.
+    const demoWithoutFile = session === "demo" && !(file instanceof File);
 
-    if (!(file instanceof File) && !mockWithoutFile) {
+    if (!(file instanceof File) && !demoWithoutFile) {
       return NextResponse.json({ error: "file required" }, { status: 400 });
     }
-    if (mockWithoutFile && !(duration > 0)) {
+    if (demoWithoutFile && !(duration > 0)) {
       return NextResponse.json(
         { error: "Couldn't read this video. Try another MP4 file." },
         { status: 400 }
@@ -139,7 +143,12 @@ export async function POST(req: Request, ctx: Ctx) {
         : project.name;
     await saveProject(project);
 
-    const updated = await runProjectPipeline(id, buffer);
+    const updated = await runProjectPipeline(
+      id,
+      buffer,
+      undefined,
+      session === "demo" ? "mock" : "real"
+    );
     return NextResponse.json({
       project: updated,
       renderInBrowser: true,

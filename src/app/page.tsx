@@ -29,7 +29,7 @@ export default function HomePage() {
           </Link>
         </nav>
         <Button asChild size="sm">
-          <Link href="/new">Start editing</Link>
+          <Link href="/new">Try it</Link>
         </Button>
       </header>
 
@@ -47,20 +47,20 @@ export default function HomePage() {
               AI does the first cut.
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-base md:text-lg text-[var(--fg-muted)] leading-relaxed">
-              Upload footage, pick an aesthetic, and get a real edited draft.
-              Then refine clips, captions, stickers, and music in a CapCut-style
-              editor — Gemini watches your actual video; FFmpeg renders the MP4.
+              Open a finished sample edit, or upload your own footage and
+              describe the cut you want. Then refine clips, captions, stickers,
+              and music — export is a real MP4.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Button asChild size="lg" className="min-w-[180px]">
-                <Link href="/new">Start editing</Link>
+                <Link href="/demo">See demo</Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
-                <a href="#how">See how it works</a>
+              <Button asChild variant="outline" size="lg" className="min-w-[180px]">
+                <Link href="/new">Try with your footage</Link>
               </Button>
             </div>
             <p className="mt-4 text-sm text-[var(--fg-subtle)]">
-              No account required to try.
+              The demo opens with a clip already placed. Try uses your upload and your prompt.
             </p>
           </div>
 
@@ -111,7 +111,7 @@ export default function HomePage() {
         <span className="font-display font-semibold text-[var(--fg-muted)]">
           stylebox
         </span>
-        <span>Shipaton 2026 · Real Gemini analysis · Real FFmpeg export</span>
+        <span>Shipaton 2026 · Sample demo or your own footage</span>
       </footer>
     </div>
   );

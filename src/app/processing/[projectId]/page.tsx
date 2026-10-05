@@ -78,6 +78,11 @@ export default function ProcessingPage() {
           "prompt",
           stored?.id === params.projectId ? stored.prompt : ""
         );
+        const session =
+          stored?.id === params.projectId && stored.session === "demo"
+            ? "demo"
+            : "try";
+        form.append("session", session);
 
         const meta = await probeClientMeta(upload.file);
         if (!(meta.duration > 0)) {
@@ -91,9 +96,12 @@ export default function ProcessingPage() {
         if (meta.thumbnailDataUrl) {
           form.append("thumbnailDataUrl", meta.thumbnailDataUrl);
         }
-        // Real AI needs the bytes. Demo mode keeps the file in the browser.
-        if (process.env.NEXT_PUBLIC_AI_MODE === "real") {
+        // Try uploads the footage for real analysis. Demo keeps the sample in the browser.
+        if (session === "try") {
+          setDetail("Watching your footage and building the edit from your prompt…");
           form.append("file", upload.file);
+        } else {
+          setDetail("Opening the sample edit…");
         }
 
         let job = analysisJobs.get(params.projectId);

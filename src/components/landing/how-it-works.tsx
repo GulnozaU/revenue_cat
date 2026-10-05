@@ -1,18 +1,18 @@
 const STEPS = [
   {
     n: "01",
-    title: "Upload real footage",
-    body: "Your MP4 is saved on the server — not just a browser preview.",
+    title: "See a finished demo",
+    body: "Open a sample clip with cuts, captions, and stickers already on the timeline.",
   },
   {
     n: "02",
-    title: "Gemini watches it",
-    body: "The actual video file is uploaded to Gemini Files API and analyzed.",
+    title: "Or upload your own",
+    body: "Try is not the demo. Your footage and your prompt build the first cut.",
   },
   {
     n: "03",
     title: "Refine & export",
-    body: "Edit in a visual timeline. FFmpeg renders a real MP4 with your changes.",
+    body: "Edit in a visual timeline, then export a real MP4 with those changes.",
   },
 ];
 

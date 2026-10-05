@@ -1,0 +1,275 @@
+{
+  "id": "proj_muo53s5k_0gh6q7",
+  "name": "demo1 (1)",
+  "format": "instagram_reel",
+  "aestheticId": "clean_lifestyle",
+  "prompt": "Make this into a cute aesthetic Instagram Reel. Use soft captions, a pretty font, little sparkle and flower stickers, gentle background music, remove boring sections, add a few subtle zooms, and make the pacing feel smooth and cozy.",
+  "assets": [
+    {
+      "id": "0f4b66d1-9288-4c28-8145-eba488be3be0",
+      "filename": "demo1 (1).mp4",
+      "mimeType": "video/mp4",
+      "sourcePath": "",
+      "sourceUrl": "",
+      "duration": 140.1,
+      "width": 1310,
+      "height": 720,
+      "fps": 30,
+      "sizeBytes": 0,
+      "hasAudio": true,
+      "thumbnailUrl": "data:image/jpeg;base64,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"
+    }
+  ],
+  "status": "ready",
+  "createdAt": "2026-09-30T13:27:22.952Z",
+  "updatedAt": "2026-09-30T13:27:23.909Z",
+  "analysis": {
+    "transcript": {
+      "language": "und",
+      "fullText": "",
+      "duration": 140.1,
+      "provider": "silence-fallback",
+      "segments": [
+        {
+          "id": "seg_1",
+          "start": 0,
+          "end": 140.1,
+          "text": "[full take]"
+        }
+      ]
+    },
+    "silences": [],
+    "highlightCandidates": [
+      {
+        "start": 0,
+        "end": 140.1,
+        "score": 0.5,
+        "reason": "Segment"
+      }
+    ]
+  },
+  "editPlan": {
+    "sourceDuration": 140.1,
+    "format": "vertical_9_16",
+    "aestheticId": "clean_lifestyle",
+    "duration": 54.639,
+    "clips": [
+      {
+        "id": "clip_1",
+        "sourceStart": 7.005,
+        "sourceEnd": 16.812,
+        "timelineStart": 0,
+        "timelineEnd": 9.807,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Highlight moment"
+      },
+      {
+        "id": "clip_2",
+        "sourceStart": 37.827,
+        "sourceEnd": 47.634,
+        "timelineStart": 9.807,
+        "timelineEnd": 19.614,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Highlight moment"
+      },
+      {
+        "id": "clip_3",
+        "sourceStart": 67.248,
+        "sourceEnd": 78.456,
+        "timelineStart": 19.614,
+        "timelineEnd": 30.822,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Highlight moment"
+      },
+      {
+        "id": "clip_4",
+        "sourceStart": 95.268,
+        "sourceEnd": 106.476,
+        "timelineStart": 30.822,
+        "timelineEnd": 42.03,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Highlight moment"
+      },
+      {
+        "id": "clip_5",
+        "sourceStart": 120.486,
+        "sourceEnd": 133.095,
+        "timelineStart": 42.03,
+        "timelineEnd": 54.639,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Highlight moment"
+      }
+    ],
+    "cuts": [
+      {
+        "at": 9.807,
+        "type": "hard"
+      },
+      {
+        "at": 19.614,
+        "type": "fade"
+      },
+      {
+        "at": 30.822,
+        "type": "hard"
+      },
+      {
+        "at": 42.03,
+        "type": "fade"
+      }
+    ],
+    "captions": [
+      {
+        "id": "cap_1",
+        "start": 0.5,
+        "end": 3.5,
+        "text": "just a little reset 🌊",
+        "style": "soft_bold",
+        "fontId": "chillax",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "fade"
+      },
+      {
+        "id": "cap_2",
+        "start": 5,
+        "end": 8.5,
+        "text": "slow down for a second",
+        "style": "soft_bold",
+        "fontId": "chillax",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "fade"
+      },
+      {
+        "id": "cap_3",
+        "start": 10,
+        "end": 14.5,
+        "text": "you don't have to rush everything ✨",
+        "style": "soft_bold",
+        "fontId": "chillax",
+        "fontSize": 40,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "fade"
+      },
+      {
+        "id": "cap_4",
+        "start": 16,
+        "end": 21,
+        "text": "a little moment for yourself",
+        "style": "soft_bold",
+        "fontId": "chillax",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "fade"
+      }
+    ],
+    "textOverlays": [
+      {
+        "id": "text_1",
+        "start": 0,
+        "end": 3,
+        "text": "ocean reset",
+        "fontId": "chillax",
+        "fontSize": 56,
+        "color": "#FFFFFF",
+        "x": 0.5,
+        "y": 0.18
+      }
+    ],
+    "stickers": [
+      {
+        "id": "stk_1",
+        "assetId": "luxury-01",
+        "start": 2,
+        "end": 5,
+        "x": 0.82,
+        "y": 0.18,
+        "scale": 0.32,
+        "rotation": -8,
+        "opacity": 1,
+        "animation": "fade"
+      },
+      {
+        "id": "stk_2",
+        "assetId": "luxury-02",
+        "start": 8,
+        "end": 12,
+        "x": 0.16,
+        "y": 0.24,
+        "scale": 0.3,
+        "rotation": 10,
+        "opacity": 1,
+        "animation": "scale-in"
+      },
+      {
+        "id": "stk_3",
+        "assetId": "luxury-03",
+        "start": 15,
+        "end": 19,
+        "x": 0.78,
+        "y": 0.7,
+        "scale": 0.26,
+        "rotation": 6,
+        "opacity": 1,
+        "animation": "fade"
+      },
+      {
+        "id": "stk_4",
+        "assetId": "luxury-04",
+        "start": 6,
+        "end": 9,
+        "x": 0.2,
+        "y": 0.68,
+        "scale": 0.22,
+        "rotation": -6,
+        "opacity": 1,
+        "animation": "scale-in"
+      }
+    ],
+    "zooms": [
+      {
+        "id": "zoom_1",
+        "start": 1,
+        "end": 4,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_2",
+        "start": 10,
+        "end": 13,
+        "scale": 1.06,
+        "x": 0.5,
+        "y": 0.5
+      },
+      {
+        "id": "zoom_3",
+        "start": 17,
+        "end": 21,
+        "scale": 1.1,
+        "x": 0.5,
+        "y": 0.48
+      }
+    ],
+    "music": {
+      "trackId": "ocean_dreams",
+      "volume": 0.28,
+      "startAt": 0,
+      "fadeIn": 0.6,
+      "fadeOut": 1.2
+    },
+    "styleNotes": "Cute cozy Instagram Reel — soft captions, sparkles, gentle pacing."
+  },
+  "aiProvider": "mock"
+}

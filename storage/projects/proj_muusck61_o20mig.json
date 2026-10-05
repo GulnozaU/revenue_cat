@@ -1,0 +1,276 @@
+{
+  "id": "proj_muusck61_o20mig",
+  "name": "Demo edit",
+  "format": "instagram_reel",
+  "aestheticId": "cute",
+  "prompt": "Make this into a cute aesthetic Instagram Reel. Use soft captions, a pretty font, little sparkle and flower stickers, gentle background music, remove boring sections, add a few subtle zooms, and make the pacing feel smooth and cozy.",
+  "session": "demo",
+  "assets": [
+    {
+      "id": "a35de353-9cda-4099-ba38-4d08c10334f1",
+      "filename": "sample.mp4",
+      "mimeType": "video/mp4",
+      "sourcePath": "",
+      "sourceUrl": "",
+      "duration": 8.033333,
+      "width": 1080,
+      "height": 1920,
+      "fps": 30,
+      "sizeBytes": 0,
+      "hasAudio": true,
+      "thumbnailUrl": "data:image/jpeg;base64,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"
+    }
+  ],
+  "status": "ready",
+  "createdAt": "2026-10-05T05:04:40.729Z",
+  "updatedAt": "2026-10-05T05:04:41.634Z",
+  "analysis": {
+    "transcript": {
+      "language": "und",
+      "fullText": "",
+      "duration": 8.033333,
+      "provider": "silence-fallback",
+      "segments": [
+        {
+          "id": "seg_1",
+          "start": 0,
+          "end": 8.033333,
+          "text": "[full take]"
+        }
+      ]
+    },
+    "silences": [],
+    "highlightCandidates": [
+      {
+        "start": 0,
+        "end": 8.033333,
+        "score": 0.5,
+        "reason": "Segment"
+      }
+    ]
+  },
+  "editPlan": {
+    "sourceDuration": 8.033333,
+    "format": "vertical_9_16",
+    "aestheticId": "cute",
+    "duration": 8.033,
+    "clips": [
+      {
+        "id": "clip_1",
+        "sourceStart": 0,
+        "sourceEnd": 1.767,
+        "timelineStart": 0,
+        "timelineEnd": 1.767,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Highlight moment"
+      },
+      {
+        "id": "clip_2",
+        "sourceStart": 1.767,
+        "sourceEnd": 3.374,
+        "timelineStart": 1.767,
+        "timelineEnd": 3.374,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Highlight moment"
+      },
+      {
+        "id": "clip_3",
+        "sourceStart": 3.374,
+        "sourceEnd": 4.981,
+        "timelineStart": 3.374,
+        "timelineEnd": 4.981,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Highlight moment"
+      },
+      {
+        "id": "clip_4",
+        "sourceStart": 4.981,
+        "sourceEnd": 6.587,
+        "timelineStart": 4.981,
+        "timelineEnd": 6.587,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Highlight moment"
+      },
+      {
+        "id": "clip_5",
+        "sourceStart": 6.587,
+        "sourceEnd": 8.033,
+        "timelineStart": 6.587,
+        "timelineEnd": 8.033,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Highlight moment"
+      }
+    ],
+    "cuts": [
+      {
+        "at": 1.767,
+        "type": "hard"
+      },
+      {
+        "at": 3.374,
+        "type": "fade"
+      },
+      {
+        "at": 4.981,
+        "type": "hard"
+      },
+      {
+        "at": 6.587,
+        "type": "fade"
+      }
+    ],
+    "captions": [
+      {
+        "id": "cap_1",
+        "start": 0.5,
+        "end": 3.5,
+        "text": "just a little reset 🌊",
+        "style": "soft_bold",
+        "fontId": "chillax",
+        "fontSize": 44,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "fade"
+      },
+      {
+        "id": "cap_2",
+        "start": 4.0329999999999995,
+        "end": 8.033,
+        "text": "slow down for a second",
+        "style": "soft_bold",
+        "fontId": "chillax",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "fade"
+      },
+      {
+        "id": "cap_3",
+        "start": 2.0329999999999995,
+        "end": 8.033,
+        "text": "you don't have to rush everything ✨",
+        "style": "soft_bold",
+        "fontId": "chillax",
+        "fontSize": 40,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "fade"
+      },
+      {
+        "id": "cap_4",
+        "start": 3.0329999999999995,
+        "end": 8.033,
+        "text": "a little moment for yourself",
+        "style": "soft_bold",
+        "fontId": "chillax",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.78,
+        "animation": "fade"
+      }
+    ],
+    "textOverlays": [
+      {
+        "id": "text_1",
+        "start": 0,
+        "end": 3,
+        "text": "ocean reset",
+        "fontId": "chillax",
+        "fontSize": 56,
+        "color": "#FFFFFF",
+        "x": 0.5,
+        "y": 0.18
+      }
+    ],
+    "stickers": [
+      {
+        "id": "stk_1",
+        "assetId": "bow",
+        "start": 2,
+        "end": 5,
+        "x": 0.82,
+        "y": 0.18,
+        "scale": 0.32,
+        "rotation": -8,
+        "opacity": 1,
+        "animation": "pop"
+      },
+      {
+        "id": "stk_2",
+        "assetId": "coquette-01",
+        "start": 3.2132,
+        "end": 8.033,
+        "x": 0.16,
+        "y": 0.24,
+        "scale": 0.3,
+        "rotation": 10,
+        "opacity": 1,
+        "animation": "float"
+      },
+      {
+        "id": "stk_3",
+        "assetId": "coquette-02",
+        "start": 5.623099999999999,
+        "end": 8.033,
+        "x": 0.78,
+        "y": 0.7,
+        "scale": 0.26,
+        "rotation": 6,
+        "opacity": 1,
+        "animation": "fade"
+      },
+      {
+        "id": "stk_4",
+        "assetId": "coquette-03",
+        "start": 2.4099,
+        "end": 8.033,
+        "x": 0.2,
+        "y": 0.68,
+        "scale": 0.22,
+        "rotation": -6,
+        "opacity": 1,
+        "animation": "pop"
+      }
+    ],
+    "zooms": [
+      {
+        "id": "zoom_1",
+        "start": 1,
+        "end": 4,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      },
+      {
+        "id": "zoom_2",
+        "start": 3.6148499999999997,
+        "end": 8.033,
+        "scale": 1.06,
+        "x": 0.5,
+        "y": 0.5
+      },
+      {
+        "id": "zoom_3",
+        "start": 6.024749999999999,
+        "end": 8.033,
+        "scale": 1.1,
+        "x": 0.5,
+        "y": 0.48
+      }
+    ],
+    "music": {
+      "trackId": "ocean_dreams",
+      "volume": 0.28,
+      "startAt": 0,
+      "fadeIn": 0.6,
+      "fadeOut": 1.2
+    },
+    "styleNotes": "Cute cozy Instagram Reel — soft captions, sparkles, gentle pacing."
+  },
+  "aiProvider": "mock"
+}

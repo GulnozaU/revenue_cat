@@ -1,0 +1,159 @@
+{
+  "id": "proj_muusduss_2wxvrd",
+  "name": "Try probe",
+  "format": "instagram_reel",
+  "aestheticId": "cute",
+  "prompt": "Cut this into a short cozy reel with one caption about the moment.",
+  "session": "try",
+  "assets": [
+    {
+      "id": "ed608580-cf43-4765-b61e-ad894d9fbf72",
+      "filename": "sample.mp4",
+      "mimeType": "application/octet-stream",
+      "sourcePath": "uploads/proj_muusduss_2wxvrd/ed608580-cf43-4765-b61e-ad894d9fbf72.mp4",
+      "sourceUrl": "/api/files/uploads/proj_muusduss_2wxvrd/ed608580-cf43-4765-b61e-ad894d9fbf72.mp4",
+      "duration": 8,
+      "width": 1080,
+      "height": 1920,
+      "fps": 30,
+      "sizeBytes": 162621,
+      "hasAudio": true,
+      "proxyPath": "uploads/proj_muusduss_2wxvrd/ed608580-cf43-4765-b61e-ad894d9fbf72.mp4",
+      "proxyUrl": "/api/files/uploads/proj_muusduss_2wxvrd/ed608580-cf43-4765-b61e-ad894d9fbf72.mp4"
+    }
+  ],
+  "status": "ready",
+  "createdAt": "2026-10-05T05:05:41.164Z",
+  "updatedAt": "2026-10-05T05:05:53.803Z",
+  "analysis": {
+    "transcript": {
+      "language": "und",
+      "fullText": "",
+      "duration": 8,
+      "provider": "silence-fallback",
+      "segments": [
+        {
+          "id": "seg_1",
+          "start": 0,
+          "end": 8,
+          "text": "[full take]"
+        }
+      ]
+    },
+    "silences": [],
+    "highlightCandidates": [
+      {
+        "start": 0,
+        "end": 8,
+        "score": 0.5,
+        "reason": "Segment"
+      }
+    ]
+  },
+  "editPlan": {
+    "sourceDuration": 8,
+    "format": "vertical_9_16",
+    "aestheticId": "cute",
+    "duration": 5.2,
+    "clips": [
+      {
+        "id": "clip_1",
+        "sourceStart": 0.6,
+        "sourceEnd": 3.2,
+        "timelineStart": 0,
+        "timelineEnd": 2.6,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Captures the initial cozy, warm smile and soft framing"
+      },
+      {
+        "id": "clip_2",
+        "sourceStart": 3.2,
+        "sourceEnd": 5.8,
+        "timelineStart": 2.6,
+        "timelineEnd": 5.2,
+        "speed": 1,
+        "action": "keep",
+        "reason": "Continues the gentle, relaxed vibe with sweet natural expressions"
+      }
+    ],
+    "cuts": [
+      {
+        "at": 2.6,
+        "type": "hard"
+      }
+    ],
+    "captions": [
+      {
+        "id": "cap_1",
+        "start": 0.5,
+        "end": 4.8,
+        "text": "quiet cozy afternoons 🤍",
+        "style": "soft_bold",
+        "fontId": "chillax",
+        "fontSize": 42,
+        "x": 0.5,
+        "y": 0.8,
+        "animation": "fade"
+      }
+    ],
+    "textOverlays": [],
+    "stickers": [
+      {
+        "id": "stk_1",
+        "assetId": "sparkle",
+        "start": 0.4,
+        "end": 2.8,
+        "x": 0.78,
+        "y": 0.2,
+        "scale": 0.35,
+        "rotation": 12,
+        "opacity": 0.9,
+        "animation": "pop"
+      },
+      {
+        "id": "stk_2",
+        "assetId": "heart",
+        "start": 2,
+        "end": 5,
+        "x": 0.22,
+        "y": 0.24,
+        "scale": 0.3,
+        "rotation": -8,
+        "opacity": 0.85,
+        "animation": "float"
+      },
+      {
+        "id": "stk_3",
+        "assetId": "bow",
+        "start": 1,
+        "end": 4.5,
+        "x": 0.82,
+        "y": 0.72,
+        "scale": 0.32,
+        "rotation": 5,
+        "opacity": 0.9,
+        "animation": "wiggle"
+      }
+    ],
+    "zooms": [
+      {
+        "id": "zoom_1",
+        "start": 1.2,
+        "end": 3.8,
+        "scale": 1.08,
+        "x": 0.5,
+        "y": 0.45
+      }
+    ],
+    "music": {
+      "trackId": "chill_01",
+      "volume": 0.14,
+      "startAt": 0,
+      "fadeIn": 0.4,
+      "fadeOut": 0.8
+    },
+    "styleNotes": "Warm cozy aesthetic with soft pastel tones, subtle punchy zoom, and cute coquette accents."
+  },
+  "aiProvider": "gemini"
+}
