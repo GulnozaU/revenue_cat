@@ -4,7 +4,7 @@ AI-powered visual video editor for creators.
 # Live hosted link:
 https://revenue-cat-gules.vercel.app
 
-**Pipeline:** Upload MP4 → Gemini Files API watches the real video → validated EditPlan → FFmpeg renders MP4 → visual editor → export.
+#**Pipeline:** Upload MP4 → Gemini Files API watches the real video → validated EditPlan → FFmpeg renders MP4 → visual editor → export.
 
 ## Run
 
